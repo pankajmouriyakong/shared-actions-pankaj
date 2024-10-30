@@ -35,6 +35,9 @@ jobs:
           sudo mv oras /usr/local/bin/
           chmod +x .github/scripts/sync_images.sh
 
+      - name: Install regctl
+        uses: regclient/actions/regctl-installer@main
+
       - name: Execute the image sync script
         run: |
           ./.github/scripts/sync_images.sh "${{ steps.login-ecr-public.outputs.registry }}"

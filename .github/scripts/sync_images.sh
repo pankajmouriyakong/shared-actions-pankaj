@@ -5,7 +5,7 @@ set -euo pipefail
 ECR_URI="$1"
 
 # Retrieve the registry alias
-REGISTRY_ALIAS=$(aws ecr-public describe-registries  --query 'registries[0].aliases[0].name' --output text)
+REGISTRY_ALIAS=$(aws ecr-public describe-registries --query 'registries[0].aliases[0].name' --output text)
 
 if [ -z "$REGISTRY_ALIAS" ]; then
   echo "Failed to retrieve registry alias."
@@ -22,38 +22,90 @@ function check_or_create_repository {
   aws ecr-public create-repository --repository-name "$REPOSITORY"
 }
 
-function pull_docker_image {
+function get_latest_ecr_public_tag {
+  local latest_ecr_tag
+  latest_ecr_tag=$(regctl tag ls "$FULL_ECR_URI/$REPOSITORY" \
+    | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
+    | sort -Vr \
+    | head -n 1)
+  echo "$latest_ecr_tag"
+}
+
+function get_latest_upstream_tag {
+  local latest_upstream_tag
   case "$source" in
     dockerhub)
-      echo "Pulling Docker image from Docker Hub..."
-      docker pull "$owner/$repo:$tag"
+      latest_upstream_tag=$(regctl tag ls "docker.io/$owner/$repo" \
+        | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
+        | sort -Vr \
+        | head -n 1)
+      ;;
+    public.ecr.aws)
+      latest_upstream_tag=$(regctl tag ls "public.ecr.aws/$owner/$repo" \
+        | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
+        | sort -Vr \
+        | head -n 1)
       ;;
     ghcr)
-      echo "Pulling Docker image from GitHub Container Registry..."
-      docker pull "ghcr.io/$owner/$repo:$tag"
+      latest_upstream_tag=$(regctl tag ls "ghcr.io/$owner/$repo" \
+        | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' \
+        | sort -Vr \
+        | head -n 1)
       ;;
     *)
-      echo "Unknown image source $source"
+      echo "Unknown source $source for getting latest upstream tag."
       ;;
   esac
+
+  echo "$latest_upstream_tag"
 }
 
-function push_docker_image {
-  echo "Tagging and pushing Docker image to ECR..."
-  docker tag "$owner/$repo:$tag" "$FULL_ECR_URI/$REPOSITORY:$tag"
-  docker push "$FULL_ECR_URI/$REPOSITORY:$tag"
+function copy_image {
+  echo "Copying image from $source_repo:$tag to $dest_repo:$tag"
+  regctl image copy "$source_repo:$tag" "$dest_repo:$tag"
 }
 
-function pull_oci_artifact {
-  echo "Pulling OCI artifact with ORAS..."
-  oras pull "$source/$owner/$repo:$tag" --output "$OUTPUT_DIR" -v
-}
+function compare_and_update_image {
+  local latest_ecr_tag latest_upstream_tag
 
-function push_oci_artifact {
-  echo "Pushing OCI artifact to ECR using ORAS..."
-  oras push "$FULL_ECR_URI/$REPOSITORY:$tag" \
-    --config config.json:application/vnd.aquasec.trivy.config.v1+json \
-    db.tar.gz:application/vnd.aquasec.trivy.db.layer.v1.tar+gzip -v
+  latest_ecr_tag=$(get_latest_ecr_public_tag)
+  latest_upstream_tag=$(get_latest_upstream_tag)
+
+  echo "Latest ECR Public tag for $REPOSITORY: $latest_ecr_tag"
+  echo "Latest upstream tag for $REPOSITORY: $latest_upstream_tag"
+
+  if [ -z "$latest_upstream_tag" ]; then
+    echo "Could not retrieve latest upstream tag for $REPOSITORY."
+    return
+  fi
+
+  if [ -z "$latest_ecr_tag" ] || [ "$latest_ecr_tag" != "$latest_upstream_tag" ]; then
+    echo "Updating to the latest upstream tag ($latest_upstream_tag)..."
+    tag="$latest_upstream_tag"
+
+    # Set source_repo and dest_repo
+    case "$source" in
+      dockerhub)
+        source_repo="docker.io/$owner/$repo"
+        ;;
+      public.ecr.aws)
+        source_repo="public.ecr.aws/$owner/$repo"
+        ;;
+      ghcr)
+        source_repo="ghcr.io/$owner/$repo"
+        ;;
+      *)
+        echo "Unknown source $source"
+        return
+        ;;
+    esac
+
+    dest_repo="$FULL_ECR_URI/$REPOSITORY"
+
+    copy_image
+  else
+    echo "ECR Public repository $REPOSITORY is up to date with tag $latest_ecr_tag."
+  fi
 }
 
 # Main script
@@ -64,27 +116,10 @@ echo "$IMAGES" | while IFS="|" read -r name type source owner repo tag; do
   echo "Processing $name from $source with type $type"
   REPOSITORY="$name"
 
-  # Variables accessible to functions:
-  # name, type, source, owner, repo, tag, REPOSITORY
-
+  # Ensure the repository exists
   check_or_create_repository
 
-  case "$type" in
-    image)
-      pull_docker_image
-      push_docker_image
-      ;;
-    oci)
-      OUTPUT_DIR="ociImage_$name"
-      mkdir -p "$OUTPUT_DIR"
-      pull_oci_artifact
-      cd "$OUTPUT_DIR"
-      echo '{}' > config.json
-      push_oci_artifact
-      cd ..
-      ;;
-    *)
-      echo "Unknown type $type"
-      ;;
-  esac
+  # Compare versions and update if necessary
+  compare_and_update_image
+
 done
