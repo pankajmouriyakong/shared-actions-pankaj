@@ -11,3 +11,9 @@ images:
     owner: aquasecurity
     repo: trivy-db
     tag: 2
+  - name: semgrep
+    type: image
+    source: dockerhub
+    owner: returntocorp
+    repo: semgrep
+    tag: 1.89
