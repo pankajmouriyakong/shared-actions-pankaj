@@ -5,7 +5,8 @@
       "description": "Update Trivy image tag in GitHub Actions workflows",
       "customType": "regex",
       "fileMatch": [
-        "^/security-actions/scan-docker-image/action.yml$"
+        "^/security-actions/scan-docker-image/action.yml$",
+        "^/security-actions/semgrep/action.yml$"
       ],
       "matchStrings": [
         "uses:\\s+docker://public\\.ecr\\.aws/k9g5m0d7/trivy:(?<currentValue>[\\w.]+)"
