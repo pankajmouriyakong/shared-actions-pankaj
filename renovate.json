@@ -13,12 +13,24 @@
       ],
       "datasourceTemplate": "docker",
       "depNameTemplate": "public.ecr.aws/k9g5m0d7/trivy"
+    },
+    {
+      "description": "Update Semgrep image tag in GitHub Actions workflows",
+      "customType": "regex",
+      "fileMatch": [
+        "^/security-actions/semgrep/action.yml$"
+      ],
+      "matchStrings": [
+        "uses:\\s+docker://public\\.ecr\\.aws/k9g5m0d7/semgrep:(?<currentValue>[\\w.]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "public.ecr.aws/k9g5m0d7/semgrep"
     }
   ],
   "packageRules": [
     {
       "matchDatasources": ["docker"],
-      "matchDepNames": ["public.ecr.aws/k9g5m0d7/trivy"],
+      "matchDepNames": ["public.ecr.aws/k9g5m0d7/trivy","public.ecr.aws/k9g5m0d7/semgrep"],
       "enabled": true
     }
   ]
