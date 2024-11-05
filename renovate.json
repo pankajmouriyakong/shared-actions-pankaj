@@ -7,7 +7,7 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["public.ecr.aws/k9g5m0d7/trivy"],
       "registryUrls": ["https://public.ecr.aws"],
-      "updateSchedule": "daily",
+      "schedule": ["* * * * *"],
       "semanticCommitType": "chore",
       "semanticCommitScope": "trivy",
       "groupName": "trivy-image-updates",
