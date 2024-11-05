@@ -1,6 +1,5 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "enabledManagers": ["custom"],
   "customManagers": [
     {
       "description": "Update Trivy image tag in GitHub Actions workflows",
