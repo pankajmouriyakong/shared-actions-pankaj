@@ -2,12 +2,5 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
-  ],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "fileMatch": ["security-actions/semgrep/action.yml"],
-      "datasourceTemplate": "docker"
-    }
   ]
 }
