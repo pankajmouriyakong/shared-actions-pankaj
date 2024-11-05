@@ -1,5 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "enabledManagers": ["custom"],
   "customManagers": [
     {
       "description": "Update Trivy image tag in GitHub Actions workflows",
@@ -12,6 +13,13 @@
       ],
       "datasourceTemplate": "docker",
       "depNameTemplate": "public.ecr.aws/k9g5m0d7/trivy"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "matchDepNames": ["public.ecr.aws/k9g5m0d7/trivy"],
+      "enabled": true
     }
   ]
 }
