@@ -17,7 +17,7 @@
   "regexManagers": [
     {
       "description": "GitHub Actions Docker image in workflow files",
-      "fileMatch": [".github/workflows/.*\\.yml$"],
+      "fileMatch": ["security-actions/scan-docker-image/.*\\.yml$"],
       "matchStrings": [
         "uses:\\s+public\\.ecr\\.aws/k9g5m0d7/trivy:(?<currentValue>[\\w.]+)"
       ],
