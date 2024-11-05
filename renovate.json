@@ -1,16 +1,17 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base"],
-  "regexManagers": [
+  "customManagers": [
     {
       "description": "Update Trivy image tag in GitHub Actions workflows",
-      "fileMatch": ["^/security-actions/scan-docker-image/.*\\.yml$"],
+      "customType": "regex",
+      "fileMatch": [
+        "^/security-actions/scan-docker-image/action.yml$"
+      ],
       "matchStrings": [
         "uses:\\s+docker://public\\.ecr\\.aws/k9g5m0d7/trivy:(?<currentValue>[\\w.]+)"
       ],
       "datasourceTemplate": "docker",
-      "depNameTemplate": "public.ecr.aws/k9g5m0d7/trivy",
-      "versioningTemplate": "docker"
+      "depNameTemplate": "public.ecr.aws/k9g5m0d7/trivy"
     }
   ]
 }
