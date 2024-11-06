@@ -28,7 +28,7 @@ jobs:
 #          aws-region: us-east-1
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v1.7.0
+        uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
             role-to-assume: arn:aws:iam::992382581569:role/ecr-publicrole
             role-session-name: GitHub_to_AWS_via_FederatedOIDC
