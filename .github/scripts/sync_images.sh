@@ -2,23 +2,19 @@
 
 set -euo pipefail
 
-ECR_URI="$1"
+ECR_URI="${{ secrets.AWS_ECR_URI }}"
 
-# Retrieve the registry alias
-REGISTRY_ALIAS=$(aws ecr-public describe-registries --query 'registries[0].aliases[0].name' --output text)
+# Retrieve the account ID and region from the provided ECR URI
+ACCOUNT_ID=$(echo "$ECR_URI" | cut -d '.' -f 1)
+REGION=$(echo "$ECR_URI" | cut -d '.' -f 4)
 
-if [ -z "$REGISTRY_ALIAS" ]; then
-  echo "Failed to retrieve registry alias."
-  exit 1
-fi
-
-# Construct the full repository URI
-FULL_ECR_URI="public.ecr.aws/$REGISTRY_ALIAS"
+# Construct the full repository URI for private ECR
+FULL_ECR_URI="$ECR_URI"
 
 # Function to check if repository exists
 function check_repository_exists {
-  echo "Checking if repository $REPOSITORY exists in ECR Public..."
-  if ! aws ecr-public describe-repositories --repository-name "$REPOSITORY" > /dev/null 2>&1; then
+  echo "Checking if repository $REPOSITORY exists in private ECR..."
+  if ! aws ecr describe-repositories --repository-name "$REPOSITORY" --region "$REGION" > /dev/null 2>&1; then
     echo "Repository $REPOSITORY does not exist. Exiting."
     exit 1
   fi
@@ -77,8 +73,8 @@ echo "$IMAGES" | while IFS="|" read -r name type source owner repo semantic; do
     echo "Current tag is semantic: $current_tag"
   fi
 
-  # Check if the repository exists in ECR Public
-  echo "Check if the repository exists in ECR Public"
+  # Check if the repository exists in private ECR
+  echo "Check if the repository exists in private ECR"
   check_repository_exists
 
   # Get the latest upstream tag
