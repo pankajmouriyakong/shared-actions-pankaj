@@ -96,6 +96,10 @@ runs:
         role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
 
+    - name: get caller identity 1
+      shell: bash
+      run: aws sts get-caller-identity
+
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
