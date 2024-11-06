@@ -8,7 +8,7 @@ AWS_ACCOUNT_ID="$1"
 ECR_URI="${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com"
 
 # Retrieve the account ID and region from the provided ECR URI
-ACCOUNT_ID=$(echo "$AWS_ACCOUNT_ID" | cut -d '.' -f 1)
+ACCOUNT_ID=${AWS_ACCOUNT_ID}
 REGION="us-east-1"
 
 # Construct the full repository URI for private ECR
