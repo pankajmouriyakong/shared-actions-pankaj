@@ -2,19 +2,14 @@
 
 set -euo pipefail
 
-# Get the AWS account ID from the argument
-AWS_ACCOUNT_ID="$1"
-
-ECR_URI="${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com"
+ECR_URI="992382581569.dkr.ecr.us-east-1.amazonaws.com"
 
 # Retrieve the account ID and region from the provided ECR URI
-ACCOUNT_ID=${AWS_ACCOUNT_ID}
-REGION="us-east-1"
+ACCOUNT_ID=$(echo "$ECR_URI" | cut -d '.' -f 1)
+REGION=$(echo "$ECR_URI" | cut -d '.' -f 4)
 
 # Construct the full repository URI for private ECR
 FULL_ECR_URI="$ECR_URI"
-
-echo "Syncing images with ECR URI: $FULL_ECR_URI"
 
 # Function to check if repository exists
 function check_repository_exists {
