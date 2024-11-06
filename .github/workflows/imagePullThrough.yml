@@ -57,3 +57,6 @@ jobs:
       - name: Execute the image sync script
         run: |
           ./.github/scripts/sync_images.sh "${{ steps.login-ecr-public.outputs.registry }}"
+
+      - name: Sync Images
+        run: ./.github/scripts/sync_images.sh "${{ secrets.AWS_ACCOUNT_ID }}"
