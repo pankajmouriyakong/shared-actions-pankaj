@@ -16,7 +16,7 @@ jobs:
 
   provenance-metadata:
     name: Set Docker Image Provenance metadata
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: ${{ github.repository_owner == 'Kong' }}
     outputs:
       IMAGE_MANIFEST_DIGEST: ${{ steps.image_manifest_metadata.outputs.manifest_sha }}

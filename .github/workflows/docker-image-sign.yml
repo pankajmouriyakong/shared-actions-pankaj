@@ -21,7 +21,7 @@ jobs:
 
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     name: Test Sign Docker Image
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       PRERELEASE_IMAGE: kongcloud/security-test-repo-pub:ubuntu_23_10 #particular reason for the choice of image: test multi arch image
       TAGS: kongcloud/security-test-repo-pub:ubuntu_23_10,kongcloud/security-test-repo:ubuntu_23_10

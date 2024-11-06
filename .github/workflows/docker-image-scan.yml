@@ -20,7 +20,7 @@ jobs:
       pull-requests: write
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     name: Test Scan Docker Image
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       IMAGE: kong/kong-gateway-dev:latest #particular reason for the choice of image: test multi arch image sbom
     steps:
@@ -78,7 +78,7 @@ jobs:
   test-download-sbom:
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     name: Download SBOM
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [test-scan-docker-image]
     env:
       SBOM_DOWNLOAD_PATH: ${{ github.workspace }}/security-assets/sboms
