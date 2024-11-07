@@ -2,7 +2,9 @@
 
 set -euo pipefail
 
-ECR_URI="992382581569.dkr.ecr.us-east-1.amazonaws.com"
+echo "ACCOUNT_ID: $AWS_ACCOUND_ID"
+
+ECR_URI="$AWS_ACCOUND_ID.dkr.ecr.us-east-1.amazonaws.com"
 
 # Retrieve the account ID and region from the provided ECR URI
 ACCOUNT_ID=$(echo "$ECR_URI" | cut -d '.' -f 1)

@@ -31,7 +31,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: us-east-1
-          role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/ecr-private-role
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
 
       - name: Sts GetCallerIdentity
@@ -57,3 +57,5 @@ jobs:
       - name: Execute the image sync script
         run: |
           ./.github/scripts/sync_images.sh "${{ steps.login-ecr-public.outputs.registry }}"
+        env:
+          AWS_ACCOUND_ID: ${{ secrets.AWS_ACCOUNT_ID }}
