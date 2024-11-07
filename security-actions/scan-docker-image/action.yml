@@ -303,12 +303,12 @@ runs:
         files: "${{ steps.meta.outputs.scan_image }}"
 
     - name: Generate docker-cis JSON report
-      uses: docker://public.ecr.aws/k9g5m0d7/trivy:0.55.2
+      uses: docker://aquasec/trivy:0.57.0
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
       id: cis_json
       with:
         entrypoint: trivy
-        args: "image ${{ env.input }} ${{ steps.meta.outputs.scan_image }} --compliance ${{ env.compliance }} -f json --ignore-unfixed -o ${{ steps.meta.outputs.cis_json_file }}"
+        args: "image ${{ env.input }} ${{ steps.meta.outputs.scan_image }} --db-repository 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2 --compliance ${{ env.compliance }} -f json --ignore-unfixed -o ${{ steps.meta.outputs.cis_json_file }} --debug"
       env:
         compliance: docker-cis-1.6.0
         input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
@@ -324,10 +324,10 @@ runs:
 
     - name: Inspect docker-cis report
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
-      uses: docker://public.ecr.aws/k9g5m0d7/trivy:0.55.2
+      uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy:0.57.0
       with:
         entrypoint: trivy
-        args: "image ${{ env.input }} ${{ steps.meta.outputs.scan_image }} --compliance ${{ env.compliance }} -f table --ignore-unfixed --exit-code ${{ env.exit-code }}"
+        args: "image ${{ env.input }} ${{ steps.meta.outputs.scan_image }} --db-repository 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2 --compliance ${{ env.compliance }} -f table --ignore-unfixed --exit-code ${{ env.exit-code }} --debug"
       env:
         exit-code: ${{ (steps.meta.outputs.global_enforce_build_failure == 'true' || inputs.fail_build == 'true') && '1' || '0' }}
         compliance: docker-cis-1.6.0
