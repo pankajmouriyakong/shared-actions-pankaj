@@ -89,24 +89,6 @@ runs:
   using: composite
   steps:
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-#        aws-region: us-east-1
-#        role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role
-#        role-session-name: GitHub_to_AWS_via_FederatedOIDC
-
-    - name: get caller identity 1
-      shell: bash
-      run: aws sts get-caller-identity
-
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v2
-
     - name: Set Scan Job Metadata
       shell: bash
       id: meta
