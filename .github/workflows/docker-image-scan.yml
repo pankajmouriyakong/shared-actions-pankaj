@@ -32,6 +32,9 @@ jobs:
         aws-region: us-east-1
         role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/ecr-private-role-to-pull
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
+      permissions:
+        id-token: write # This is required for requesting the JWT
+        contents: read  # This is required for actions/checkout
 
     - name: Sts GetCallerIdentity
       run: |
