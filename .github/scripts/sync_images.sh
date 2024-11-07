@@ -44,9 +44,9 @@ function pull_artifact {
 
 # Main script
 CONFIG_FILE=".github/imageList.yml"
-IMAGES=$(yq -r '.images[] | "\(.name)|\(.type)|\(.source)|\(.owner)|\(.repo)|\(.semantic)"' "$CONFIG_FILE")
+IMAGES=$(yq -r '.images[] | "\(.name)|\(.type)|\(.source)|\(.owner)|\(.repo)"' "$CONFIG_FILE")
 
-echo "$IMAGES" | while IFS="|" read -r name type source owner repo semantic; do
+echo "$IMAGES" | while IFS="|" read -r name type source owner repo; do
   REPOSITORY="$name"
   echo "Repo name is = $REPOSITORY"
 
