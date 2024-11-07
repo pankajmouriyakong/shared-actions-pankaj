@@ -15,6 +15,9 @@ permissions:
 jobs:
   sync_images:
     runs-on: ubuntu-latest
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.GHA_DOCKERHUB_PULL_USER }}
+      DOCKERHUB_PASSWORD: ${{ secrets.GHA_KONG_ORG_DOCKERHUB_PUBLIC_TOKEN }}
 
     steps:
       - name: Checkout repository
@@ -46,14 +49,16 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y python3-pip
           pip3 install yq
-          curl -LO https://github.com/oras-project/oras/releases/download/v1.2.0/oras_1.2.0_linux_amd64.tar.gz
-          tar -zxvf oras_1.2.0_linux_amd64.tar.gz
-          sudo mv oras /usr/local/bin/
           chmod +x .github/scripts/sync_images.sh
 
-      - name: Install regctl
-        uses: regclient/actions/regctl-installer@main
-        
+      - name: Install regsync
+        run: |
+          curl -Lo /usr/local/bin/regsync https://github.com/regclient/regclient/releases/download/v0.4.5/regsync-linux-amd64
+          chmod +x /usr/local/bin/regsync
+
       - name: Execute the image sync script
         run: |
-          ./.github/scripts/sync_images.sh "${{ steps.login-ecr-public.outputs.registry }}"
+          ./.github/scripts/sync_images.sh
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.GHA_DOCKERHUB_PULL_USER }}
+          DOCKERHUB_PASSWORD: ${{ secrets.GHA_KONG_ORG_DOCKERHUB_PUBLIC_TOKEN }}
