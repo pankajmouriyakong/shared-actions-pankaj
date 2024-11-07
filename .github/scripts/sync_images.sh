@@ -7,11 +7,6 @@ ECR_URI="992382581569.dkr.ecr.us-east-1.amazonaws.com"
 CONFIG_FILE=".github/imageList.yml"
 REGSYNC_CONFIG_FILE="regsync_config.yml"
 
-# Export Docker Hub credentials as environment variables for regsync
-export REGSYNC_CREDS_1_REGISTRY="docker.io"
-export REGSYNC_CREDS_1_USER="$GHA_DOCKERHUB_PULL_USER"
-export REGSYNC_CREDS_1_PASS="$GHA_KONG_ORG_DOCKERHUB_PUBLIC_TOKEN"
-
 # Create the regsync configuration file header without credentials
 cat <<EOF > "$REGSYNC_CONFIG_FILE"
 version: 1
