@@ -1,6 +1,9 @@
 name: Docker SCA and CIS scan
 description: Generates SBOM and vulnerabiity report
 author: 'Kong'
+permissions:
+  id-token: write
+  contents: write
 inputs:
   asset_prefix:
     description: 'prefix for generated scan artifacts'
