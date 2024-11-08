@@ -98,7 +98,7 @@ runs:
         ASSET_PREFIX: ${{ inputs.asset_prefix }}
       run: $GITHUB_ACTION_PATH/scripts/scan-metadata.sh
 
-    name: Docker SCA and CIS scan
+name: Docker SCA and CIS scan
 description: Generates SBOM and vulnerabiity report
 author: 'Kong'
 inputs:
