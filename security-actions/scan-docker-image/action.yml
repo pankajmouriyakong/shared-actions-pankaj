@@ -107,7 +107,8 @@ runs:
        output-credentials: true
       
        
-    - name: get caller identity 1
+    - name: get caller identity
+      shell: bash
       run: |
         aws sts get-caller-identity
         echo ${{ steps.creds.outputs.aws-access-key-id }}
