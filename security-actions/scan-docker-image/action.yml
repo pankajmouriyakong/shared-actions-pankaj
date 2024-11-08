@@ -105,8 +105,8 @@ runs:
        aws-region: us-east-1
        role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role
        output-credentials: true
+       unset-current-credentials: true
       
-       
     - name: get caller identity
       shell: bash
       run: |
@@ -114,7 +114,8 @@ runs:
         echo ${{ steps.creds.outputs.aws-access-key-id }}
         echo ${{ steps.creds.outputs.aws-secret-access-key }}
         echo ${{ steps.creds.outputs.aws-session-token }}
-
+        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 992382581569.dkr.ecr.us-east-1.amazonaws.com
+      
     # Must upload artifact for output file parameter to have effect
     - name: Generate SPDX SBOM Using Syft
       uses: anchore/sbom-action@v0.17.2
