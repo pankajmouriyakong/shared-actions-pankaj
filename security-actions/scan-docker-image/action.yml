@@ -95,7 +95,7 @@ runs:
       uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-region: us-east-1
-        role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
+        role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
 
     - name: Sts GetCallerIdentity
@@ -103,9 +103,13 @@ runs:
       run: |
         aws sts get-caller-identity
 
+    # - name: Login to Amazon ECR
+    #   id: login-ecr
+    #   uses: aws-actions/amazon-ecr-login@v2
+
     - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v2
+      run: |
+        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 992382581569.dkr.ecr.us-east-1.amazonaws.com
 
     - name: Set Scan Job Metadata
       shell: bash
