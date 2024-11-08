@@ -1,9 +1,6 @@
 name: Docker SCA and CIS scan
 description: Generates SBOM and vulnerabiity report
 author: 'Kong'
-permissions:
-  id-token: write
-  contents: write
 inputs:
   asset_prefix:
     description: 'prefix for generated scan artifacts'
@@ -91,27 +88,6 @@ outputs:
 runs:
   using: composite
   steps:
-#    - name: Configure AWS Credentials
-#      uses: aws-actions/configure-aws-credentials@v4
-#      with:
-#        aws-region: us-east-1
-#        role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role
-#        role-session-name: GitHub_to_AWS_via_FederatedOIDC
-#
-#    - name: Sts GetCallerIdentity
-#      shell: bash
-#      run: |
-#        aws sts get-caller-identity
-#
-#    # - name: Login to Amazon ECR
-#    #   id: login-ecr
-#    #   uses: aws-actions/amazon-ecr-login@v2
-#
-#    - name: Login to Amazon ECR
-#      shell: bash
-#      run: |
-#        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 992382581569.dkr.ecr.us-east-1.amazonaws.com
-#        echo "AWS ECR Login successful"
 
     - name: Set Scan Job Metadata
       shell: bash
@@ -325,6 +301,7 @@ runs:
       id: docker_tar
       with:
         files: "${{ steps.meta.outputs.scan_image }}"
+
 
     - name: Generate docker-cis JSON report
       uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy:0.57.0
