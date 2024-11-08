@@ -111,6 +111,7 @@ runs:
       shell: bash
       run: |
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 992382581569.dkr.ecr.us-east-1.amazonaws.com
+        echo "AWS ECR Login successful"
 
     - name: Set Scan Job Metadata
       shell: bash
