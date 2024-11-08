@@ -14,7 +14,7 @@ on:
 jobs:
   test-scan-docker-image:
     permissions:
-      id-token: write
+      # id-token: write
       contents: write # publish sbom to GH releases/tag assets
       issues: read
       checks: write
@@ -27,20 +27,20 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-region: us-east-1
-        role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/ecr-private-role-to-pull
-        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+    # - name: Configure AWS Credentials
+    #   uses: aws-actions/configure-aws-credentials@v4
+    #   with:
+    #     aws-region: us-east-1
+    #     role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/ecr-private-role-to-pull
+    #     role-session-name: GitHub_to_AWS_via_FederatedOIDC
 
-    - name: Sts GetCallerIdentity
-      run: |
-        aws sts get-caller-identity
+    # - name: Sts GetCallerIdentity
+    #   run: |
+    #     aws sts get-caller-identity
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v2
+    # - name: Login to Amazon ECR
+    #   id: login-ecr
+    #   uses: aws-actions/amazon-ecr-login@v2
 
     - name: Install regctl
       uses: regclient/actions/regctl-installer@main
