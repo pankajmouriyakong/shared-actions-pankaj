@@ -98,6 +98,122 @@ runs:
         ASSET_PREFIX: ${{ inputs.asset_prefix }}
       run: $GITHUB_ACTION_PATH/scripts/scan-metadata.sh
 
+    name: Docker SCA and CIS scan
+description: Generates SBOM and vulnerabiity report
+author: 'Kong'
+inputs:
+  asset_prefix:
+    description: 'prefix for generated scan artifacts'
+    required: false
+    default: ''
+  image:
+    description: 'specify an image to be scanned. Specify registry credentials if the image is remote. Takes priority over dir and file'
+    required: false
+    default: ''
+  tag:
+    description: 'specify a docker image tag / release tag / ref to be scanned'
+    required: false
+    default: ''
+  registry_username:
+    description: 'docker username to login against private docker registry'
+    required: false
+  registry_password:
+    description: 'docker password to login against private docker registry'
+    required: false
+  config:
+    description: 'file path to syft custom configuration'
+    required: false
+  fail_build:
+    description: 'fail the build if the vulnerability is above the severity cutoff'
+    required: false
+    default: false
+    type: choice
+    options:
+    - 'true'
+    - 'false'
+  github-token:
+    description: "Authorized secret GitHub Personal Access Token. Defaults to github.token"
+    required: false
+    default: ${{ github.token }}
+  upload-sbom-release-assets:
+    description: 'specify to only upload sboms to GH release assets'
+    required: false
+    default: false
+    type: choice
+    options:
+    - 'true'
+    - 'false'
+  force_grype_db_update:
+    required: false
+    default: false
+    description: 'Force to download DB when cache is available and up-to-date'
+    type: choice
+    options:
+    - 'true'
+    - 'false'
+  skip_grype_db_cache:
+    required: false
+    default: true
+    description: 'Skip grype db caching'
+    type: choice
+    options:
+      - 'true'
+      - 'false'
+  skip_cis_scan:
+    required: false
+    default: false
+    description: 'Toggle to skip Trivy scan'
+    type: choice
+    options:
+      - 'true'
+      - 'false'
+
+outputs:
+  cis-json-report:
+    description: 'docker-cis json report'
+    value: ${{ steps.meta.outputs.cis_json_file }}
+  grype-json-report:
+    description: 'vulnerability json report'
+    value: ${{ steps.meta.outputs.grype_json_report }}
+  grype-sarif-report:
+    description: 'vulnerability sarif report'
+    value: ${{ steps.meta.outputs.grype_sarif_report }}
+  sbom-spdx-report:
+    description: 'SBOM spdx report'
+    value: ${{ steps.meta.outputs.sbom_spdx_file }}
+  sbom-cyclonedx-report:
+    description: 'SBOM cyclonedx report'
+    value: ${{ steps.meta.outputs.sbom_cyclonedx_file }}
+
+runs:
+  using: composite
+  steps:
+
+    - name: Set Scan Job Metadata
+      shell: bash
+      id: meta
+      env:
+        IMAGE: ${{ inputs.image }}
+        TAG: ${{ inputs.tag }}
+        ASSET_PREFIX: ${{ inputs.asset_prefix }}
+      run: $GITHUB_ACTION_PATH/scripts/scan-metadata.sh
+
+    - name: Configure AWS Credentials
+      id: creds
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+       aws-region: us-east-1
+       role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role
+       output-credentials: true
+      
+       
+    - name: get caller identity 1
+      run: |
+        aws sts get-caller-identity
+        echo ${{ steps.creds.outputs.aws-access-key-id }}
+        echo ${{ steps.creds.outputs.aws-secret-access-key }}
+        echo ${{ steps.creds.outputs.aws-session-token }}
+
     # Must upload artifact for output file parameter to have effect
     - name: Generate SPDX SBOM Using Syft
       uses: anchore/sbom-action@v0.17.2
