@@ -27,7 +27,7 @@ runs:
   steps:
 
     - name: SAST Scan
-      uses: public.ecr.aws/k9g5m0d7/semgrep:1.86.0
+      uses: 992382581569.dkr.ecr.us-east-1.amazonaws.com/semgrep:1.96.0
       id: semgrep
       continue-on-error: true
       with:

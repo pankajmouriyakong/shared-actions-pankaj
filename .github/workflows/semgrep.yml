@@ -20,7 +20,7 @@ jobs:
       actions: read
       contents: read
     env:
-      TEST_REPOSITORY: "${{github.repository_owner}}/atc-router"
+      TEST_REPOSITORY: "${{github.repository_owner}}/rust"
     if: (github.actor != 'dependabot[bot]')
 
     steps:
@@ -35,4 +35,3 @@ jobs:
           additional_config: '--config p/rust'
           codeql_upload: false
           fail_on_findings: false
-            
