@@ -336,16 +336,14 @@ runs:
       uses: aquasecurity/trivy-action@0.28.0
       with:
         scan-type: 'image'
-        image-ref: ${{ steps.meta.outputs.scan_image }}
+        image-ref: ${{ env.input }} ${{ steps.meta.outputs.scan_image }}
         format: 'json'
         output: ${{ steps.meta.outputs.cis_json_file }}
         ignore-unfixed: true
         input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
       env:
         TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
-        # TRIVY_SKIP_DB_UPDATE: true
-        # TRIVY_SKIP_JAVA_DB_UPDATE: true
-
+        TRIVY_COMPLIANCE: docker-cis-1.6.0
 
     - name: upload docker-cis JSON report
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
@@ -358,11 +356,16 @@ runs:
 
     - name: Inspect docker-cis report
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
-      uses: docker://aquasec/trivy:0.57.0
+      id: cis_json
+      uses: aquasecurity/trivy-action@0.28.0
       with:
-        entrypoint: trivy
-        args: "image ${{ env.input }} ${{ steps.meta.outputs.scan_image }} --db-repository 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2 --compliance ${{ env.compliance }} -f table --ignore-unfixed --exit-code ${{ env.exit-code }} --debug"
-      env:
-        exit-code: ${{ (steps.meta.outputs.global_enforce_build_failure == 'true' || inputs.fail_build == 'true') && '1' || '0' }}
-        compliance: docker-cis-1.6.0
+        scan-type: 'image'
+        image-ref: ${{ env.input }} ${{ steps.meta.outputs.scan_image }}
+        format: 'table'
+        output: ${{ steps.meta.outputs.cis_json_file }}
+        ignore-unfixed: true
         input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
+        exit-code: ${{ (steps.meta.outputs.global_enforce_build_failure == 'true' || inputs.fail_build == 'true') && '1' || '0' }}
+      env:
+        TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
+        TRIVY_COMPLIANCE: docker-cis-1.6.0
