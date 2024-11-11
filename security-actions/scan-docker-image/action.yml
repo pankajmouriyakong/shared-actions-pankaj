@@ -341,8 +341,8 @@ runs:
       env:
         input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
         TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
-        TRIVY_SKIP_DB_UPDATE: true
-        TRIVY_SKIP_JAVA_DB_UPDATE: true
+        # TRIVY_SKIP_DB_UPDATE: true
+        # TRIVY_SKIP_JAVA_DB_UPDATE: true
 
 
     - name: upload docker-cis JSON report
