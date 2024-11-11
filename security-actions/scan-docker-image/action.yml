@@ -335,7 +335,8 @@ runs:
       id: cis_json
       uses: aquasecurity/trivy-action@0.28.0
       with:
-        image-ref: aquasec/trivy:0.57.0
+        scan-type: 'image'
+        scan-ref: ${{ env.input }} ${{ steps.meta.outputs.scan_image }}
         format: 'json'
         output: ${{ steps.meta.outputs.cis_json_file }}
         ignore-unfixed: true
