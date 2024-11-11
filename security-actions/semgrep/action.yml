@@ -25,9 +25,15 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    # Step 1: Authenticate to ECR using reusable workflow
+    - name: Authenticate to ECR
+      uses: ./security-actions/ecr-login
+      with:
+      aws_region: us-east-1
+      role_arn: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
 
     - name: SAST Scan
-      uses: 992382581569.dkr.ecr.us-east-1.amazonaws.com/semgrep:1.96.0
+      uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/semgrep:1.96.0
       id: semgrep
       continue-on-error: true
       with:
