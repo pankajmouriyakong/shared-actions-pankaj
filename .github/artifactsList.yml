@@ -1,3 +1,7 @@
+# This artifact list file is to define the existing security tools which need to be mirrored from upstream
+# within Kong's artifact store.
+# Any future artifacts can also be added here
+
 images:
   - name: trivy
     type: image

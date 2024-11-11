@@ -46,6 +46,6 @@ jobs:
         
       - name: Execute the image sync script
         run: |
-          ./.github/scripts/sync_images.sh "${{ steps.login-ecr.outputs.registry }}"
+          ./.github/scripts/sync_security_artifacts.sh "${{ steps.login-ecr.outputs.registry }}"
         env:
           AWS_ACCOUND_ID: ${{ secrets.AWS_ACCOUNT_ID }}

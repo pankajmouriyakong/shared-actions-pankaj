@@ -45,7 +45,7 @@ function pull_artifact {
 }
 
 # Main script
-SECURITY_ARTIFACTS_CONFIG_FILE=".github/imageList.yml"
+SECURITY_ARTIFACTS_CONFIG_FILE=".github/artifactsList.yml"
 ARTIFACTS=$(yq -r '.images[] | "\(.name)|\(.type)|\(.source)|\(.owner)|\(.repo)"' "$SECURITY_ARTIFACTS_CONFIG_FILE")
 
 echo "$ARTIFACTS" | while IFS="|" read -r name type source owner repo; do
