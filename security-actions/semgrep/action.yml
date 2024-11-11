@@ -32,12 +32,22 @@ runs:
         aws_region: us-east-1
         role_arn: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
 
+    # Step 2: Pull the Docker Image
+    - name: Pull Semgrep Image
+      shell: bash
+      run: |
+        docker pull 992382581569.dkr.ecr.us-east-1.amazonaws.com/semgrep:1.96.0
+
     - name: SAST Scan
-      uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/semgrep:1.96.0
       id: semgrep
       continue-on-error: true
-      with:
-        args: "semgrep ci --config auto --sarif -o semgrep_${{github.sha}}.sarif --no-autofix ${{ inputs.additional_config }}"
+      shell: bash
+      run: |
+        docker run --rm \
+          -v ${{ github.workspace }}:/workspace \
+          -w /workspace \
+          XXXXXXX3434.dkr.ecr.us-east-1.amazonaws.com/semgrep:1.96.0 \
+          semgrep ci --config auto --sarif -o semgrep_${{ github.sha }}.sarif --no-autofix ${{ inputs.additional_config }}
 
     # Upload grype cve reports
     - name: Upload Semgrep SARIF to Workflow
