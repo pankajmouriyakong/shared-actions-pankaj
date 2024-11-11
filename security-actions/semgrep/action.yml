@@ -29,8 +29,8 @@ runs:
     - name: Authenticate to ECR
       uses: ./ecr-login
       with:
-      aws_region: us-east-1
-      role_arn: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
+        aws_region: us-east-1
+        role_arn: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
 
     - name: SAST Scan
       uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/semgrep:1.96.0
