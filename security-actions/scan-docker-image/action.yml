@@ -356,7 +356,7 @@ runs:
 
     - name: Inspect docker-cis report
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
-      uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy:0.57.0
+      uses: docker://aquasec/trivy:0.57.0
       with:
         entrypoint: trivy
         args: "image ${{ env.input }} ${{ steps.meta.outputs.scan_image }} --db-repository 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2 --compliance ${{ env.compliance }} -f table --ignore-unfixed --exit-code ${{ env.exit-code }} --debug"
