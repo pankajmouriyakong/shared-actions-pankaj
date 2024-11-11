@@ -22,6 +22,7 @@ inputs:
     options:
     - 'true'
     - 'false'
+
 runs:
   using: 'composite'
   steps:
