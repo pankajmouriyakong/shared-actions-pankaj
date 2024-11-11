@@ -11,15 +11,13 @@ on:
     - '*'
   workflow_dispatch: {}
 
-permissions:
-  id-token: write
-  contents: write
-  issues: read
-  checks: write
-  pull-requests: write
-
 jobs:
   test-scan-docker-image:
+    permissions:
+      contents: write
+      issues: read
+      checks: write
+      pull-requests: write
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     name: Test Scan Docker Image
     runs-on: ubuntu-22.04
