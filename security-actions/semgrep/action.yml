@@ -26,11 +26,21 @@ runs:
   using: 'composite'
   steps:
     # Step 1: Authenticate to ECR using reusable workflow
-    - name: Authenticate to ECR
-      uses: ./ecr-login
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
       with:
-        aws_region: us-east-1
-        role_arn: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
+        aws-region: us-east-1
+        role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+
+    # Step 2: Verify AWS Authentication
+    - name: Verify AWS Authentication
+      shell: bash
+      run: aws sts get-caller-identity
+
+    # Step 3: Login to Amazon ECR
+    - name: Login to Amazon ECR
+      uses: aws-actions/amazon-ecr-login@v2
 
     # Step 2: Pull the Docker Image
     - name: Pull Semgrep Image
@@ -46,7 +56,7 @@ runs:
         docker run --rm \
           -v ${{ github.workspace }}:/workspace \
           -w /workspace \
-          XXXXXXX3434.dkr.ecr.us-east-1.amazonaws.com/semgrep:1.96.0 \
+          992382581569.dkr.ecr.us-east-1.amazonaws.com/semgrep:1.96.0 \
           semgrep ci --config auto --sarif -o semgrep_${{ github.sha }}.sarif --no-autofix ${{ inputs.additional_config }}
 
     # Upload grype cve reports
