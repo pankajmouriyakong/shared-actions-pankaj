@@ -1,4 +1,6 @@
-name: ECR Login
+name:  ECR Login
+description: ECR Login
+author: 'Kong'
 on:
   workflow_call:
     inputs:
@@ -11,26 +13,26 @@ on:
         required: true
         type: string
 
-jobs:
-  ecr-login:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
 
-    steps:
-      # Step 1: Configure AWS Credentials
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: ${{ inputs.aws_region }}
-          role-to-assume: ${{ inputs.role_arn }}
-          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+permissions:
+  id-token: write
+  contents: read
 
-      # Step 2: Verify AWS Authentication
-      - name: Verify AWS Authentication
-        run: aws sts get-caller-identity
+runs:
+  using: 'composite'
+  steps:
+    # Step 1: Configure AWS Credentials
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: ${{ inputs.aws_region }}
+        role-to-assume: ${{ inputs.role_arn }}
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
 
-      # Step 3: Login to Amazon ECR
-      - name: Login to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v2
+    # Step 2: Verify AWS Authentication
+    - name: Verify AWS Authentication
+      run: aws sts get-caller-identity
+
+    # Step 3: Login to Amazon ECR
+    - name: Login to Amazon ECR
+      uses: aws-actions/amazon-ecr-login@v2
