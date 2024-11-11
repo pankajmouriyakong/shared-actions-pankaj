@@ -2,8 +2,8 @@ images:
   - name: trivy
     type: image
     source: docker.io
-    owner: aquasec32
-    repo: trivy1
+    owner: aquasec
+    repo: trivy
   - name: trivy-db
     type: oci
     source: public.ecr.aws
