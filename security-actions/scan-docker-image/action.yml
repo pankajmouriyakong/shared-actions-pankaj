@@ -345,6 +345,7 @@ runs:
         TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
         TRIVY_COMPLIANCE: docker-cis-1.6.0
 
+
     - name: upload docker-cis JSON report
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
       uses: actions/upload-artifact@v4
@@ -354,6 +355,7 @@ runs:
           ${{ steps.meta.outputs.cis_json_file }}
         if-no-files-found: warn
 
+
     - name: Inspect docker-cis report
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
       id: cis_json
@@ -362,7 +364,6 @@ runs:
         scan-type: 'image'
         image-ref: ${{ env.input }} ${{ steps.meta.outputs.scan_image }}
         format: 'table'
-        output: ${{ steps.meta.outputs.cis_json_file }}
         ignore-unfixed: true
         input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
         exit-code: ${{ (steps.meta.outputs.global_enforce_build_failure == 'true' || inputs.fail_build == 'true') && '1' || '0' }}
