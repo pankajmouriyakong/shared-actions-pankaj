@@ -1,4 +1,4 @@
-name: Multi-Registry Image Sync
+name: Multi-Registry Artifact Sync
 
 on:
   schedule:
@@ -39,7 +39,7 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y python3-pip
           pip3 install yq
-          chmod +x .github/scripts/sync_images.sh
+          chmod +x .github/scripts/sync_security_artifacts.sh
 
       - name: Install regctl
         uses: regclient/actions/regctl-installer@main
