@@ -27,7 +27,7 @@ runs:
   steps:
     # Step 1: Authenticate to ECR using reusable workflow
     - name: Authenticate to ECR
-      uses: ./security-actions/ecr-login
+      uses: ./ecr-login
       with:
       aws_region: us-east-1
       role_arn: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
