@@ -336,12 +336,12 @@ runs:
       uses: aquasecurity/trivy-action@0.28.0
       with:
         scan-type: 'image'
-        image-ref: ${{ env.input }} ${{ steps.meta.outputs.scan_image }}
+        image-ref: ${{ steps.meta.outputs.scan_image }}
         format: 'json'
         output: ${{ steps.meta.outputs.cis_json_file }}
         ignore-unfixed: true
-      env:
         input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
+      env:
         TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
         # TRIVY_SKIP_DB_UPDATE: true
         # TRIVY_SKIP_JAVA_DB_UPDATE: true
