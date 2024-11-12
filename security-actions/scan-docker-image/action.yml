@@ -341,7 +341,7 @@ runs:
         ignore-unfixed: true
         input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
       env:
-        TRIVY_DB_REPOSITORY: <DEFINE_AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
+        TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
         TRIVY_COMPLIANCE: docker-cis-1.6.0
 
 
@@ -366,5 +366,5 @@ runs:
         input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
         exit-code: ${{ (steps.meta.outputs.global_enforce_build_failure == 'true' || inputs.fail_build == 'true') && '1' || '0' }}
       env:
-        TRIVY_DB_REPOSITORY: <DEFINE_AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
+        TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
         TRIVY_COMPLIANCE: docker-cis-1.6.0
