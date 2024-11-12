@@ -92,7 +92,7 @@ runs:
       uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-region: us-east-1
-        role-to-assume: arn:aws:iam::<DEFINE_AWS_ACCOUNT_ID>:role/ecr-private-role-to-pull
+        role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
 
     - name: Sts GetCallerIdentity
