@@ -2,14 +2,16 @@
 
 set -euo pipefail
 
-ECR_URI="992382581569.dkr.ecr.us-east-1.amazonaws.com"
+echo "ACCOUNT_ID: $AWS_ACCOUND_ID"
+
+KONG_ECR_URI="$AWS_ACCOUND_ID.dkr.ecr.us-east-1.amazonaws.com"
 
 # Retrieve the account ID and region from the provided ECR URI
-ACCOUNT_ID=$(echo "$ECR_URI" | cut -d '.' -f 1)
-REGION=$(echo "$ECR_URI" | cut -d '.' -f 4)
+ACCOUNT_ID=$(echo "$KONG_ECR_URI" | cut -d '.' -f 1)
+REGION=$(echo "$KONG_ECR_URI" | cut -d '.' -f 4)
 
 # Construct the full repository URI for private ECR
-FULL_ECR_URI="$ECR_URI"
+FULL_KONG_ECR_URI="$KONG_ECR_URI"
 
 # Function to check if repository exists
 function check_repository_exists {
@@ -21,7 +23,7 @@ function check_repository_exists {
 }
 
 # Function to get the latest tag from upstream
-function get_latest_upstream_tag {
+function get_latest_image_tag_from_upstream {
   echo "Fetching available tags from the upstream registry for $repo..." >&2
 
   # Fetch all tags and select the latest (semantic or numeric)
@@ -39,14 +41,14 @@ function get_latest_upstream_tag {
 # Function to pull an image or OCI artifact using regctl
 function pull_artifact {
   echo "Pulling $type from $source with regctl..."
-  regctl image copy "$source/$owner/$repo:$tag" "$FULL_ECR_URI/$REPOSITORY:$tag"
+  regctl image copy "$source/$owner/$repo:$tag" "$FULL_KONG_ECR_URI/$REPOSITORY:$tag"
 }
 
 # Main script
-CONFIG_FILE=".github/imageList.yml"
-IMAGES=$(yq -r '.images[] | "\(.name)|\(.type)|\(.source)|\(.owner)|\(.repo)"' "$CONFIG_FILE")
+SECURITY_ARTIFACTS_CONFIG_FILE=".github/artifactsList.yml"
+ARTIFACTS=$(yq -r '.assets[] | "\(.name)|\(.type)|\(.source)|\(.owner)|\(.repo)"' "$SECURITY_ARTIFACTS_CONFIG_FILE")
 
-echo "$IMAGES" | while IFS="|" read -r name type source owner repo; do
+echo "$ARTIFACTS" | while IFS="|" read -r name type source owner repo; do
   REPOSITORY="$name"
   echo "Repo name is = $REPOSITORY"
 
@@ -56,7 +58,7 @@ echo "$IMAGES" | while IFS="|" read -r name type source owner repo; do
 
   # Get the latest upstream tag
   echo "Get the latest upstream tag, function run get_latest_upstream_tag"
-  tag=$(get_latest_upstream_tag)
+  tag=$(get_latest_image_tag_from_upstream)
 
   # Pull and push the latest tag to ECR, overwriting if it already exists
   echo "Pulling and pushing the latest tag: $tag for $name"

@@ -14,7 +14,7 @@ on:
 jobs:
   test-scan-docker-image:
     permissions:
-      contents: write # publish sbom to GH releases/tag assets
+      contents: write
       issues: read
       checks: write
       pull-requests: write
