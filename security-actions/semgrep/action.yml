@@ -12,53 +12,26 @@ inputs:
     default: true
     type: choice
     options:
-    - 'true'
-    - 'false'
+      - 'true'
+      - 'false'
   fail_on_findings:
     description: 'Fail build / job on semgrep findings/errors'
     required: false
     default: false
     type: choice
     options:
-    - 'true'
-    - 'false'
-
+      - 'true'
+      - 'false'
 runs:
   using: 'composite'
   steps:
-    # Step 1: Authenticate to ECR using reusable workflow
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-region: us-east-1
-        role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
-        role-session-name: GitHub_to_AWS_via_FederatedOIDC
-
-    # Step 2: Verify AWS Authentication
-    - name: Verify AWS Authentication
-      shell: bash
-      run: aws sts get-caller-identity
-
-    # Step 3: Login to Amazon ECR
-    - name: Login to Amazon ECR
-      uses: aws-actions/amazon-ecr-login@v2
-
-    # Step 2: Pull the Docker Image
-    - name: Pull Semgrep Image
-      shell: bash
-      run: |
-        docker pull 992382581569.dkr.ecr.us-east-1.amazonaws.com/semgrep:1.96.0
 
     - name: SAST Scan
+      uses: docker://returntocorp/semgrep:1.86.0
       id: semgrep
       continue-on-error: true
-      shell: bash
-      run: |
-        docker run --rm \
-          -v ${{ github.workspace }}:/workspace \
-          -w /workspace \
-          992382581569.dkr.ecr.us-east-1.amazonaws.com/semgrep:1.96.0 \
-          semgrep ci --config auto --sarif -o semgrep_${{ github.sha }}.sarif --no-autofix ${{ inputs.additional_config }}
+      with:
+        args: "semgrep ci --config auto --sarif -o semgrep_${{github.sha}}.sarif --no-autofix ${{ inputs.additional_config }}"
 
     # Upload grype cve reports
     - name: Upload Semgrep SARIF to Workflow
@@ -79,7 +52,7 @@ runs:
         # Optional category for the results
         # Used to differentiate multiple results for one commit
         category: sast_semgrep
-    
+
     - name: Fail on findings
       if: ${{ always() && inputs.fail_on_findings == 'true' && steps.semgrep.outcome == 'failure' }}
       shell: bash

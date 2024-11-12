@@ -4,14 +4,14 @@ set -euo pipefail
 
 echo "ACCOUNT_ID: $AWS_ACCOUND_ID"
 
-SECURITY_ECR_URI="$AWS_ACCOUND_ID.dkr.ecr.us-east-1.amazonaws.com"
+KONG_ECR_URI="$AWS_ACCOUND_ID.dkr.ecr.us-east-1.amazonaws.com"
 
 # Retrieve the account ID and region from the provided ECR URI
-ACCOUNT_ID=$(echo "$SECURITY_ECR_URI" | cut -d '.' -f 1)
-REGION=$(echo "$SECURITY_ECR_URI" | cut -d '.' -f 4)
+ACCOUNT_ID=$(echo "$KONG_ECR_URI" | cut -d '.' -f 1)
+REGION=$(echo "$KONG_ECR_URI" | cut -d '.' -f 4)
 
 # Construct the full repository URI for private ECR
-FULL_SECURITY_ECR_URI="$SECURITY_ECR_URI"
+FULL_KONG_ECR_URI="$KONG_ECR_URI"
 
 # Function to check if repository exists
 function check_repository_exists {
@@ -41,12 +41,12 @@ function get_latest_image_tag_from_upstream {
 # Function to pull an image or OCI artifact using regctl
 function pull_artifact {
   echo "Pulling $type from $source with regctl..."
-  regctl image copy "$source/$owner/$repo:$tag" "$FULL_SECURITY_ECR_URI/$REPOSITORY:$tag"
+  regctl image copy "$source/$owner/$repo:$tag" "$FULL_KONG_ECR_URI/$REPOSITORY:$tag"
 }
 
 # Main script
 SECURITY_ARTIFACTS_CONFIG_FILE=".github/artifactsList.yml"
-ARTIFACTS=$(yq -r '.images[] | "\(.name)|\(.type)|\(.source)|\(.owner)|\(.repo)"' "$SECURITY_ARTIFACTS_CONFIG_FILE")
+ARTIFACTS=$(yq -r '.assets[] | "\(.name)|\(.type)|\(.source)|\(.owner)|\(.repo)"' "$SECURITY_ARTIFACTS_CONFIG_FILE")
 
 echo "$ARTIFACTS" | while IFS="|" read -r name type source owner repo; do
   REPOSITORY="$name"

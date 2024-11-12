@@ -85,7 +85,6 @@ outputs:
     description: 'SBOM cyclonedx report'
     value: ${{ steps.meta.outputs.sbom_cyclonedx_file }}
 
-
 runs:
   using: composite
   steps:
@@ -93,7 +92,7 @@ runs:
       uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-region: us-east-1
-        role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
+        role-to-assume: arn:aws:iam::<DEFINE_AWS_ACCOUNT_ID>:role/ecr-private-role-to-pull
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
 
     - name: Sts GetCallerIdentity
@@ -342,7 +341,7 @@ runs:
         ignore-unfixed: true
         input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
       env:
-        TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
+        TRIVY_DB_REPOSITORY: <DEFINE_AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
         TRIVY_COMPLIANCE: docker-cis-1.6.0
 
 
@@ -367,5 +366,5 @@ runs:
         input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
         exit-code: ${{ (steps.meta.outputs.global_enforce_build_failure == 'true' || inputs.fail_build == 'true') && '1' || '0' }}
       env:
-        TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
+        TRIVY_DB_REPOSITORY: <DEFINE_AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
         TRIVY_COMPLIANCE: docker-cis-1.6.0
