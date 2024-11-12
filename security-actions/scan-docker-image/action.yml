@@ -348,8 +348,7 @@ runs:
 #      env:
 #        TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
 #        TRIVY_COMPLIANCE: docker-cis-1.6.0
-      image: 'Dockerfile'
-      entrypoint: ["trivy"]
+      uses: ./dockerfiles-actions
       args:
         - image
         - ${{ env.input }}
