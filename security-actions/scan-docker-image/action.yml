@@ -330,6 +330,7 @@ runs:
 #        input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
 
     - name: Pull Trivy Docker Image
+      shell: bash
       run: |
         docker pull 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy:0.57.0
 
@@ -347,7 +348,6 @@ runs:
 #      env:
 #        TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
 #        TRIVY_COMPLIANCE: docker-cis-1.6.0
-      using: 'docker'
       image: 'Dockerfile'
       args:
         - image
