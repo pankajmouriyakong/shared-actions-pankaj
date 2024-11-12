@@ -112,24 +112,6 @@ runs:
         TAG: ${{ inputs.tag }}
         ASSET_PREFIX: ${{ inputs.asset_prefix }}
       run: $GITHUB_ACTION_PATH/scripts/scan-metadata.sh
-
-    - name: Configure AWS Credentials
-      id: creds
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-       aws-region: us-east-1
-       role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role
-       output-credentials: true
-       unset-current-credentials: true
-      
-    - name: get caller identity
-      shell: bash
-      run: |
-        aws sts get-caller-identity
-        echo ${{ steps.creds.outputs.aws-access-key-id }}
-        echo ${{ steps.creds.outputs.aws-secret-access-key }}
-        echo ${{ steps.creds.outputs.aws-session-token }}
-        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 992382581569.dkr.ecr.us-east-1.amazonaws.com
       
     # Must upload artifact for output file parameter to have effect
     - name: Generate SPDX SBOM Using Syft
@@ -347,20 +329,37 @@ runs:
 #        compliance: docker-cis-1.6.0
 #        input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
 
+    - name: Pull Trivy Docker Image
+      run: |
+        docker pull 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy:0.57.0
+
     - name: Run Trivy vulnerability scanner
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
       id: cis_json
-      uses: aquasecurity/trivy-action@0.28.0
-      with:
-        scan-type: 'image'
-        image-ref: ${{ steps.meta.outputs.scan_image }}
-        format: 'json'
-        output: ${{ steps.meta.outputs.cis_json_file }}
-        ignore-unfixed: true
-        input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
-      env:
-        TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
-        TRIVY_COMPLIANCE: docker-cis-1.6.0
+#      uses: aquasecurity/trivy-action@0.28.0
+#      with:
+#        scan-type: 'image'
+#        image-ref: ${{ steps.meta.outputs.scan_image }}
+#        format: 'json'
+#        output: ${{ steps.meta.outputs.cis_json_file }}
+#        ignore-unfixed: true
+#        input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
+#      env:
+#        TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
+#        TRIVY_COMPLIANCE: docker-cis-1.6.0
+      using: 'docker'
+      image: 'Dockerfile'
+      args:
+        - image
+        - ${{ env.input }}
+        - ${{ steps.meta.outputs.scan_image }}
+        - --compliance
+        - docker-cis-1.6.0
+        - -f
+        - json
+        - --ignore-unfixed
+        - -o
+        - ${{ steps.meta.outputs.cis_json_file }}
 
 
     - name: upload docker-cis JSON report
