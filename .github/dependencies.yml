@@ -1,29 +1,15 @@
 ---
 assets:
   - name: trivy
-    tag: 0.57.0
+    tag: 0.56.2
     build-args:
-      TRIVY_BASE_IMAGE: docker.io/aquasec/trivy
-      TRIVY_BASE_TAG: 0.57.0
-      TRIVY_BASE_REPO: trivy
-      TRIVY_BASE_OWENER: aquasec
-      TRIVY_BASE_REGISTRY: docker.io
-      TRIVY_DB_IMAGE: public.ecr.aws/aquasecurity/trivy-db
-      TRIVY_DB_REGISTRY: public.ecr.aws
-      TRIVY_DB_OWNER: aquasecurity
-      TRIVY_DB_REPO: trivy-db
-      TRIVY_DB_TAG: 2
-
-# assets:
-#   - name: "asset1"
-#     build-args:
-#       ARG1: "value1"
-#       ARG2: "value2"
-#   - name: "asset2"
-#     build-args:
-#       ARG1: "value3"
-#       ARG2: "value4"
-#   - name: "asset3"
-#     build-args:
-#       ARG1: "value5"
-#       ARG2: "value6"
+    - TRIVY_BASE_IMAGE: docker.io/aquasec/trivy
+    - TRIVY_BASE_TAG: 0.56.2
+    - TRIVY_BASE_REPO: trivy
+    - TRIVY_BASE_OWENER: aquasec
+    - TRIVY_BASE_REGISTRY: docker.io
+    - TRIVY_DB_IMAGE: public.ecr.aws/aquasecurity/trivy-db
+    - TRIVY_DB_REGISTRY: public.ecr.aws
+    - TRIVY_DB_OWNER: aquasecurity
+    - TRIVY_DB_REPO: trivy-db
+    - TRIVY_DB_TAG: 2
