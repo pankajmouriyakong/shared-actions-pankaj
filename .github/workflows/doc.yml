@@ -30,7 +30,4 @@ jobs:
         uses: ./security-actions/dockerfiles-actions
         with:
           args: |
-            - image
-            - aquasec/trivy:latest
-            - -f
-            - json
+            - image aquasec/trivy:latest -f json
