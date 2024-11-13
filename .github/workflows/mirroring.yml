@@ -1,0 +1,112 @@
+repo: SCA Docker Test
+
+on:
+  pull_request:
+    branches:
+    - main
+  push:
+    branches:
+    - main
+    tags:
+    - '*'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  discussions: read
+  issues: read
+  pull-requests: read
+
+env:
+  AWS_ACCOUND_ID: ${{ secrets.AWS_ACCOUND_ID }}
+  #KONG_ECR_URI: ${{ secrets.AWS_ACCOUND_ID }}.dkr.ecr.us-east-1.amazonaws.com
+  REGION: us-east-1
+
+jobs:
+  metadata:
+    name: Metadata
+    id: metadata
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.config.outputs.matrix }}
+    steps:
+    - uses: actions/checkout@v3
+    - repo: Construct tooling matrix
+      id: config
+      run: |
+        matrix_file=".github/dependencies.yml"
+        echo "matrix=$(yq -I=0 -o=json $matrix_file)" >> $GITHUB_OUTPUT
+
+        # assets=$(yq -I=0 -o=json '.assets' .github/dependencies.yml | jq -c '.[]')
+        # echo "Assets: $assets"
+        # echo "assets=$(echo $assets | jq -c -s '. | map({name: .name, build_args: .build-args})')" >> $GITHUB_OUTPUT
+  
+  # TODO: Enhance this job to run per asset frequency schedule
+  build-publish-assets:
+    needs: metadata
+    name: Build Asset - ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        asset: ${{fromJson(needs.metadata.outputs.assets)}}
+    if: ${{ github.repository_owner == "Kong" && (github.event_repo == 'schedule' || github.event_repo == 'workflow_dispatch') }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: us-east-1
+        role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+
+    - name: Sts GetCallerIdentity
+      shell: bash
+      run: |
+        aws sts get-caller-identity
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - repo: Docker meta
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.KONG_ECR_REGISTRY }}
+        sep-tags: ","
+        tags: |
+          type=raw,${{ matrix.tag }}
+        env:
+          KONG_ECR_REGISTRY: ${{ secrets.AWS_ACCOUND_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com
+    
+    # - repo: Set Docker build args
+    #   id: docker_build_args
+    #   run: |
+    #     platforms="${{ matrix.docker-platforms }}"
+    #     if [[ -z "$platforms" ]]; then
+    #       platforms="linux/amd64"
+    #     fi
+    #     echo "platforms=$platforms" >> $GITHUB_OUTPUT
+
+    - repo: Build Docker Image
+      uses: docker/build-push-action@v5
+      id: image
+      with:
+        file: security-actions/dockerfiles/${{ matrix.name }}.Dockerfile
+        context: .
+        push: true
+        pull: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        # platforms: ${{ steps.docker_build_args.outputs.platforms }}
+        build-args: ${{fromJson(matrix.build-args)}}
+
+        # these 2 options are needed so that the MediaType of the manifest is
+        # OCI-compliant for other downstream integrations
+        # see also:
+        #   - https://github.com/docker/buildx/issues/1507
+        #   - https://github.com/docker/buildx/issues/1509#issuecomment-1378538197
+        provenance: false
+        outputs: type=image,oci-mediatypes=true
+
