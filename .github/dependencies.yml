@@ -1,10 +1,10 @@
 ---
 assets:
   - name: trivy
-    tag: 0.56.2
+    tag: 0.57.0
     build-args:
       - TRIVY_BASE_IMAGE: docker.io/aquasec/trivy
-      - TRIVY_BASE_TAG: 0.56.2
+      - TRIVY_BASE_TAG: 0.57.0
       - TRIVY_BASE_REPO: trivy
       - TRIVY_BASE_OWENER: aquasec
       - TRIVY_BASE_REGISTRY: docker.io
