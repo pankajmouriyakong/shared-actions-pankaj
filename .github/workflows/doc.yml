@@ -1,0 +1,18 @@
+name: Android CI
+on:
+  pull_request: {}
+  push:
+    branches:
+      - experiment-dockerfile
+  workflow_dispatch: {}
+
+jobs:
+  trivy-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: "Testing Dockerfile"
+        uses: ./security-actions/dockerfiles-actions
+        with:
+          args: |
+            image --help
