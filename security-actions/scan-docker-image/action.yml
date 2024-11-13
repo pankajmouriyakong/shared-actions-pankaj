@@ -353,7 +353,7 @@ runs:
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
       id: cis_json
       shell: bash
-      uses: ./security-actions/dockerfiles-actions
+      uses: ./dockerfiles-actions
       with:
         args: |
           image --help
