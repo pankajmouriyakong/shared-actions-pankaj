@@ -41,7 +41,7 @@ jobs:
       fail-fast: false
       matrix:
         #include: "${{ fromJSON(needs.metadata.outputs.matrix)['assets'] }}"
-        asset: ${{ fromJson(needs.metadata.outputs.assets) }}
+        asset: ${{ fromJson(needs.metadata.outputs.assets['']) }}
         
     if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
     steps:
