@@ -29,6 +29,6 @@ jobs:
       - name: "Testing Dockerfile"
         uses: ./security-actions/dockerfiles-actions
         with:
-          - args:
-            - image python:3.4-alpine
-            - --debug
+          args:
+            - image
+            - python:3.4-alpine
