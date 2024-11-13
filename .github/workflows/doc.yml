@@ -32,7 +32,5 @@ jobs:
           args: |
             - image
             - aquasec/trivy:latest
-            - --compliance
-            - docker-cis-1.6.0
             - -f
             - json
