@@ -353,11 +353,11 @@ runs:
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
       id: cis_json
       shell: bash
-      uses: dockerfiles-actions
+      uses: ./security-actions/dockerfiles-actions
       with:
         args: |
           image --help
-#      args:
+##      args:
 #        - image
 #        - ${{ env.input }}
 #        - ${{ steps.meta.outputs.scan_image }}
@@ -368,6 +368,12 @@ runs:
 #        - --ignore-unfixed
 #        - -o
 #        - ${{ steps.meta.outputs.cis_json_file }}
+
+
+#    - name: Run Trivy vulnerability scanner
+#      if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
+#      id: cis_json
+
 
 
     - name: upload docker-cis JSON report
