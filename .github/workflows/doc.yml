@@ -30,5 +30,4 @@ jobs:
         uses: ./security-actions/dockerfiles-actions
         with:
           args: |
-            - image
-            - python:3.4-alpine
+            image python:3.4-alpine
