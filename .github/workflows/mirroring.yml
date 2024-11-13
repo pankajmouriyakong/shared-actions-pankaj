@@ -91,7 +91,8 @@ jobs:
         # platforms: ${{ steps.docker_build_args.outputs.platforms }}
         # build-args: |
         #   ${{fromJson(matrix.build-args)}}
-        build-args: "${{ toJson(matrix.build-args) }}"
+        build-args: ${{ matrix.build-args }}
+        #build-args: "${{ toJson(matrix.build-args) }}"
 
         # these 2 options are needed so that the MediaType of the manifest is
         # OCI-compliant for other downstream integrations
