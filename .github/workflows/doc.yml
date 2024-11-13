@@ -30,4 +30,4 @@ jobs:
         uses: ./security-actions/dockerfiles-actions
         with:
           args: |
-            image python:3.4-alpine
+            image python:3.4-alpine --db-repository  992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2 --debug
