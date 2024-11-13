@@ -1,0 +1,33 @@
+name: Android CI
+on:
+  pull_request: {}
+  workflow_dispatch: {}
+
+permissions:
+  id-token: write
+
+jobs:
+  trivy-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/ecr-private-role
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+
+      - name: Sts GetCallerIdentity
+        run: |
+          aws sts get-caller-identity
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: "Testing Dockerfile"
+        uses: ./security-actions/dockerfiles-actions
+        with:
+          args: |
+            image python:3.4-alpine --db-repository  992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2 --debug
