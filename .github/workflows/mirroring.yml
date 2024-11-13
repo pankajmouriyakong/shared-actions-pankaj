@@ -93,7 +93,7 @@ jobs:
       id: format_build_args
       run: |
         # Split the build_args into multi-line format
-        formatted_args=$(echo "${{ matrix.asset.build_args }}" | sed 's/ /\'$'\n/g' | sed 's/^/  /')
+        formatted_args=$(echo "${{ matrix.asset.build_args }}" | tr ' ' '\n' | sed '/^$/d' | sed 's/^/  /')
         echo "formatted_args=$formatted_args"
         echo "formatted_args=$formatted_args" >> $GITHUB_OUTPUT
 
