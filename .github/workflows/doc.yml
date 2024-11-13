@@ -30,4 +30,9 @@ jobs:
         uses: ./security-actions/dockerfiles-actions
         with:
           args: |
-            image --help
+            - image
+            - aquasec/trivy:latest
+            - --compliance
+            - docker-cis-1.6.0
+            - -f
+            - json
