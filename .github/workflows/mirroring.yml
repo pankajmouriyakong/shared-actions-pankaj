@@ -30,14 +30,14 @@ jobs:
         ASSETS_JSON=$(yq eval -o=json '.assets' $matrix_file | jq -c 'map({
           name: .name,
           tag: .tag,
-          build-args: (
-            .["build-args"] |
+          build_args: (
+            .["build_args"] |
             map(to_entries | map("--build-arg \(.key)=\(.value)") | join(" ")) | 
             join(" ")            
           )
         })')
         echo "ASSETS_JSON=$ASSETS_JSON"
-        MATRIX_JSON=$(echo "$ASSETS_JSON" | jq -rc '[.[] | {name: .name, tag: .tag, build-args: .build-args}]')
+        MATRIX_JSON=$(echo "$ASSETS_JSON" | jq -rc '[.[] | {name: .name, tag: .tag, build_args: .build_args}]')
         echo "MATRIX_JSON=$MATRIX_JSON"
         echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT 
   
@@ -115,7 +115,7 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         # platforms: ${{ steps.docker_build_args.outputs.platforms }}
         build-args: |
-          ${{ matrix.asset.build-args }}
+          ${{ matrix.asset.build_args }}
         # these 2 options are needed so that the MediaType of the manifest is
         # OCI-compliant for other downstream integrations
         # see also:
