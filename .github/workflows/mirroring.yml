@@ -1,4 +1,4 @@
-name: SCA Docker Test
+name: Mirroring
 
 on:
   pull_request:
@@ -48,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        asset: ${{fromJson(needs.metadata.outputs.assets)}}
+        include: "${{ fromJSON(needs.metadata.outputs.matrix)['assets'] }}"
     if: ${{ github.repository_owner == 'Kong' && (github.event_repo == 'schedule' || github.event_repo == 'workflow_dispatch') }}
     steps:
     - uses: actions/checkout@v4
