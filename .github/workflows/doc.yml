@@ -30,4 +30,5 @@ jobs:
         uses: ./security-actions/dockerfiles-actions
         with:
           args: |
-            - image aquasec/trivy:latest 
+            - image python:3.4-alpine
+            - --debug
