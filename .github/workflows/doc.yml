@@ -6,6 +6,9 @@ on:
       - experiment-dockerfile
   workflow_dispatch: {}
 
+permissions:
+  id-token: write
+  
 jobs:
   trivy-ci:
     runs-on: ubuntu-latest
@@ -25,7 +28,7 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-        
+
       - name: "Testing Dockerfile"
         uses: ./security-actions/dockerfiles-actions
         with:
