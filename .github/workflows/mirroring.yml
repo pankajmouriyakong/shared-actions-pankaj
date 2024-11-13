@@ -41,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        asset: ${{ fromJSON(needs.generate-matrix.outputs.matrix) }}
+        asset: ${{ fromJSON(needs.metadata.outputs.matrix) }}
     if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
     steps:
     - uses: actions/checkout@v4
