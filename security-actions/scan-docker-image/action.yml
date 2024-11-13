@@ -334,9 +334,9 @@ runs:
       run: |
         docker pull 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy:0.57.0
 
-    - name: Run Trivy vulnerability scanner
-      if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
-      id: cis_json
+#    - name: Run Trivy vulnerability scanner
+#      if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
+#      id: cis_json
 #      uses: aquasecurity/trivy-action@0.28.0
 #      with:
 #        scan-type: 'image'
@@ -352,6 +352,7 @@ runs:
     - name: Run Trivy vulnerability scanner
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
       id: cis_json
+      shell: bash
       uses: ./security-actions/dockerfiles-actions
       with:
         args: |
