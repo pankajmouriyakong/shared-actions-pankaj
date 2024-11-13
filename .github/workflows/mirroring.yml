@@ -27,7 +27,7 @@ jobs:
       id: config
       run: |
         matrix_file=".github/dependencies.yml"
-        echo "assets=$(yq e -I=0 -o=json $matrix_file)" >> $GITHUB_OUTPUT
+        echo "matrix=$(yq e -I=0 -o=json $matrix_file)" >> $GITHUB_OUTPUT
       
         # assets_json=$(cat .github/dependencies.yml | yq eval -I=0 -o=json '.assets')
         # echo "assets=$assets_json" >> $GITHUB_OUTPUT
@@ -41,7 +41,7 @@ jobs:
       fail-fast: false
       matrix:
         #include: "${{ fromJSON(needs.metadata.outputs.matrix)['assets'] }}"
-        asset: ${{ fromJson(needs.metadata.outputs.assets['assets']) }}
+        asset: ${{ fromJson((needs.metadata.outputs.matrix)['assets']) }}
         
     if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
     steps:
