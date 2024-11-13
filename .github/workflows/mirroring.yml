@@ -37,6 +37,10 @@ jobs:
         matrix_file=".github/dependencies.yml"
         echo "matrix=$(yq -I=0 -o=json $matrix_file)" >> $GITHUB_OUTPUT
 
+        ASSETS=$(yq -I=0 -o=json '.assets' .github/dependencies.yml | jq -c '.[]')
+        echo "Assets: $ASSETS"
+        echo "assets=$(echo $ASSETS | jq -c -s '. | map({name: .name, build_args: .build-args})')" >> $GITHUB_OUTPUT
+
         # assets=$(yq -I=0 -o=json '.assets' .github/dependencies.yml | jq -c '.[]')
         # echo "Assets: $assets"
         # echo "assets=$(echo $assets | jq -c -s '. | map({name: .name, build_args: .build-args})')" >> $GITHUB_OUTPUT
@@ -49,7 +53,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include: "${{ fromJSON(needs.metadata.outputs.matrix)['assets'] }}"
+        #include: "${{ fromJSON(needs.metadata.outputs.matrix)['assets'] }}"
+        assets: ${{fromJson(needs.metadata.outputs.assets)}}
+        
     if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
     steps:
     - uses: actions/checkout@v4
@@ -77,7 +83,7 @@ jobs:
         images: ${{ env.KONG_ECR_REGISTRY }}
         sep-tags: ","
         tags: |
-          type=raw,${{ matrix.tag }}
+          type=raw,${{ matrix.asset.tag }}
       env:
         KONG_ECR_REGISTRY: 992382581569.dkr.ecr.${{ env.REGION }}.amazonaws.com
     
@@ -94,15 +100,16 @@ jobs:
       uses: docker/build-push-action@v5
       id: image
       with:
-        file: security-actions/dockerfiles/${{ matrix.name }}.Dockerfile
+        file: security-actions/dockerfiles/${{ matrix.asset.name }}.Dockerfile
         context: .
         push: true
         pull: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         # platforms: ${{ steps.docker_build_args.outputs.platforms }}
-        build-args: | 
-          ${{fromJson(matrix.build-args)}}
+        # build-args: |
+        #   ${{fromJson(matrix.build-args)}}
+        build-args: ${{ toJson(matrix.asset.build_args) }}
 
         # these 2 options are needed so that the MediaType of the manifest is
         # OCI-compliant for other downstream integrations
