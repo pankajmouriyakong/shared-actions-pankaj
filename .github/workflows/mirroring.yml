@@ -27,9 +27,17 @@ jobs:
       id: config
       run: |
         matrix_file=".github/dependencies.yml"
-        ASSETS_JSON=$(yq e -o=json  '.assets | map({"name": .name, "tag": .tag, "build_args": .["build-args"]})' $matrix_file)
+        ASSETS_JSON=$(yq eval -o=json '.assets' $matrix_file | jq -c 'map({
+            name: .name,
+            tag: .tag,
+            build_args: (
+              .["build-args"] |
+              map(to_entries | map("--build-arg \(.key)=\(.value)") | join(" ")) | 
+              join(" ")            
+            )
+          })')
         echo "ASSETS_JSON=$ASSETS_JSON"
-        MATRIX_JSON=$(echo "$ASSETS_JSON" | jq -r '[.[] | {name: .name, tag: .tag, build_args: (.build_args | map(to_entries | map("\(.key)=\(.value)") | join(" ")) | join(" "))}]')
+        MATRIX_JSON=$(echo "$ASSETS_JSON" | jq -r '[.[] | {name: .name, tag: .tag, build_args: .build_args}]')
         echo "MATRIX_JSON=$MATRIX_JSON"
         echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT 
   
