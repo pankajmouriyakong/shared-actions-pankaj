@@ -16,6 +16,7 @@ permissions:
   discussions: read
   issues: read
   pull-requests: read
+  id-token: write
 
 env:
   AWS_ACCOUND_ID: ${{ secrets.AWS_ACCOUND_ID }}
