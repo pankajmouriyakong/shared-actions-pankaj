@@ -37,7 +37,7 @@ jobs:
             )
           })')
         echo "ASSETS_JSON=$ASSETS_JSON"
-        MATRIX_JSON=$(echo "$ASSETS_JSON" | jq -r '[.[] | {name: .name, tag: .tag, build_args: .build_args}]')
+        MATRIX_JSON=$(echo "$ASSETS_JSON" | jq -rc '[.[] | {name: .name, tag: .tag, build_args: .build_args}]')
         echo "MATRIX_JSON=$MATRIX_JSON"
         echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT 
   
