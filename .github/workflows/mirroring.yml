@@ -27,10 +27,10 @@ jobs:
       id: config
       run: |
         matrix_file=".github/dependencies.yml"
-        echo "matrix=$(yq -I=0 -o=json $matrix_file)" >> $GITHUB_OUTPUT
+        echo "assets=$(yq e -I=0 -o=json '.assets' $matrix_file)" >> $GITHUB_OUTPUT
       
-        assets_json=$(cat .github/dependencies.yml | yq eval -I=0 -o=json '.assets')
-        echo "assets=$assets_json" >> $GITHUB_OUTPUT
+        # assets_json=$(cat .github/dependencies.yml | yq eval -I=0 -o=json '.assets')
+        # echo "assets=$assets_json" >> $GITHUB_OUTPUT
   
   # TODO: Enhance this job to run per asset frequency schedule
   build-publish-assets:
@@ -41,7 +41,7 @@ jobs:
       fail-fast: false
       matrix:
         #include: "${{ fromJSON(needs.metadata.outputs.matrix)['assets'] }}"
-        asset: ${{ fromJson(needs.docker-build-push.outputs.assets) }}
+        asset: ${{ fromJson(needs.metadata.outputs.assets) }}
         
     if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
     steps:
