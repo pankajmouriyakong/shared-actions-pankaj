@@ -91,7 +91,7 @@ jobs:
         tags: |
           type=raw,${{ matrix.asset.tag }}
       env:
-        KONG_ECR_REGISTRY: 992382581569.dkr.ecr.${{ env.REGION }}.amazonaws.com
+        KONG_ECR_REGISTRY: 992382581569.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ matrix.asset.name }}
 
     - name: Set Docker build args
       id: format_build_args
