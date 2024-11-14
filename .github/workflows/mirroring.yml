@@ -66,7 +66,7 @@ jobs:
       run: |
           build_args="${{ join(toJson(matrix.asset.build_args), ' ') }}"
           echo "Build args: $build_args"
-
+          echo "build_args=$build_args" >> $GITHUB_OUTPUT
 
     # - name: Configure AWS Credentials
     #   uses: aws-actions/configure-aws-credentials@v4
@@ -101,23 +101,24 @@ jobs:
     #  echo "${{ matrix.asset.build_args }}"
        
 
-    # - name: Build Docker Image
-    #   uses: docker/build-push-action@v5
-    #   id: image
-    #   with:
-    #     file: security-actions/dockerfiles/${{ matrix.asset.name }}.Dockerfile
-    #     context: .
-    #     push: true
-    #     pull: true
-    #     tags: ${{ steps.meta.outputs.tags }}
-    #     labels: ${{ steps.meta.outputs.labels }}
-    #     # platforms: ${{ steps.docker_build_args.outputs.platforms }}
-    #     build-args: ${{ fromJson(join(matrix.asset.build_args, ' ')) }}
-    #     # these 2 options are needed so that the MediaType of the manifest is
-    #     # OCI-compliant for other downstream integrations
-    #     # see also:
-    #     #   - https://github.com/docker/buildx/issues/1507
-    #     #   - https://github.com/docker/buildx/issues/1509#issuecomment-1378538197
-    #     provenance: false
-    #     outputs: type=image,oci-mediatypes=true
+    - name: Build Docker Image
+      uses: docker/build-push-action@v5
+      id: image
+      with:
+        file: security-actions/dockerfiles/${{ matrix.asset.name }}.Dockerfile
+        context: .
+        push: true
+        pull: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        # platforms: ${{ steps.docker_build_args.outputs.platforms }}
+        build-args: ${{ steps.format_build_args.outputs.build_args }}
+
+        # these 2 options are needed so that the MediaType of the manifest is
+        # OCI-compliant for other downstream integrations
+        # see also:
+        #   - https://github.com/docker/buildx/issues/1507
+        #   - https://github.com/docker/buildx/issues/1509#issuecomment-1378538197
+        provenance: false
+        outputs: type=image,oci-mediatypes=true
 
