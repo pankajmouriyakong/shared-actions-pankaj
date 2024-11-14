@@ -1,6 +1,9 @@
 name: Mirroring
 
 on:
+  push:
+    branches:
+      - 'main'
   workflow_dispatch: {}
 
 permissions:
@@ -14,6 +17,7 @@ env:
   AWS_ACCOUND_ID: 992382581569
   #KONG_ECR_URI: ${{ secrets.AWS_ACCOUND_ID }}.dkr.ecr.us-east-1.amazonaws.com
   REGION: us-east-1
+  ECR_REGISTRY: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com
 
 jobs:
   metadata:
@@ -58,7 +62,7 @@ jobs:
       fail-fast: false
       matrix:
         asset: ${{ fromJSON(needs.metadata.outputs.assets) }}
-    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
     steps:
     - uses: actions/checkout@v4
 
@@ -86,12 +90,12 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.KONG_ECR_REGISTRY }}
-        sep-tags: ","
+        images: ${{ env.ECR_REGISTRY }}/${{ matrix.asset.name }}
+#        sep-tags: ","
         tags: |
           type=raw,${{ matrix.asset.tag }}
-      env:
-        KONG_ECR_REGISTRY: 992382581569.dkr.ecr.${{ env.REGION }}.amazonaws.com
+#      env:
+#        KONG_ECR_REGISTRY: 992382581569.dkr.ecr.${{ env.REGION }}.amazonaws.com
 
     - name: Set Docker build args
       id: format_build_args
