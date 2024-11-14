@@ -20,26 +20,29 @@ jobs:
     name: Metadata
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.config.outputs.matrix }}
+      assets: ${{ steps.config.outputs.assets }}
     steps:
     - uses: actions/checkout@v3
     - name: Construct tooling matrix
       id: config
       run: |
         matrix_file=".github/dependencies.yml"
-        ASSETS_JSON=$(yq eval -o=json '.assets' $matrix_file | jq -c 'map({
-          name: .name,
-          tag: .tag,
-          build_args: (
-            .["build_args"] |
-            map(to_entries | map("\(.key)=\(.value)") | join(" ")) | 
-            join(" ")            
-          )
-        })')
-        echo "ASSETS_JSON=$ASSETS_JSON"
-        MATRIX_JSON=$(echo "$ASSETS_JSON" | jq -rc '[.[] | {name: .name, tag: .tag, build_args: .build_args}]')
-        echo "MATRIX_JSON=$MATRIX_JSON"
-        echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT 
+        assets=$(yq eval -o=json '.assets' $matrix_file)
+        echo "assets=${assets}" >> $GITHUB_OUTPUT
+
+        # ASSETS_JSON=$(yq eval -o=json '.assets' $matrix_file | jq -c 'map({
+        #   name: .name,
+        #   tag: .tag,
+        #   build_args: (
+        #     .["build_args"] |
+        #     map(to_entries | map("\(.key)=\(.value)") | join(" ")) | 
+        #     join(" ")            
+        #   )
+        # })')
+        # echo "ASSETS_JSON=$ASSETS_JSON"
+        # MATRIX_JSON=$(echo "$ASSETS_JSON" | jq -rc '[.[] | {name: .name, tag: .tag, build_args: .build_args}]')
+        # echo "MATRIX_JSON=$MATRIX_JSON"
+        # echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT 
   
   # TODO: Enhance this job to run per asset frequency schedule
   build-publish-assets:
@@ -53,7 +56,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        asset: ${{ fromJSON(needs.metadata.outputs.matrix) }}
+        asset: ${{ fromJSON(needs.metadata.outputs.assets) }}
     if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
     steps:
     - uses: actions/checkout@v4
@@ -92,10 +95,11 @@ jobs:
     - name: Set Docker build args
       id: format_build_args
       run: |
-        # Split the build_args into multi-line format
-        formatted_args=$(echo "${{ matrix.asset.build_args }}" | tr ' ' '\n' | sed '/^$/d' | sed 's/^/  /')
-        echo "formatted_args=$formatted_args"
-        echo "formatted_args=$formatted_args" >> $GITHUB_ENV
+        echo ${{matrix.asset.build_args}}
+        # # Split the build_args into multi-line format
+        # formatted_args=$(echo "${{ matrix.asset.build_args }}" | tr ' ' '\n' | sed '/^$/d' | sed 's/^/  /')
+        # echo "formatted_args=$formatted_args"
+        # echo "formatted_args=$formatted_args" >> $GITHUB_ENV
 
     - name: Build Docker Image
       uses: docker/build-push-action@v5
@@ -109,7 +113,7 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         # platforms: ${{ steps.docker_build_args.outputs.platforms }}
         build-args: |
-          ${{ env.formatted_args }}
+          ${{ matrix.asset.build_args }}
         # these 2 options are needed so that the MediaType of the manifest is
         # OCI-compliant for other downstream integrations
         # see also:

@@ -6,7 +6,7 @@ assets:
       - TRIVY_BASE_IMAGE: docker.io/aquasec/trivy
       - TRIVY_BASE_TAG: 0.57.0
       - TRIVY_BASE_REPO: trivy
-      - TRIVY_BASE_OWENER: aquasec
+      - TRIVY_BASE_OWNER: aquasec
       - TRIVY_BASE_REGISTRY: docker.io
       - TRIVY_DB_IMAGE: public.ecr.aws/aquasecurity/trivy-db
       - TRIVY_DB_REGISTRY: public.ecr.aws
