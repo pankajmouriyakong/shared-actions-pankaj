@@ -27,23 +27,22 @@ jobs:
       id: config
       run: |
         matrix_file=".github/dependencies.yml"
-        assets=$(yq eval -o=json '.assets' $matrix_file)
-        single_line_assets=$(echo "$assets" | tr -d '\n' | sed 's/  */ /g')
-        echo "assets=${single_line_assets}" >> $GITHUB_OUTPUT
-
-        # ASSETS_JSON=$(yq eval -o=json '.assets' $matrix_file | jq -c 'map({
-        #   name: .name,
-        #   tag: .tag,
-        #   build_args: (
-        #     .["build_args"] |
-        #     map(to_entries | map("\(.key)=\(.value)") | join(" ")) | 
-        #     join(" ")            
-        #   )
-        # })')
-        # echo "ASSETS_JSON=$ASSETS_JSON"
+        single_line_assets=$(echo "$assets" | jq -rc 'map({
+          name: .name,
+          tag: .tag,
+          build_args: (
+            .build_args | 
+            to_entries | 
+            map("\(.key)=\(.value)") | 
+            join(" ")
+          )
+        })')  
+        echo "ASSETS_JSON=$single_line_assets"
+        echo "assets=$single_line_assets" >> $GITHUB_OUTPUT 
+        
         # MATRIX_JSON=$(echo "$ASSETS_JSON" | jq -rc '[.[] | {name: .name, tag: .tag, build_args: .build_args}]')
         # echo "MATRIX_JSON=$MATRIX_JSON"
-        # echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT 
+       
   
   # TODO: Enhance this job to run per asset frequency schedule
   build-publish-assets:
@@ -64,16 +63,13 @@ jobs:
     - name: Set Docker build args
       id: format_build_args
       run: |
-          # Convert build_args to JSON string using toJson
-          build_args=""
-          for entry in $(echo "${{ matrix.asset.build_args }}" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"'); do
-            build_args+="$entry\n"
-          done
+          # Accessing the matrix asset to get build_args
+          build_args="${{ matrix.asset.build_args }}"
+
+          # Echo the build_args as Docker build-args (for debugging purposes)
+          echo "Build Args: $build_args"
           
-          # Debug: Print the constructed build_args
-          echo "Formatted build_args: $build_args"
-          
-          echo "build_args=$formatted_build_args" >> $GITHUB_OUTPUT
+          echo "build_args=$build_args" >> $GITHUB_OUTPUT
 
     # - name: Configure AWS Credentials
     #   uses: aws-actions/configure-aws-credentials@v4
