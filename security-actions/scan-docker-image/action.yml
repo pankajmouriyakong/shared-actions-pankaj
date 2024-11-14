@@ -352,7 +352,7 @@ runs:
     - name: Run Trivy vulnerability scanner (JSON)
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
       id: cis_json
-      uses: ./security-actions/test-docker
+      uses: ./security-actions/tools/trivy
       with:
         scan_image: ${{ steps.meta.outputs.scan_image }}
         compliance: docker-cis-1.6.0
@@ -414,7 +414,7 @@ runs:
 
 #    - name: Inspect docker-cis report
 #      if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
-#      uses: ./security-actions/test-docker
+#      uses: ./security-actions/tools
 #      with:
 #        scan_image: ${{ steps.meta.outputs.scan_image }}
 #        compliance: docker-cis-1.6.0
@@ -422,7 +422,7 @@ runs:
 
     - name: Inspect docker-cis report (Table)
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
-      uses: ./security-actions/test-docker
+      uses: ./security-actions/tools/trivy
       with:
         scan_image: ${{ steps.meta.outputs.scan_image }}
         compliance: docker-cis-1.6.0

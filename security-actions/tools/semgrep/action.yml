@@ -63,7 +63,7 @@ runs:
       with:
         entrypoint: trivy
         args:
-          image ${{ inputs.input_tar != '' && '--input ' || '' }}${{ inputs.input_tar != '' && inputs.input_tar || inputs.scan_image }}
+          image ${{ inputs.input_tar != '' && '--input ' || '' }}${{ inputs.input_tar != '' && inputs.input_tar || inputs.scan_image }} --debug
       env:
         TRIVY_FORMAT: ${{ inputs.output_format }}
         TRIVY_OUTPUT: ${{ inputs.output_file }}
