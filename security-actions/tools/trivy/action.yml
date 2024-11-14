@@ -40,7 +40,7 @@ inputs:
   skip_db_update:
     description: 'To skip DB update'
     required: true
-    default: false
+    default: true
     type: choice
     options:
       - 'true'
