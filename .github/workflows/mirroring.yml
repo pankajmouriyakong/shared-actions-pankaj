@@ -61,6 +61,38 @@ jobs:
     if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
     steps:
     - uses: actions/checkout@v4
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      id: creds
+      with:
+        aws-region: us-east-1
+        role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+
+    - name: Sts GetCallerIdentity
+      shell: bash
+      run: |
+        aws sts get-caller-identity
+
+    - name: Login to ECR
+      uses: docker/login-action@v3
+      with:
+        registry: 992382581569.dkr.ecr.us-east-1.amazonaws.com
+        username: ${{ steps.creds.outputs.aws-access-key-id }}
+        password: ${{ steps.creds.outputs.aws-secret-access-key }}
+
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.KONG_ECR_REGISTRY }}
+        sep-tags: ","
+        tags: |
+          type=raw,${{ matrix.asset.tag }}
+      env:
+        KONG_ECR_REGISTRY: 992382581569.dkr.ecr.${{ env.REGION }}.amazonaws.com
+
     - name: Set Docker build args
       id: format_build_args
       run: |
@@ -74,39 +106,6 @@ jobs:
           echo "build_args<<EOF" >> $GITHUB_ENV
           echo "$formatted_build_args" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-
-    # - name: Configure AWS Credentials
-    #   uses: aws-actions/configure-aws-credentials@v4
-    #   id: creds
-    #   with:
-    #     aws-region: us-east-1
-    #     role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
-    #     role-session-name: GitHub_to_AWS_via_FederatedOIDC
-
-    # - name: Sts GetCallerIdentity
-    #   shell: bash
-    #   run: |
-    #     aws sts get-caller-identity
-
-    # - name: Login to ECR
-    #   uses: docker/login-action@v3
-    #   with:
-    #     registry: 992382581569.dkr.ecr.us-east-1.amazonaws.com
-    #     username: ${{ steps.creds.outputs.aws-access-key-id }}
-    #     password: ${{ steps.creds.outputs.aws-secret-access-key }}
-
-    # - name: Docker meta
-    #   id: meta
-    #   uses: docker/metadata-action@v5
-    #   with:
-    #     images: ${{ env.KONG_ECR_REGISTRY }}
-    #     sep-tags: ","
-    #     tags: |
-    #       type=raw,${{ matrix.asset.tag }}
-    #   env:
-    #     KONG_ECR_REGISTRY: 992382581569.dkr.ecr.${{ env.REGION }}.amazonaws.com
-    #  echo "${{ matrix.asset.build_args }}"
-       
 
     - name: Build Docker Image
       uses: docker/build-push-action@v5
