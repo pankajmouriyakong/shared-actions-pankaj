@@ -27,6 +27,7 @@ jobs:
       id: config
       run: |
         matrix_file=".github/dependencies.yml"
+        assets=$(yq eval -o=json '.assets' $matrix_file)
         single_line_assets=$(echo "$assets" | jq -rc 'map({
           name: .name,
           tag: .tag,
