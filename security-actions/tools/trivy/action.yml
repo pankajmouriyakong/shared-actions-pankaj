@@ -1,6 +1,6 @@
 name: Trivy Docker Scan
 description: Scan a Docker image using Trivy from a private ECR repository
-author: 'ABC'
+author: 'KONG'
 
 inputs:
   scan_image:
@@ -37,14 +37,14 @@ inputs:
     description: 'Specify --input if using a tar file instead of an image reference'
     required: false
     default: ''
-#  skip_db_update:
-#    description: 'To skip DB update'
-#    required: true
-#    default: false
-#    type: choice
-#    options:
-#      - 'true'
-#      - 'false'
+  skip_db_update:
+    description: 'To skip DB update'
+    required: true
+    default: false
+    type: choice
+    options:
+      - 'true'
+      - 'false'
   skip_check_update:
     description: 'To skip IAC policies updates'
     required: true
@@ -70,6 +70,6 @@ runs:
         TRIVY_IGNORE_UNFIXED: ${{ inputs.ignore_unfixed }}
         TRIVY_COMPLIANCE: ${{ inputs.compliance }}
         TRIVY_EXIT_CODE: ${{ inputs.fail_build == 'true' && '1' || '0' }}
-#        TRIVY_SKIP_DB_UPDATE: ${{ inputs.skip_db_update }}
+        TRIVY_SKIP_DB_UPDATE: ${{ inputs.skip_db_update }}
         TRIVY_SKIP_CHECK_UPDATE: ${{ inputs.skip_check_update }}
 
