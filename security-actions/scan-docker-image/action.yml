@@ -378,6 +378,8 @@ runs:
         scan_image: ${{ steps.meta.outputs.scan_image }}
         compliance: docker-cis-1.6.0
         output_file: ${{ steps.meta.outputs.cis_json_file }}
+        entrypoint: trivy
+        args: "image --input ${{ inputs.scan_image }} --compliance ${{ inputs.compliance }} -f json --ignore-unfixed -o ${{ inputs.output_file }}"
 
 
     - name: upload docker-cis JSON report
