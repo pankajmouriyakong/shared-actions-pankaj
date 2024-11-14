@@ -89,12 +89,12 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.KONG_ECR_REGISTRY }}
+        images: ${{ env.KONG_ECR_REGISTRY }}/${{ matrix.asset.name }}
         sep-tags: ","
         tags: |
           type=raw,${{ matrix.asset.tag }}
       env:
-        KONG_ECR_REGISTRY: 992382581569.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ matrix.asset.name }}
+        KONG_ECR_REGISTRY: 992382581569.dkr.ecr.${{ env.REGION }}.amazonaws.com
 
     - name: Set Docker build args
       id: format_build_args
