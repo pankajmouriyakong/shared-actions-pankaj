@@ -89,7 +89,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.KONG_ECR_REGISTRY }}/${{ matrix.asset.name }}
+        images: ${{ env.KONG_ECR_REGISTRY }}/trivy
         sep-tags: ","
         tags: |
           type=raw,${{ matrix.asset.tag }}
