@@ -359,7 +359,7 @@ runs:
         output_format: json
         output_file: ${{ steps.meta.outputs.cis_json_file }}
         ignore_unfixed: 'true'
-        trivy_db_repository: '992382581569.dkr.ecr.us-east-1.amazonaws.com/custom-trivy-db:2'
+
 
 
 
@@ -429,5 +429,4 @@ runs:
         output_format: table
         fail_build: 'true'
         ignore_unfixed: 'true'
-        trivy_db_repository: '992382581569.dkr.ecr.us-east-1.amazonaws.com/custom-trivy-db:2'
 

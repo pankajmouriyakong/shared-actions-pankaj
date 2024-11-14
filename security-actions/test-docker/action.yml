@@ -59,6 +59,6 @@ runs:
       uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy:0.57.0
       with:
         entrypoint: trivy
-        args: >
-          image
-          ${{ inputs.input_tar != '' && '--input ' + inputs.input_tar || inputs.scan_image }}
+        args:
+          image ${{ inputs.input_tar != '' && '--input ' || '' }}${{ inputs.input_tar != '' && inputs.input_tar || inputs.scan_image }}
+
