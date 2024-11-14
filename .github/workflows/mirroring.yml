@@ -3,7 +3,7 @@ name: Mirroring
 on:
   push:
     branches:
-      - 'main'
+      - 'mirroring-poc-pankaj'
   workflow_dispatch:
 
 permissions:
