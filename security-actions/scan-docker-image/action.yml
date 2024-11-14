@@ -375,11 +375,12 @@ runs:
       id: cis_json
       uses: ./security-actions/test-docker
       with:
-        scan_image: ${{ steps.meta.outputs.scan_image }}
-        compliance: docker-cis-1.6.0
-        output_file: ${{ steps.meta.outputs.cis_json_file }}
-        entrypoint: trivy
-        args: "image --input ${{ inputs.scan_image }} --compliance ${{ inputs.compliance }} -f json --ignore-unfixed -o ${{ inputs.output_file }}"
+#        scan_image: ${{ steps.meta.outputs.scan_image }}
+#        compliance: docker-cis-1.6.0
+#        output_file: ${{ steps.meta.outputs.cis_json_file }}
+        args: |
+          image python:3.4-alpine --complaince docker-cis-1.6.0
+
 
 
     - name: upload docker-cis JSON report
@@ -392,16 +393,26 @@ runs:
         if-no-files-found: warn
 
 
+#    - name: Inspect docker-cis report
+#      if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
+#      uses: aquasecurity/trivy-action@0.28.0
+#      with:
+#        scan-type: 'image'
+#        image-ref: ${{ steps.meta.outputs.scan_image }}
+#        format: 'table'
+#        ignore-unfixed: true
+#        input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
+#        exit-code: ${{ (steps.meta.outputs.global_enforce_build_failure == 'true' || inputs.fail_build == 'true') && '1' || '0' }}
+#      env:
+#        TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
+#        TRIVY_COMPLIANCE: docker-cis-1.6.0
+
     - name: Inspect docker-cis report
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
-      uses: aquasecurity/trivy-action@0.28.0
+      uses: ./security-actions/test-docker
       with:
-        scan-type: 'image'
-        image-ref: ${{ steps.meta.outputs.scan_image }}
-        format: 'table'
-        ignore-unfixed: true
-        input: ${{ steps.docker_tar.outputs.files_exists == 'true' && '--input' || '' }}
-        exit-code: ${{ (steps.meta.outputs.global_enforce_build_failure == 'true' || inputs.fail_build == 'true') && '1' || '0' }}
-      env:
-        TRIVY_DB_REPOSITORY: 992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
-        TRIVY_COMPLIANCE: docker-cis-1.6.0
+        args: |
+          image python:3.4-alpine -f table
+#        scan_image: ${{ steps.meta.outputs.scan_image }}
+#        compliance: docker-cis-1.6.0
+#        output_file: ${{ steps.meta.outputs.cis_json_file }}
