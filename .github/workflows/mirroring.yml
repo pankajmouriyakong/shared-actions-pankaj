@@ -64,18 +64,22 @@ jobs:
     - name: Set Docker build args
       id: format_build_args
       run: |
-          build_args=""
-          for key in "${!matrix.asset.build_args[@]}"; do
-            build_args+="$key=${matrix.asset.build_args[$key]} "
+          # Convert build_args to JSON string using toJson
+          build_args=$(echo "${{ matrix.asset.build_args }}" | toJson)
+
+          # Debug: Print the JSON representation of build_args
+          echo "build_args as JSON: $build_args"
+
+          # Convert build_args from JSON to key=value pairs and format them as a multiline string
+          formatted_build_args=""
+          for entry in $(echo "$build_args" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"'); do
+            formatted_build_args+="$entry\n"
           done
           
-          # Clean up the trailing space
-          build_args=$(echo $build_args | sed 's/ $//')
-          
           # Debug: Print the constructed build_args
-          echo "Formatted build_args: $build_args"
+          echo "Formatted build_args: $formatted_build_args"
           
-          echo "build_args=$build_args" >> $GITHUB_OUTPUT
+          echo "build_args=$formatted_build_args" >> $GITHUB_OUTPUT
 
     # - name: Configure AWS Credentials
     #   uses: aws-actions/configure-aws-credentials@v4
