@@ -33,10 +33,6 @@ inputs:
     options:
       - 'true'
       - 'false'
-  trivy_db_repository:
-    description: 'Custom Trivy DB repository to use for vulnerability scanning'
-    required: false
-    default: '992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2'
   input_tar:
     description: 'Specify --input if using a tar file instead of an image reference'
     required: false
@@ -85,7 +81,6 @@ runs:
         TRIVY_IGNORE_UNFIXED: ${{ inputs.ignore_unfixed }}
         TRIVY_COMPLIANCE: ${{ inputs.compliance }}
         TRIVY_EXIT_CODE: ${{ inputs.fail_build == 'true' && '1' || '0' }}
-        TRIVY_DB_REPOSITORY: ${{ inputs.trivy_db_repository }}
         TRIVY_SKIP_DB_UPDATE: ${{ inputs.skip_db_update }}
         TRIVY_SKIP_CHECK_UPDATE: ${{ inputs.skip_check_update }}
 
