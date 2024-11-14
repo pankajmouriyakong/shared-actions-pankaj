@@ -1,0 +1,64 @@
+name: Trivy Docker Scan
+description: Scan a Docker image using Trivy from a private ECR repository
+author: 'ABC'
+
+inputs:
+  scan_image:
+    description: 'Docker image or tar file to scan'
+    required: true
+  compliance:
+    description: 'Compliance level for the scan'
+    required: false
+    default: docker-cis-1.6.0
+  output_file:
+    description: 'Path to save the JSON report (required for JSON output)'
+    required: false
+  output_format:
+    description: 'Specify the output format (e.g., json, table)'
+    required: true
+    default: json
+  fail_build:
+    description: 'Fail the build if vulnerability is found (only applicable for table format)'
+    required: false
+    default: false
+    type: choice
+    options:
+      - 'true'
+      - 'false'
+  ignore_unfixed:
+    description: 'Ignore unfixed vulnerabilities'
+    required: false
+    default: false
+    type: choice
+    options:
+      - 'true'
+      - 'false'
+  trivy_db_repository:
+    description: 'Custom Trivy DB repository to use for vulnerability scanning'
+    required: false
+    default: '992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2'
+  input_tar:
+    description: 'Specify --input if using a tar file instead of an image reference'
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Set Trivy Environment Variables
+      shell: bash
+      run: |
+        export TRIVY_FORMAT=${{ inputs.output_format }}
+        export TRIVY_OUTPUT=${{ inputs.output_file }}
+        export TRIVY_IGNORE_UNFIXED=${{ inputs.ignore_unfixed }}
+        export TRIVY_COMPLIANCE=${{ inputs.compliance }}
+        export TRIVY_EXIT_CODE=${{ inputs.fail_build == 'true' && 1 || 0 }}
+        export TRIVY_DB_REPOSITORY=${{ inputs.trivy_db_repository }}
+
+    - name: Generate docker-cis report
+      uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy:0.57.0
+      with:
+        entrypoint: trivy
+        args: >
+          image
+          ${{ inputs.input_tar != '' && '--input ' + inputs.input_tar || inputs.scan_image }}
