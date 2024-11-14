@@ -64,7 +64,9 @@ jobs:
     - name: Set Docker build args
       id: format_build_args
       run: |
-          build_args=$(echo "${{ toJson(matrix.asset.build_args) }}" | jq -c 'to_entries | map("\(.key)=\(.value)") | join(" ")')
+          build_args_json="${{ toJson(matrix.asset.build_args) }}"
+          # Join into a single line (to avoid multi-line issues) and then process with jq
+          build_args=$(echo "$build_args_json" | tr -d '\n' | jq -r 'to_entries | map("\(.key)=\(.value|tostring)") | join(" ")')
           echo "Build args: $build_args"
           echo "build_args=$build_args" >> $GITHUB_OUTPUT
 
