@@ -64,10 +64,7 @@ jobs:
     - name: Set Docker build args
       id: format_build_args
       run: |
-        echo "${{ fromJson(matrix.asset.build_args) }}"
-        echo "${{ toJson(matrix.asset.build_args) }}"
-        echo "${{ join(fromJson(matrix.asset.build_args), ' ') }}"
-        echo "${{ join(toJson(matrix.asset.build_args), ' ') }}"
+        echo ${{matrix.asset.build_args}}
 
     # - name: Configure AWS Credentials
     #   uses: aws-actions/configure-aws-credentials@v4
