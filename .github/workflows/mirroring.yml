@@ -65,19 +65,13 @@ jobs:
       id: format_build_args
       run: |
           # Convert build_args to JSON string using toJson
-          build_args=$(echo "${{ matrix.asset.build_args }}" | toJson)
-
-          # Debug: Print the JSON representation of build_args
-          echo "build_args as JSON: $build_args"
-
-          # Convert build_args from JSON to key=value pairs and format them as a multiline string
-          formatted_build_args=""
-          for entry in $(echo "$build_args" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"'); do
-            formatted_build_args+="$entry\n"
+          build_args=""
+          for entry in $(echo "${{ matrix.asset.build_args }}" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"'); do
+            build_args+="$entry\n"
           done
           
           # Debug: Print the constructed build_args
-          echo "Formatted build_args: $formatted_build_args"
+          echo "Formatted build_args: $build_args"
           
           echo "build_args=$formatted_build_args" >> $GITHUB_OUTPUT
 
