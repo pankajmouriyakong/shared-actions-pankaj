@@ -67,10 +67,15 @@ jobs:
           # Accessing the matrix asset to get build_args
           build_args="${{ matrix.asset.build_args }}"
 
-          # Echo the build_args as Docker build-args (for debugging purposes)
-          echo "Build Args: $build_args"
+          # Convert the space-separated build_args into multi-line YAML block format
+          # Each "key=value" will be converted to a new line
+          formatted_build_args=$(echo "$build_args" | tr ' ' '\n')
+
+          # Output the formatted build_args in YAML block style for debugging purposes
+          echo "Formatted build_args:"
+          echo "$formatted_build_args"
           
-          echo "build_args=$build_args" >> $GITHUB_OUTPUT
+          echo "build_args=$formatted_build_args" >> $GITHUB_OUTPUT
 
     # - name: Configure AWS Credentials
     #   uses: aws-actions/configure-aws-credentials@v4
