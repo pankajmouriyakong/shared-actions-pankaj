@@ -16,7 +16,6 @@ permissions:
 env:
   AWS_ACCOUNT_ID: 992382581569
   REGION: us-east-1
-  ECR_REGISTRY: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com
 
 jobs:
   metadata:
@@ -55,7 +54,14 @@ jobs:
       fail-fast: false
       matrix:
         asset: ${{ fromJSON(needs.metadata.outputs.assets) }}
+
     if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
+
+    env:
+      AWS_ACCOUNT_ID: ${{ env.AWS_ACCOUNT_ID }}
+      REGION: ${{ env.REGION }}
+      ECR_REGISTRY: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com
+
     steps:
       - uses: actions/checkout@v4
 
@@ -89,8 +95,12 @@ jobs:
       - name: Set Docker Build Arguments
         id: format_build_args
         run: |
+          # Accessing the matrix asset to get build_args
           build_args="${{ matrix.asset.build_args }}"
+
           formatted_build_args=$(echo "$build_args" | tr ' ' '\n' | sed 's/\([^=]*\)=\([^ ]*\)/\1=\2/')
+
+          # Set output to a single multi-line block
           echo "build_args=$formatted_build_args" >> $GITHUB_OUTPUT
 
       - name: Build and Push Docker Image
