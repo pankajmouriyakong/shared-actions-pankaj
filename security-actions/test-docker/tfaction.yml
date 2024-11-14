@@ -21,4 +21,4 @@ runs:
       uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy:0.57.0
       with:
         entrypoint: trivy
-#        args: "image --input ${{ inputs.scan_image }} --compliance ${{ inputs.compliance }} -f json --ignore-unfixed -o ${{ inputs.output_file }}"
+        args: "image --input ${{ inputs.scan_image }} --compliance ${{ inputs.compliance }} -f json --ignore-unfixed -o ${{ inputs.output_file }}"
