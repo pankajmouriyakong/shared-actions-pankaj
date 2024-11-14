@@ -72,9 +72,6 @@ jobs:
           formatted_build_args=$(echo "$build_args" | tr ' ' '\n')
 
           # Output the formatted build_args in YAML block style for debugging purposes
-          echo "Formatted build_args:"
-          echo "$formatted_build_args"
-          
           echo "build_args=$formatted_build_args" >> $GITHUB_OUTPUT
 
     # - name: Configure AWS Credentials
