@@ -41,19 +41,37 @@ inputs:
     description: 'Specify --input if using a tar file instead of an image reference'
     required: false
     default: ''
+  skip_db_update:
+    description: 'To skip DB update'
+    required: true
+    default: true
+    type: choice
+    options:
+      - 'true'
+      - 'false'
+  skip_check_update:
+    description: 'To skip IAC policies updates'
+    required: true
+    default: true
+    type: choice
+    options:
+      - 'true'
+      - 'false'
 
 runs:
   using: composite
   steps:
-    - name: Set Trivy Environment Variables
-      shell: bash
-      run: |
-        export TRIVY_FORMAT=${{ inputs.output_format }}
-        export TRIVY_OUTPUT=${{ inputs.output_file }}
-        export TRIVY_IGNORE_UNFIXED=${{ inputs.ignore_unfixed }}
-        export TRIVY_COMPLIANCE=${{ inputs.compliance }}
-        export TRIVY_EXIT_CODE=${{ inputs.fail_build == 'true' && 1 || 0 }}
-        export TRIVY_DB_REPOSITORY=${{ inputs.trivy_db_repository }}
+#    - name: Set Trivy Environment Variables
+#      shell: bash
+#      run: |
+#        export TRIVY_FORMAT=${{ inputs.output_format }}
+#        export TRIVY_OUTPUT=${{ inputs.output_file }}
+#        export TRIVY_IGNORE_UNFIXED=${{ inputs.ignore_unfixed }}
+#        export TRIVY_COMPLIANCE=${{ inputs.compliance }}
+#        export TRIVY_EXIT_CODE=${{ inputs.fail_build == 'true' && 1 || 0 }}
+#        export TRIVY_DB_REPOSITORY=${{ inputs.trivy_db_repository }}
+#        export TRIVY_SKIP_DB_UPDATE=${{ input.skip_db_update }}
+#        export TRIVY_SKIP_CHECK_UPDATE=${{ input.skip_check_update }}
 
     - name: Generate docker-cis report
       uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy:0.57.0
@@ -61,4 +79,13 @@ runs:
         entrypoint: trivy
         args:
           image ${{ inputs.input_tar != '' && '--input ' || '' }}${{ inputs.input_tar != '' && inputs.input_tar || inputs.scan_image }}
+      env:
+        TRIVY_FORMAT: ${{ inputs.output_format }}
+        TRIVY_OUTPUT: ${{ inputs.output_file }}
+        TRIVY_IGNORE_UNFIXED: ${{ inputs.ignore_unfixed }}
+        TRIVY_COMPLIANCE: ${{ inputs.compliance }}
+        TRIVY_EXIT_CODE: ${{ inputs.fail_build == 'true' && '1' || '0' }}
+        TRIVY_DB_REPOSITORY: ${{ inputs.trivy_db_repository }}
+        TRIVY_SKIP_DB_UPDATE: ${{ inputs.skip_db_update }}
+        TRIVY_SKIP_CHECK_UPDATE: ${{ inputs.skip_check_update }}
 
