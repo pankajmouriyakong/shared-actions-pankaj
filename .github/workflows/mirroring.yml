@@ -59,7 +59,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/ecr-private-role-to-push
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/ecr-private-role-to-pull
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ vars.REGION }}
 
