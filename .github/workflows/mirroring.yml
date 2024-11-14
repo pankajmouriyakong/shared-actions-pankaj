@@ -67,6 +67,8 @@ jobs:
         echo ${{matrix.asset.build_args}}
         build_args="${{ join(matrix.asset.build_args, ' ') }}"
         echo "Build args: $build_args"
+        build_args_new=$(echo "${{ toJson(matrix.asset.build_args) }}" | jq -r 'map(to_entries | map("\(.key)=\(.value)") | join("=")) | join(" ")')
+        echo "Build args New: $build_args_new"
 
     # - name: Configure AWS Credentials
     #   uses: aws-actions/configure-aws-credentials@v4
