@@ -89,8 +89,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: |
-            ${{ env.KONG_ECR_REGISTRY }}
+        images: ${{ env.KONG_ECR_REGISTRY }}
         sep-tags: ","
         tags: |
           type=raw,${{ matrix.asset.tag }}
