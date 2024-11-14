@@ -90,7 +90,7 @@ jobs:
       uses: docker/metadata-action@v5
       with:
         images: |
-          992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy
+            ${{ env.KONG_ECR_REGISTRY }}
         sep-tags: ","
         tags: |
           type=raw,${{ matrix.asset.tag }}
