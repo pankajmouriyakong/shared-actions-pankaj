@@ -62,63 +62,65 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      id: creds
-      with:
-        aws-region: us-east-1
-        role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
-        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+    # - name: Configure AWS Credentials
+    #   uses: aws-actions/configure-aws-credentials@v4
+    #   id: creds
+    #   with:
+    #     aws-region: us-east-1
+    #     role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
+    #     role-session-name: GitHub_to_AWS_via_FederatedOIDC
 
-    - name: Sts GetCallerIdentity
-      shell: bash
-      run: |
-        aws sts get-caller-identity
-
-    - name: Login to ECR
-      uses: docker/login-action@v3
-      with:
-        registry: 992382581569.dkr.ecr.us-east-1.amazonaws.com
-        username: ${{ steps.creds.outputs.aws-access-key-id }}
-        password: ${{ steps.creds.outputs.aws-secret-access-key }}
-
-    - name: Docker meta
-      id: meta
-      uses: docker/metadata-action@v5
-      with:
-        images: ${{ env.KONG_ECR_REGISTRY }}
-        sep-tags: ","
-        tags: |
-          type=raw,${{ matrix.asset.tag }}
-      env:
-        KONG_ECR_REGISTRY: 992382581569.dkr.ecr.${{ env.REGION }}.amazonaws.com
-    
-    # - name: Set Docker build args
-    #   id: format_build_args
+    # - name: Sts GetCallerIdentity
+    #   shell: bash
     #   run: |
-    #     #echo ${{ join(matrix.asset.build_args, ' ') }}
-    #     # # Split the build_args into multi-line format
-    #     # formatted_args=$(echo "${{ matrix.asset.build_args }}" | tr ' ' '\n' | sed '/^$/d' | sed 's/^/  /')
-    #     # echo "formatted_args=$formatted_args"
-    #     # echo "formatted_args=$formatted_args" >> $GITHUB_ENV
+    #     aws sts get-caller-identity
 
-    - name: Build Docker Image
-      uses: docker/build-push-action@v5
-      id: image
-      with:
-        file: security-actions/dockerfiles/${{ matrix.asset.name }}.Dockerfile
-        context: .
-        push: true
-        pull: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
-        # platforms: ${{ steps.docker_build_args.outputs.platforms }}
-        build-args: ${{ join(matrix.asset.build_args | map(kv => join("=", kv) ), ' ') }}
-        # these 2 options are needed so that the MediaType of the manifest is
-        # OCI-compliant for other downstream integrations
-        # see also:
-        #   - https://github.com/docker/buildx/issues/1507
-        #   - https://github.com/docker/buildx/issues/1509#issuecomment-1378538197
-        provenance: false
-        outputs: type=image,oci-mediatypes=true
+    # - name: Login to ECR
+    #   uses: docker/login-action@v3
+    #   with:
+    #     registry: 992382581569.dkr.ecr.us-east-1.amazonaws.com
+    #     username: ${{ steps.creds.outputs.aws-access-key-id }}
+    #     password: ${{ steps.creds.outputs.aws-secret-access-key }}
+
+    # - name: Docker meta
+    #   id: meta
+    #   uses: docker/metadata-action@v5
+    #   with:
+    #     images: ${{ env.KONG_ECR_REGISTRY }}
+    #     sep-tags: ","
+    #     tags: |
+    #       type=raw,${{ matrix.asset.tag }}
+    #   env:
+    #     KONG_ECR_REGISTRY: 992382581569.dkr.ecr.${{ env.REGION }}.amazonaws.com
+    
+    - name: Set Docker build args
+      id: format_build_args
+      run: |
+        echo "${{ matrix.asset.build_args }}"
+        echo "${{ join(matrix.asset.build_args, ' ') }}"
+        echo "${{ fromJson(matrix.asset.build_args) }}"
+        echo "${{ toJson(matrix.asset.build_args) }}"
+        echo "${{ join(fromJson(matrix.asset.build_args), ' ') }}"
+        echo "${{ join(toJson(matrix.asset.build_args), ' ') }}"
+       
+
+    # - name: Build Docker Image
+    #   uses: docker/build-push-action@v5
+    #   id: image
+    #   with:
+    #     file: security-actions/dockerfiles/${{ matrix.asset.name }}.Dockerfile
+    #     context: .
+    #     push: true
+    #     pull: true
+    #     tags: ${{ steps.meta.outputs.tags }}
+    #     labels: ${{ steps.meta.outputs.labels }}
+    #     # platforms: ${{ steps.docker_build_args.outputs.platforms }}
+    #     build-args: ${{ fromJson(join(matrix.asset.build_args, ' ')) }}
+    #     # these 2 options are needed so that the MediaType of the manifest is
+    #     # OCI-compliant for other downstream integrations
+    #     # see also:
+    #     #   - https://github.com/docker/buildx/issues/1507
+    #     #   - https://github.com/docker/buildx/issues/1509#issuecomment-1378538197
+    #     provenance: false
+    #     outputs: type=image,oci-mediatypes=true
 
