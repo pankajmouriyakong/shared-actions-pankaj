@@ -25,13 +25,26 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: us-east-1
+        role-to-assume: arn:aws:iam::992382581569:role/ecr-private-role-to-pull
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+
+    - name: Sts GetCallerIdentity
+      shell: bash
+      run: |
+        aws sts get-caller-identity
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
 
     - name: SAST Scan
-      uses: docker://returntocorp/semgrep:1.86.0
+      uses: ./security-actions/tools/semgrep
       id: semgrep
       continue-on-error: true
-      with:
-        args: "semgrep ci --config auto --sarif -o semgrep_${{github.sha}}.sarif --no-autofix ${{ inputs.additional_config }}"
 
     # Upload grype cve reports
     - name: Upload Semgrep SARIF to Workflow
