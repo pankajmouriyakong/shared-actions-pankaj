@@ -16,5 +16,5 @@ FROM ${GRYPE_BASE_IMAGE}:${GRYPE_BASE_TAG} AS grype-base
 #WORKDIR /home/$GRYPE_USER
 
 # Set the entrypoint to the GRYPE command
-ENTRYPOINT ["/usr/local/bin/grype"]
+ENTRYPOINT ["/usr/bin/grype"]
 
