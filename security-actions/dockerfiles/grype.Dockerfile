@@ -15,6 +15,5 @@ FROM ${GRYPE_BASE_IMAGE}:${GRYPE_BASE_TAG} AS grype-base
 #USER $GRYPE_USER
 #WORKDIR /home/$GRYPE_USER
 
-# Set the entrypoint to the GRYPE command
-ENTRYPOINT ["/usr/bin/grype"]
-
+# Set CMD to start a shell by default, allowing you to run commands
+CMD ["/bin/sh"]
