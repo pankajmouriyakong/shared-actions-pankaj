@@ -1,0 +1,16 @@
+name: Grype CVE Scan
+description: Grype
+author: 'Kong'
+
+
+runs:
+  using: composite
+  steps:
+
+    - name: Grype CVE Scan
+      uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/semgrep:1.96.0
+      with:
+        entrypoint: grype
+#        args:
+#          ci --config auto --sarif -o semgrep_${{ github.sha }}.sarif --no-autofix ${{ inputs.additional_config }}
+
