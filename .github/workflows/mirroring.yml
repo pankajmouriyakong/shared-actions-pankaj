@@ -3,7 +3,7 @@ name: Mirroring
 on:
   push:
     branches:
-      - 'mirroring-poc-pankaj'
+      - 'dockerfile-semgrep'
   workflow_dispatch:
 
 permissions:

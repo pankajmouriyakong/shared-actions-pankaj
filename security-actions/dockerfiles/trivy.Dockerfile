@@ -26,7 +26,7 @@ RUN chown $TRIVY_USER:$TRIVY_USER /usr/local/bin/trivy
 USER $TRIVY_USER
 # Create necessary directories as Non root user
 RUN mkdir -p $TRIVY_DB_CACHE_PATH
-    
+
 # Stage 3: Final image based on the Trivy image but with files from previous stages
 FROM trivy-base AS trivy
 #Switch to non-root user
