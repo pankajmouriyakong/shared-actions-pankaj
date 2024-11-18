@@ -1,23 +1,31 @@
 ---
 assets:
-  - name: trivy
-    tag: 0.57.0
+#  - name: trivy
+#    tag: 0.57.0
+#    build_args:
+#      TRIVY_BASE_IMAGE: docker.io/aquasec/trivy
+#      TRIVY_BASE_TAG: 0.57.0
+#      TRIVY_BASE_REPO: trivy
+#      TRIVY_BASE_OWNER: aquasec
+#      TRIVY_BASE_REGISTRY: docker.io
+#      TRIVY_DB_IMAGE: public.ecr.aws/aquasecurity/trivy-db
+#      TRIVY_DB_REGISTRY: public.ecr.aws
+#      TRIVY_DB_OWNER: aquasecurity
+#      TRIVY_DB_REPO: trivy-db
+#      TRIVY_DB_TAG: 2
+#  - name: semgrep
+#    tag: 1.96.0
+#    build_args:
+#      SEMGREP_BASE_IMAGE: docker.io/returntocorp/semgrep
+#      SEMGREP_BASE_TAG: 1.96.0
+#      SEMGREP_BASE_REPO: semgrep
+#      SEMGREP_BASE_OWNER: returntocorp
+#      SEMGREP_BASE_REGISTRY: docker.io
+  - name: grype
+    tag: v0.84.0
     build_args:
-      TRIVY_BASE_IMAGE: docker.io/aquasec/trivy
-      TRIVY_BASE_TAG: 0.57.0
-      TRIVY_BASE_REPO: trivy
-      TRIVY_BASE_OWNER: aquasec
-      TRIVY_BASE_REGISTRY: docker.io
-      TRIVY_DB_IMAGE: public.ecr.aws/aquasecurity/trivy-db
-      TRIVY_DB_REGISTRY: public.ecr.aws
-      TRIVY_DB_OWNER: aquasecurity
-      TRIVY_DB_REPO: trivy-db
-      TRIVY_DB_TAG: 2
-  - name: semgrep
-    tag: 1.96.0
-    build_args:
-      SEMGREP_BASE_IMAGE: docker.io/returntocorp/semgrep
-      SEMGREP_BASE_TAG: 1.96.0
-      SEMGREP_BASE_REPO: semgrep
-      SEMGREP_BASE_OWNER: returntocorp
-      SEMGREP_BASE_REGISTRY: docker.io
+      GRYPE_BASE_IMAGE: docker.io/anchore/grype
+      GRYPE_BASE_TAG: v0.84.0
+      GRYPE_BASE_REPO: grype
+      GRYPE_BASE_OWNER: achore
+      GRYPE_BASE_REGISTRY: docker.io

@@ -1,20 +1,20 @@
-# Stage 1: Use the specified base image for Semgrep
-ARG SEMGREP_BASE_IMAGE=docker.io/anchore/grype
-ARG SEMGREP_BASE_TAG=latest
+# Stage 1: Use the specified base image for GRYPE
+ARG GRYPE_BASE_IMAGE=docker.io/anchore/grype
+ARG GRYPE_BASE_TAG=latest
 
-FROM ${SEMGREP_BASE_IMAGE}:${SEMGREP_BASE_TAG} AS semgrep-base
+FROM ${GRYPE_BASE_IMAGE}:${GRYPE_BASE_TAG} AS grype-base
 
 ## Set up a non-root user for better security
-ARG SEMGREP_USER=semgrep-custom
+ARG GRYPE_USER=grype-custom
 
 #Create a custom user (non-root user)
-RUN addgroup -g 1001 $SEMGREP_USER && \
-    adduser -D -u 1001 -G $SEMGREP_USER $SEMGREP_USER
+RUN addgroup -g 1001 $GRYPE_USER && \
+    adduser -D -u 1001 -G $GRYPE_USER $GRYPE_USER
 
 # Switch to the non-root user
-USER $SEMGREP_USER
-WORKDIR /home/$SEMGREP_USER
+USER $GRYPE_USER
+WORKDIR /home/$GRYPE_USER
 
-# Set the entrypoint to the semgrep command
-ENTRYPOINT ["semgrep"]
+# Set the entrypoint to the GRYPE command
+ENTRYPOINT ["GRYPE"]
 
