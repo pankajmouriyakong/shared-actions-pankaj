@@ -112,11 +112,11 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ needs.metadata.outputs.ecr_registry }}/${{ env.SECURITY_ASSETS_ECR_REPOSITORY }}
+          images: ${{ needs.metadata.outputs.ecr_registry }}/${{ env.SECURITY_ASSETS_REPOSITORY }}
           sep-tags: ","
           tags: |
             # TODO: tagging / release mechanism fro dev / pr / releases
-            type=raw,latest # Use same tags as base image
+            type=raw,latest-${{matrix.assets.name}} # Use same tags as base image
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
