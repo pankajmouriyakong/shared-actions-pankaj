@@ -133,7 +133,7 @@ jobs:
           pull: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: ${{ steps.docker_build_args.outputs.platforms }}
+          platforms: ${{ env.platforms }}
           build-args: ${{ env.build_args }}
           # these 2 options are needed so that the MediaType of the manifest is
           # OCI-compliant for other downstream integrations
