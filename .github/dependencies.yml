@@ -1,10 +1,10 @@
 ---
 assets:
   - name: trivy
-    tag: 0.57.0
+    tag: 0.55.1
     build_args:
       TRIVY_BASE_IMAGE: docker.io/aquasec/trivy
-      TRIVY_BASE_TAG: 0.57.0
+      TRIVY_BASE_TAG: 0.55.1
       TRIVY_BASE_REPO: trivy
       TRIVY_BASE_OWNER: aquasec
       TRIVY_BASE_REGISTRY: docker.io
@@ -14,10 +14,10 @@ assets:
       TRIVY_DB_REPO: trivy-db
       TRIVY_DB_TAG: 2
   - name: semgrep
-    tag: 1.96.0
+    tag: 1.92.0
     build_args:
       SEMGREP_BASE_IMAGE: docker.io/returntocorp/semgrep
-      SEMGREP_BASE_TAG: 1.96.0
+      SEMGREP_BASE_TAG: 1.92.0
       SEMGREP_BASE_REPO: semgrep
       SEMGREP_BASE_OWNER: returntocorp
       SEMGREP_BASE_REGISTRY: docker.io
