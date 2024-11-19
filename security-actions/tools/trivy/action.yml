@@ -53,6 +53,14 @@ inputs:
     options:
       - 'true'
       - 'false'
+  skip_java_db_update:
+    description: 'To skip Java DB updates'
+    required: true
+    default: true
+    type: choice
+    options:
+      - 'true'
+      - 'false'
 
 runs:
   using: composite
@@ -72,4 +80,6 @@ runs:
         TRIVY_EXIT_CODE: ${{ inputs.fail_build == 'true' && '1' || '0' }}
         TRIVY_SKIP_DB_UPDATE: ${{ inputs.skip_db_update }}
         TRIVY_SKIP_CHECK_UPDATE: ${{ inputs.skip_check_update }}
+        TRIVY_SKIP_JAVA_DB_UPDATE: ${{ inputs.skip_java_db_update }}
+
 
