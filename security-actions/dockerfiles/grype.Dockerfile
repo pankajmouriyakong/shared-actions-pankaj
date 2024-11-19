@@ -4,8 +4,6 @@ ARG GRYPE_BASE_TAG=latest
 
 FROM ${GRYPE_BASE_IMAGE}:${GRYPE_BASE_TAG} AS grype-base
 
-
-
 ## Set up a non-root user for better security
 #ARG GRYPE_USER=grype-custom
 #
