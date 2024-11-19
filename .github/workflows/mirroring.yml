@@ -116,7 +116,7 @@ jobs:
         uses: docker/build-push-action@v5
         id: image
         with:
-          file: security-actions/dockerfiles/${{ matrix.asset.name }}.Dockerfile
+          file: security-actions/build/dockerfiles/${{ matrix.asset.name }}.Dockerfile
           context: .
           push: true
           pull: true
