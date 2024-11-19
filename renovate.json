@@ -1,31 +1,20 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "customManagers": [
+  "extends": ["config:base"],
+  "packageRules": [
     {
-      "description": "Update tags for Trivy in dependencies.yml",
-      "customType": "regex",
-      "fileMatch": [
-        "^\\.github/dependencies\\.yml$"
-      ],
-      "matchStrings": [
-        "- name:\\s*trivy[\\s\\S]*?\\n\\s*tag:\\s*(?<currentValue>[\\w.]+)",
-        "TRIVY_BASE_TAG:\\s*(?<currentValue>[\\w.]+)"
-      ],
-      "datasourceTemplate": "docker",
-      "depNameTemplate": "aquasec/trivy"
-    },
-    {
-      "description": "Update tags for Semgrep in dependencies.yml",
-      "customType": "regex",
-      "fileMatch": [
-        "^\\.github/dependencies\\.yml$"
-      ],
-      "matchStrings": [
-        "- name:\\s*semgrep[\\s\\S]*?\\n\\s*tag:\\s*(?<currentValue>[\\w.]+)",
-        "SEMGREP_BASE_TAG:\\s*(?<currentValue>[\\w.]+)"
-      ],
-      "datasourceTemplate": "docker",
-      "depNameTemplate": "returntocorp/semgrep"
+      "matchManagers": ["dockerfile"],
+      "matchPaths": ["security-actions/build/dockerfiles/**"],
+      "extractVersion": {
+        "enabled": true
+      },
+      "matchDatasources": ["docker"],
+      "matchCurrentDigest": true,
+      "groupName": "Docker base images",
+      "updateTypes": ["major", "minor", "patch", "digest"]
     }
-  ]
+  ],
+  "docker": {
+    "enabled": true,
+    "pinDigests": true
+  }
 }

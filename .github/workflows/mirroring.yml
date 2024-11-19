@@ -102,7 +102,7 @@ jobs:
           images: ${{ env.ECR_REGISTRY }}
           sep-tags: ","
           tags: |
-            type=raw,${{ env.BASE_TAG }} # Use same tags as base image
+            type=raw,latest # Use same tags as base image
         env:
           ECR_REGISTRY: ${{env.AWS_ACCOUND_ID}}.dkr.ecr.${{ env.REGION }}.amazonaws.com
 
