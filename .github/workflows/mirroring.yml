@@ -17,7 +17,6 @@ permissions:
 env:
   AWS_ACCOUND_ID: 992382581569
   REGION: us-east-1
-  ECR_REGISTRY: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com
 
 jobs:
   metadata:
@@ -26,6 +25,7 @@ jobs:
     
     outputs:
       assets: ${{ steps.config.outputs.assets }}
+      ecr_registry: ${{ steps.config.outputs.ecr_registry }}
     steps:
     - uses: actions/checkout@v3
     - name: Construct tooling matrix
@@ -50,6 +50,7 @@ jobs:
           )
         })')  
         echo "ASSETS_JSON=$single_line_assets"
+        echo "ecr_registry=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
         echo "assets=$single_line_assets" >> $GITHUB_OUTPUT
   
   # TODO: Enhance this job to run per asset frequency schedule
@@ -82,7 +83,7 @@ jobs:
       - name: Login to ECR
         uses: docker/login-action@v3
         with:
-          registry: ${{env.ECR_REGISTRY}}
+          registry: ${{needs.metadata.outputs.ecr_registry}}
           username: ${{ steps.creds.outputs.aws-access-key-id }}
           password: ${{ steps.creds.outputs.aws-secret-access-key }}
     
@@ -111,7 +112,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.ECR_REGISTRY }}/${{ matrix.asset.name }}
+          images: ${{ needs.metadata.outputs.ecr_registry }}/${{ matrix.asset.name }}
           sep-tags: ","
           tags: |
             # TODO: tagging / release mechanism fro dev / pr / releases
