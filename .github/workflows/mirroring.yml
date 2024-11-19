@@ -1,10 +1,9 @@
 name: Mirroring
 
 on:
-  push:
-    branches:
-      - 'feat-multiplatform-builds'
   workflow_dispatch:
+  schedulue:
+    - cron:  '0 0 * * *' # Runs every midnight
 
 
 permissions:
@@ -17,6 +16,7 @@ permissions:
 env:
   AWS_ACCOUNT_ID: 992382581569
   REGION: us-east-1
+  SECURITY_ASSETS_REPOSITORY: security-base-images
 
 jobs:
   metadata:
@@ -112,7 +112,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ needs.metadata.outputs.ecr_registry }}/${{ matrix.asset.name }}
+          images: ${{ needs.metadata.outputs.ecr_registry }}/${{ env.SECURITY_ASSETS_ECR_REPOSITORY }}
           sep-tags: ","
           tags: |
             # TODO: tagging / release mechanism fro dev / pr / releases
@@ -130,7 +130,7 @@ jobs:
         with:
           file: security-actions/build/dockerfiles/${{ matrix.asset.name }}.Dockerfile
           context: .
-          push: true
+          push: false
           pull: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
