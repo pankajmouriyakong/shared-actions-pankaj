@@ -5,24 +5,28 @@
       "description": "Update tags for Trivy in dependencies.yml",
       "customType": "regex",
       "fileMatch": [
-        "^\\.github/dependencies\\.yml$"
+        "^\\.github/dependencies\\.yml$",
+        "^security-actions/tools/trivy/action\\.yml$"
       ],
       "matchStrings": [
         "- name:\\s*trivy[\\s\\S]*?\\n\\s*tag:\\s*(?<currentValue>[\\w.]+)",
-        "TRIVY_BASE_TAG:\\s*(?<currentValue>[\\w.]+)"
+        "TRIVY_BASE_TAG:\\s*(?<currentValue>[\\w.]+)",
+        "uses:\\s+docker://[\\w.\\-]+\\.amazonaws\\.com/trivy:(?<currentValue>[\\w.]+)"
       ],
       "datasourceTemplate": "docker",
       "depNameTemplate": "aquasec/trivy"
     },
     {
-      "description": "Update tags for semgrep in dependencies.yml",
+      "description": "Update tags for Semgrep in dependencies.yml",
       "customType": "regex",
       "fileMatch": [
-        "^\\.github/dependencies\\.yml$"
+        "^\\.github/dependencies\\.yml$",
+        "^security-actions/tools/semgrep/action\\.yml$"
       ],
       "matchStrings": [
         "- name:\\s*semgrep[\\s\\S]*?\\n\\s*tag:\\s*(?<currentValue>[\\w.]+)",
-        "SEMGREP_BASE_TAG:\\s*(?<currentValue>[\\w.]+)"
+        "SEMGREP_BASE_TAG:\\s*(?<currentValue>[\\w.]+)",
+        "uses:\\s+docker://[\\w.\\-]+\\.amazonaws\\.com/semgrep:(?<currentValue>[\\w.]+)"
       ],
       "datasourceTemplate": "docker",
       "depNameTemplate": "returntocorp/semgrep"
