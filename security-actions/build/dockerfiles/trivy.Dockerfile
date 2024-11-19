@@ -9,7 +9,7 @@ ARG DB_VERSION="2"
 RUN oras pull ${DB_IMAGE}:${DB_VERSION}
 
 # Stage 2: Use aquasec/trivy as the base to prepare Trivy with the custom DB
-FROM docker.io/aquasec/trivy:0.57.0@sha256:cad5cc4c273b98de4e84d19b481399fae19cd2ba09914239e9d0597fa227a8e4 AS trivy-setup
+FROM docker.io/aquasec/trivy:0.57.1@sha256:5c59e08f980b5d4d503329773480fcea2c9bdad7e381d846fbf9f2ecb8050f6b AS trivy-setup
 
 # Copy the DB tarball from the previous trivy-db stage
 COPY --from=trivy-db /workspace/db.tar.gz db.tar.gz
