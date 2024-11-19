@@ -26,42 +26,6 @@
       ],
       "datasourceTemplate": "docker",
       "depNameTemplate": "returntocorp/semgrep"
-    },
-    {
-      "description": "Update Semgrep version in action.yml based on dependencies.yml",
-      "fileMatch": [
-        "^security-actions/tools/semgrep/action\\.yml$"
-      ],
-      "matchStrings": [
-        "uses:\\s+docker://[\\w.\\-]+\\.amazonaws\\.com/semgrep:(?<currentValue>[\\w.]+)"
-      ],
-      "datasourceTemplate": "file",
-      "depNameTemplate": "dependencies.yml",
-      "fileNameTemplate": ".github/dependencies.yml",
-      "extractVersion": "- name:\\s*semgrep[\\s\\S]*?\\n\\s*tag:\\s*(?<version>[\\w.]+)",
-      "versioning": "semver"
-    },
-    {
-      "description": "Update trivy version in action.yml based on dependencies.yml",
-      "fileMatch": [
-        "^security-actions/tools/trivy/action\\.yml$"
-      ],
-      "matchStrings": [
-        "uses:\\s+docker://[\\w.\\-]+\\.amazonaws\\.com/trivy:(?<currentValue>[\\w.]+)"
-      ],
-      "datasourceTemplate": "file",
-      "depNameTemplate": "dependencies.yml",
-      "fileNameTemplate": ".github/dependencies.yml",
-      "extractVersion": "- name:\\s*trivy[\\s\\S]*?\\n\\s*tag:\\s*(?<version>[\\w.v]+)",
-      "versioning": "semver"
-    }
-  ],
-  "packageRules": [
-    {
-      "description": "Configure file datasource",
-      "matchDatasources": ["file"],
-      "extractVersion": "(?<version>.*)",
-      "fileMatch": ["\\.github/dependencies\\.yml$"]
     }
   ]
 }
