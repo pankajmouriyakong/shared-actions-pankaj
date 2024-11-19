@@ -6,6 +6,7 @@ on:
       - 'feat-multiplatform-builds'
   workflow_dispatch:
 
+
 permissions:
   contents: read
   discussions: read
@@ -37,10 +38,14 @@ jobs:
         single_line_assets=$(echo "$assets" | jq -rc 'map({
           name: .name,
           build_args: (
-            .build_args | 
-            to_entries | 
-            map("\(.key)=\(.value)") | 
-            join(" ")
+            if (.build_args // null) == null then
+              ""
+            else
+              .build_args |
+              to_entries |
+              map("\(.key)=\(.value)") |
+              join(" ")
+            end
           )
         })')  
         echo "ASSETS_JSON=$single_line_assets"
@@ -85,15 +90,21 @@ jobs:
         run: |
           # Accessing the matrix asset to get build_args
           build_args="${{ matrix.asset.build_args }}"
-          
-          # New line separated formmated string (base_image:<name>\nbase_tag:<x.y.z>\n)
-          formatted_build_args=$(echo "$build_args" | tr ' ' '\n' | sed 's/\([^=]*\)=\([^ ]*\)/"\1=\2"/')
+          platforms="linux/amd64,linux/arm64"
 
-          # Combine formatted_build_args into a single multi-line string for Docker build args
-          # Set output to a single multi-line block
-          echo "build_args<<EOF" >> $GITHUB_ENV
-          echo "$formatted_build_args" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          echo "platforms=$platforms" >> $GITHUB_ENV
+          if [[ -z ${build_args} ]]; then
+           # Pass empty string for build_args
+           echo "build_args=$build_args" >> $GITHUB_ENV
+          else
+            # New line separated formmated string (base_image:<name>\nbase_tag:<x.y.z>\n)
+            formatted_build_args=$(echo "$build_args" | tr ' ' '\n' | sed 's/\([^=]*\)=\([^ ]*\)/"\1=\2"/')
+            # Combine formatted_build_args into a single multi-line string for Docker build args
+            # Set output to a single multi-line block
+            echo "build_args<<EOF" >> $GITHUB_ENV
+            echo "$formatted_build_args" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          fi
 
       - name: Docker meta
         id: meta
@@ -102,7 +113,9 @@ jobs:
           images: ${{ env.ECR_REGISTRY }}
           sep-tags: ","
           tags: |
+            # TODO: tagging / release mechanism fro dev / pr / releases
             type=raw,latest # Use same tags as base image
+
         env:
           ECR_REGISTRY: ${{env.AWS_ACCOUND_ID}}.dkr.ecr.${{ env.REGION }}.amazonaws.com
 
@@ -122,7 +135,7 @@ jobs:
           pull: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          # platforms: ${{ steps.docker_build_args.outputs.platforms }}
+          platforms: ${{ steps.docker_build_args.outputs.platforms }}
           build-args: ${{ env.build_args }}
           # these 2 options are needed so that the MediaType of the manifest is
           # OCI-compliant for other downstream integrations
@@ -131,4 +144,3 @@ jobs:
           #   - https://github.com/docker/buildx/issues/1509#issuecomment-1378538197
           provenance: false
           outputs: type=image,oci-mediatypes=true
-          platforms: linux/amd64,linux/arm64

@@ -7,3 +7,4 @@ assets:
       DB_IMAGE: public.ecr.aws/aquasecurity/trivy-db
       DB_VERSION: 2
   - name: semgrep
+    build_args: {}
