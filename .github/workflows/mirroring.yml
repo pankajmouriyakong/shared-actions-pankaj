@@ -2,7 +2,7 @@ name: Mirroring
 
 on:
   workflow_dispatch:
-  schedulue:
+  schedule:
     - cron:  '0 0 * * *' # Runs every midnight
 
 
