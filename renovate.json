@@ -14,16 +14,17 @@
       "depNameTemplate": "public.ecr.aws/k9g5m0d7/trivy"
     },
     {
-      "description": "Update Semgrep image tag in GitHub Actions workflows",
+      "description": "Update assets.tag for Trivy in dependencies.yml",
       "customType": "regex",
       "fileMatch": [
-        "^/security-actions/semgrep/action.yml$"
+        "^\\.github/dependencies\\.yml$"
       ],
       "matchStrings": [
-        "uses:\\s+docker://public\\.ecr\\.aws/k9g5m0d7/semgrep:(?<currentValue>[\\w.]+)"
+        "- name:\\s*trivy[\\s\\S]*?\\n\\s*tag:\\s*(?<currentValue>[\\w.]+)",
+        "TRIVY_BASE_TAG:\\s*(?<currentValue>[\\w.]+)"
       ],
       "datasourceTemplate": "docker",
-      "depNameTemplate": "public.ecr.aws/k9g5m0d7/semgrep"
+      "depNameTemplate": "aquasec/trivy"
     }
   ]
 }
