@@ -3,7 +3,7 @@ name: Mirroring
 on:
   push:
     branches:
-      - 'dockerfile-semgrep'
+      - 'feat-multiplatform-builds'
   workflow_dispatch:
 
 permissions:
@@ -90,6 +90,9 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
