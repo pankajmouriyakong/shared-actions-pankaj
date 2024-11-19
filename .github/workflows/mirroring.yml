@@ -113,7 +113,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build and Push Docker Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         id: image
         with:
           file: security-actions/dockerfiles/${{ matrix.asset.name }}.Dockerfile
