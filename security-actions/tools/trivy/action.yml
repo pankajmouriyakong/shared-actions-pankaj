@@ -59,7 +59,7 @@ runs:
   steps:
 
     - name: Generate docker-cis report
-      uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy:0.57.0
+      uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy:0.55.1
       with:
         entrypoint: trivy
         args:

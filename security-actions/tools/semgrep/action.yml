@@ -8,7 +8,7 @@ runs:
   steps:
 
     - name: SAST Scan
-      uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/semgrep:1.96.0
+      uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/semgrep:1.92.0
       with:
         entrypoint: semgrep
         args:
