@@ -15,7 +15,7 @@ permissions:
   id-token: write
 
 env:
-  AWS_ACCOUND_ID: 992382581569
+  AWS_ACCOUND_ID: "992382581569"
   REGION: us-east-1
 
 jobs:
@@ -83,7 +83,7 @@ jobs:
       - name: Login to ECR
         uses: docker/login-action@v3
         with:
-          registry: ${{needs.metadata.outputs.ecr_registry}}
+          registry: ${{ needs.metadata.outputs.ecr_registry }}
           username: ${{ steps.creds.outputs.aws-access-key-id }}
           password: ${{ steps.creds.outputs.aws-secret-access-key }}
     
