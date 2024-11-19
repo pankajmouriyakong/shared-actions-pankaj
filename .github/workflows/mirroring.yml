@@ -17,6 +17,7 @@ permissions:
 env:
   AWS_ACCOUND_ID: 992382581569
   REGION: us-east-1
+  ECR_REGISTRY: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com
 
 jobs:
   metadata:
@@ -81,7 +82,7 @@ jobs:
       - name: Login to ECR
         uses: docker/login-action@v3
         with:
-          registry: ${{env.AWS_ACCOUND_ID}}.dkr.ecr.${{env.REGION}}.amazonaws.com
+          registry: ${{env.ECR_REGISTRY}}
           username: ${{ steps.creds.outputs.aws-access-key-id }}
           password: ${{ steps.creds.outputs.aws-secret-access-key }}
     
@@ -110,14 +111,11 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.ECR_REGISTRY }}
+          images: ${{ env.ECR_REGISTRY }}/${{ matrix.asset.name }}
           sep-tags: ","
           tags: |
             # TODO: tagging / release mechanism fro dev / pr / releases
             type=raw,latest # Use same tags as base image
-
-        env:
-          ECR_REGISTRY: ${{env.AWS_ACCOUND_ID}}.dkr.ecr.${{ env.REGION }}.amazonaws.com
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
