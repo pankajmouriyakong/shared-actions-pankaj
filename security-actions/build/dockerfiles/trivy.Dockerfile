@@ -28,11 +28,11 @@ RUN mkdir -p /.cache/trivy/db && \
 FROM $BASE_IMAGE AS trivy-final
 
 # Set environment variable for Trivy DB cache path
-ENV TRIVY_CACHE_DIR="/.cache/trivy/db"
+ENV TRIVY_CACHE_DIR="/.cache/trivy"
 
 # Copy the Trivy binary and DB cache from the previous stage
 COPY --from=trivy-setup --chown=1001:0 /usr/local/bin/trivy /usr/local/bin/trivy
-COPY --from=trivy-setup --chown=1001:0 /.cache/trivy/db $TRIVY_CACHE_DIR
+COPY --from=trivy-setup --chown=1001:0 /.cache/trivy/db $TRIVY_CACHE_DIR/db
 
 # Run Trivy as Non-root user
 USER 1001
