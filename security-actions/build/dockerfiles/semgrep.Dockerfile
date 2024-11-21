@@ -2,7 +2,11 @@
 ARG BASE_TOOL_IMAGE
 ARG BASE_IMAGE
 FROM $BASE_IMAGE AS base
-USER semgrep
+RUN addgroup -g 1001 kong && \
+    adduser -D -u 1001 -G kong kong
+
+# Switch to the non-root user
+USER kong
 LABEL orgs.opencontainers.image.semgrep.image="$BASE_TOOL_IMAGE" \
     orgs.opencontainers.image.base_image="$BASE_IMAGE" \
     orgs.opencontainers.image.url="https://github.com/Kong/public-shared-actions" \
