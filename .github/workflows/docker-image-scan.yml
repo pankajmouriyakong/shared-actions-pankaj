@@ -30,13 +30,6 @@ jobs:
     - name: Install regctl
       uses: regclient/actions/regctl-installer@main
 
-    # - name: Login to DockerHub
-    #   if: success()
-    #   uses: docker/login-action@v3
-    #   with:
-    #     username: ${{ secrets.GHA_DOCKERHUB_PULL_USER }}
-    #     password: ${{ secrets.GHA_KONG_ORG_DOCKERHUB_PUBLIC_TOKEN }}
-
     - name: Parse Architecture Specific Image Manifest Digests
       id: image_manifest_metadata
       run: |
@@ -64,7 +57,6 @@ jobs:
       with:
         asset_prefix: kong-gateway-dev-linux-amd64
         image: ${{env.IMAGE}}@${{ steps.image_manifest_metadata.outputs.amd64_sha }}
-        skip_cis_scan: false
 
     - name: Scan ARM64 Image digest
       if: steps.image_manifest_metadata.outputs.manifest_list_exists == 'true' && steps.image_manifest_metadata.outputs.arm64_sha != ''
@@ -74,7 +66,6 @@ jobs:
         asset_prefix: test.kong-gateway-dev-linux-arm64
         image: ${{env.IMAGE}}@${{ steps.image_manifest_metadata.outputs.arm64_sha }}
         upload-sbom-release-assets: true
-        skip_cis_scan: false
 
   test-download-sbom:
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
