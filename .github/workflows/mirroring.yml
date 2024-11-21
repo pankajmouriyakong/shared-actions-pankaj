@@ -16,7 +16,6 @@ permissions:
 env:
   AWS_ACCOUNT_ID: 992382581569
   REGION: us-east-1
-  SECURITY_ASSETS_REPOSITORY: security-base-images
 
 jobs:
   metadata:
@@ -32,7 +31,7 @@ jobs:
       if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
       id: config
       run: |
-        matrix_file=".github/dependencies.yml"
+        matrix_file=".github/build/docker/security-image-matrix.yml"
         assets=$(yq eval -o=json '.assets' $matrix_file)
         # Construct the dependency matrix
         # Format tooling build_args as key=value pair space separated string
@@ -90,33 +89,47 @@ jobs:
       - name: Set Docker build args
         id: format_build_args
         run: |
+          platforms="linux/amd64,linux/arm64"
+          echo "platforms=$platforms" >> $GITHUB_ENV
+
           # Accessing the matrix asset to get build_args
           build_args="${{ matrix.asset.build_args }}"
-          platforms="linux/amd64,linux/arm64"
-
-          echo "platforms=$platforms" >> $GITHUB_ENV
           if [[ -z ${build_args} ]]; then
            # Pass empty string for build_args
            echo "build_args=$build_args" >> $GITHUB_ENV
           else
+            # Expose the build args as individual GH Env
+            echo "$build_args" | tr ' ' '\n' >> $GITHUB_ENV
+
             # New line separated formmated string (base_image:<name>\nbase_tag:<x.y.z>\n)
             formatted_build_args=$(echo "$build_args" | tr ' ' '\n' | sed 's/\([^=]*\)=\([^ ]*\)/"\1=\2"/')
-            # Combine formatted_build_args into a single multi-line string for Docker build args
+
+            # Expose a single multi-line string for YAML block for Docker build args
             # Set output to a single multi-line block
             echo "build_args<<EOF" >> $GITHUB_ENV
             echo "$formatted_build_args" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
           fi
 
+      - name: Parse vendor specific image tag
+        id: base_tool_image_meta
+        run: |
+          image=${{env.BASE_TOOL_IMAGE}}
+          echo "full_image_version=${image#*:}" >> $GITHUB_OUTPUT
+          echo "image_name=${image%%:*}" >> $GITHUB_OUTPUT
+          echo "image_tag=${full_image_version%%@*}" >> $GITHUB_OUTPUT
+          echo "image_sha=${image#*@}" >> $GITHUB_OUTPUT
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ needs.metadata.outputs.ecr_registry }}/${{ env.SECURITY_ASSETS_REPOSITORY }}
+          images: ${{ needs.metadata.outputs.ecr_registry }}/${{ matrix.asset.name }}
           sep-tags: ","
           tags: |
-            # TODO: tagging / release mechanism fro dev / pr / releases
-            type=raw,latest-${{matrix.assets.name}} # Use same tags as base image
+            type=raw,enable={{is_default_branch}},1000,prefix=,suffix=,value=latest
+            # BASE_TOOL_VERSION is static key for vendor specific base tool image version
+            type=raw,enable={{is_default_branch}},1000,prefix=,suffix=,value=${{ steps.base_tool_image_meta.outputs.image_tag }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -133,7 +146,7 @@ jobs:
           push: false
           pull: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          # labels: ${{ steps.meta.outputs.labels }}
           platforms: ${{ env.platforms }}
           build-args: ${{ env.build_args }}
           # these 2 options are needed so that the MediaType of the manifest is

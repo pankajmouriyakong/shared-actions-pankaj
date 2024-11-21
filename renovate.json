@@ -1,20 +1,34 @@
 {
-  "extends": ["config:base"],
-  "packageRules": [
-    {
-      "matchManagers": ["dockerfile"],
-      "matchPaths": ["security-actions/build/dockerfiles/**"],
-      "extractVersion": {
-        "enabled": true
-      },
-      "matchDatasources": ["docker"],
-      "matchCurrentDigest": true,
-      "groupName": "Docker base images",
-      "updateTypes": ["major", "minor", "patch", "digest"]
-    }
+  "extends": [
+    "config:base"
   ],
-  "docker": {
-    "enabled": true,
-    "pinDigests": true
-  }
+  "regexManagers": [
+    {
+      "fileMatch": [".github/build/docker/security-image-matrix.yml"],
+      "matchStrings": [
+        "BASE_TOOL_IMAGE:\\s*(?<depName>.*?):(?<currentValue>[\\w\\.\\-]+)"
+      ],
+      "depNameTemplate": "{{depName}}",
+      "versioning": "docker",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "fileMatch": [".github/build/docker/security-image-matrix.yml"],
+      "matchStrings": [
+        "DB_IMAGE:\\s*(?<depName>.*?):(?<currentValue>[\\w\\.\\-]+)"
+      ],
+      "depNameTemplate": "{{depName}}",
+      "versioning": "docker",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "fileMatch": [".github/build/docker/security-image-matrix.yml"],
+      "matchStrings": [
+        "BASE_IMAGE:\\s*(?<depName>.*?@sha256:[a-f0-9]+)"
+      ],
+      "depNameTemplate": "{{depName}}",
+      "versioning": "docker",
+      "datasourceTemplate": "docker"
+    }
+  ]
 }

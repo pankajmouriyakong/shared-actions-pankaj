@@ -1,9 +1,0 @@
----
-assets:
-  - name: trivy
-    # Will be exported as GH env
-    # Must match args in dockerfile
-    build_args:
-      DB_IMAGE: public.ecr.aws/aquasecurity/trivy-db:2
-  - name: semgrep
-    build_args: {}

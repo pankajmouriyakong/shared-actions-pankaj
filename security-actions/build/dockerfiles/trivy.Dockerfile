@@ -1,14 +1,17 @@
+ARG BASE_TOOL_IMAGE
+ARG BASE_IMAGE
+
 # Stage 1: Pull Trivy DB using ORAS and build a custom image
 FROM ghcr.io/oras-project/oras:v1.2.0 AS trivy-db
 
 # Set build arguments for Trivy DB image
-ARG DB_IMAGE="public.ecr.aws/aquasecurity/trivy-db:2"
+ARG DB_IMAGE
 
 # Pull the Trivy DB tarball from the specified image
 RUN oras pull ${DB_IMAGE}
 
 # Stage 2: Use aquasec/trivy as the base to prepare Trivy with the custom DB
-FROM docker.io/aquasec/trivy:0.57.0@sha256:cad5cc4c273b98de4e84d19b481399fae19cd2ba09914239e9d0597fa227a8e4 AS trivy-setup
+FROM $BASE_TOOL_IMAGE AS trivy-setup
 
 # Copy the DB tarball from the previous trivy-db stage
 COPY --from=trivy-db /workspace/db.tar.gz db.tar.gz
@@ -20,7 +23,7 @@ RUN mkdir -p /.cache/trivy/db && \
     rm db.tar.gz
 
 # Stage 3: Final minimal image (distroless) with Trivy
-FROM gcr.io/distroless/base@sha256:7a4bffcb07307d97aa731b50cb6ab22a68a8314426f4e4428335939b5b1943a5 AS trivy-final
+FROM $BASE_IMAGE AS trivy-final
 
 # Set environment variable for Trivy DB cache path
 ENV TRIVY_DB_CACHE_PATH="/.cache/trivy/db"
@@ -32,9 +35,9 @@ COPY --from=trivy-setup --chown=1001:0 /.cache/trivy/db $TRIVY_DB_CACHE_PATH
 # Run Trivy as Non-root user
 USER 1001
 
-LABEL orgs.opencontainers.image.trivy.image="docker.io/aquasec/trivy:0.57.0@sha256:cad5cc4c273b98de4e84d19b481399fae19cd2ba09914239e9d0597fa227a8e4" \
+LABEL orgs.opencontainers.image.trivy.image="$BASE_TOOL_IMAGE" \
     orgs.opencontainers.image.trivy.db_image="$DB_IMAGE" \
-    orgs.opencontainers.image.base_image="gcr.io/distroless/base@sha256:7a4bffcb07307d97aa731b50cb6ab22a68a8314426f4e4428335939b5b1943a5" \
+    orgs.opencontainers.image.base_image="$BASE_IMAGE" \
     orgs.opencontainers.image.url="https://github.com/Kong/public-shared-actions" \
     orgs.opencontainers.image.documentation="https://github.com/Kong/public-shared-actions"
 
