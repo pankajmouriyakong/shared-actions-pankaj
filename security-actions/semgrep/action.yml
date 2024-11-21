@@ -42,7 +42,7 @@ runs:
       uses: aws-actions/amazon-ecr-login@v2
 
     - name: SAST Scan
-      uses: $GITHUB_ACTION_PATH/run-semgrep
+      uses: ./security-actions/semgrep/run-semgrep
       id: semgrep
       continue-on-error: true
 

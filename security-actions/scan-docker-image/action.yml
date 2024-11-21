@@ -320,7 +320,7 @@ runs:
     - name: Generate docker-cis JSON report
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
       id: cis_json
-      uses: $GITHUB_ACTION_PATH/run-trivy
+      uses: ./security-actions/scan-docker-image/run-trivy
       with:
         scan_image: ${{ steps.meta.outputs.scan_image }}
         compliance: docker-cis-1.6.0
@@ -339,7 +339,7 @@ runs:
 
     - name: Inspect docker-cis report (Table)
       if: ${{ inputs.skip_cis_scan != 'true' && steps.meta.outputs.scan_image != '' }}
-      uses: $GITHUB_ACTION_PATH/run-trivy
+      uses: ./security-actions/scan-docker-image/run-trivy
       with:
         scan_image: ${{ steps.meta.outputs.scan_image }}
         output_format: table
