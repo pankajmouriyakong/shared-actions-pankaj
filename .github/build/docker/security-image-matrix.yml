@@ -7,7 +7,7 @@ assets:
     # Update renovate.json when docker image keys are modified in this file
     build_args:
       # Points to base image of vendor specific tool
-      BASE_TOOL_IMAGE: docker.io/aquasec/trivy:0.57.0@sha256:cad5cc4c273b98de4e84d19b481399fae19cd2ba09914239e9d0597fa227a8e4 
+      BASE_TOOL_IMAGE: docker.io/aquasec/trivy:0.57.0@sha256:cad5cc4c273b98de4e84d19b481399fae19cd2ba09914239e9d0597fa227a8e4
       # Points to the base image of the final build stage
       BASE_IMAGE: gcr.io/distroless/base@sha256:7a4bffcb07307d97aa731b50cb6ab22a68a8314426f4e4428335939b5b1943a5
       DB_IMAGE: public.ecr.aws/aquasecurity/trivy-db:2

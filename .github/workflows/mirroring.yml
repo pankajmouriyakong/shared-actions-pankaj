@@ -115,10 +115,12 @@ jobs:
         id: base_tool_image_meta
         run: |
           image=${{env.BASE_TOOL_IMAGE}}
-          echo "full_image_version=${image#*:}" >> $GITHUB_OUTPUT
+          full_image_version=${image#*:}
+          echo "full_image_version=$full_image_version" >> $GITHUB_OUTPUT
           echo "image_name=${image%%:*}" >> $GITHUB_OUTPUT
-          echo "image_tag=${full_image_version%%@*}" >> $GITHUB_OUTPUT
           echo "image_sha=${image#*@}" >> $GITHUB_OUTPUT
+          echo "image_tag=${full_image_version%%@*}" >> $GITHUB_OUTPUT
+          
 
       - name: Docker meta
         id: meta
@@ -127,9 +129,8 @@ jobs:
           images: ${{ needs.metadata.outputs.ecr_registry }}/${{ matrix.asset.name }}
           sep-tags: ","
           tags: |
-            type=raw,enable={{is_default_branch}},1000,prefix=,suffix=,value=latest
-            # BASE_TOOL_VERSION is static key for vendor specific base tool image version
-            type=raw,enable={{is_default_branch}},1000,prefix=,suffix=,value=${{ steps.base_tool_image_meta.outputs.image_tag }}
+            type=raw,enable={{is_default_branch}},value=latest
+            type=raw,enable={{is_default_branch}},value=${{ steps.base_tool_image_meta.outputs.image_tag }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -143,7 +144,7 @@ jobs:
         with:
           file: security-actions/build/dockerfiles/${{ matrix.asset.name }}.Dockerfile
           context: .
-          push: false
+          push: true
           pull: true
           tags: ${{ steps.meta.outputs.tags }}
           # labels: ${{ steps.meta.outputs.labels }}

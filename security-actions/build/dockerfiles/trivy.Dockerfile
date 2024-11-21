@@ -1,5 +1,7 @@
+# ARGs for external input (These should be set during build)
 ARG BASE_TOOL_IMAGE
 ARG BASE_IMAGE
+ARG DB_IMAGE
 
 # Stage 1: Pull Trivy DB using ORAS and build a custom image
 FROM ghcr.io/oras-project/oras:v1.2.0 AS trivy-db
@@ -40,7 +42,6 @@ LABEL orgs.opencontainers.image.trivy.image="$BASE_TOOL_IMAGE" \
     orgs.opencontainers.image.base_image="$BASE_IMAGE" \
     orgs.opencontainers.image.url="https://github.com/Kong/public-shared-actions" \
     orgs.opencontainers.image.documentation="https://github.com/Kong/public-shared-actions"
-
 
 # Set the entrypoint to Trivy without shell access
 ENTRYPOINT ["/usr/local/bin/trivy"]
