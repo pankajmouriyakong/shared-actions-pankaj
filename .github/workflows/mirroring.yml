@@ -133,8 +133,8 @@ jobs:
           images: ${{ needs.metadata.outputs.ecr_registry }}/${{ matrix.asset.name }}
           sep-tags: ","
           tags: |
-            type=raw,enable={{is_default_branch}},value=latest
-            type=raw,enable={{is_default_branch}},value=${{ steps.base_tool_image_meta.outputs.image_tag }}
+            type=raw,enable=true,value=latest
+            type=raw,enable=true,value=${{ steps.base_tool_image_meta.outputs.image_tag }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
