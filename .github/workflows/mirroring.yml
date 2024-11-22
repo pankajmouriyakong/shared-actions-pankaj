@@ -38,7 +38,7 @@ jobs:
         id: convert_yaml_to_json
         run: |
           matrix_file=".github/build/docker/security-image-matrix.yml"
-          assets_json=$(yq eval -o=json '.assets' $matrix_file | jq -c '.')
+          assets_json=$(yq eval -o=json '.assets' "$matrix_file" | jq -c '.')
           echo "$assets_json" > assets.json
           echo "assets=$assets_json" >> $GITHUB_OUTPUT
 
