@@ -49,6 +49,8 @@ jobs:
     - name: Construct tooling matrix
       if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
       id: config
+      env:
+        CHANGED_FILES: ${{ steps.changed-files.outputs.dockerfiles_changed_files }}
       run: |
         matrix_file=".github/build/docker/security-image-matrix.yml"
         assets=$(yq eval -o=json '.assets' $matrix_file)
@@ -57,23 +59,39 @@ jobs:
         changed_files="${{ steps.changed-files.outputs.dockerfiles_changed }}"
         echo "Changed files: $changed_files"
         
-        # Construct the dependency matrix
-        # Format tooling build_args as key=value pair space separated string
-        single_line_assets=$(echo "$assets" | jq -rc --arg changed_files "$changed_files" '
-            map(select(.name as $name | $changed_files | contains($name))) | 
-            map({
-              name: .name,
-              build_args: (
-                if (.build_args // null) == null then
-                  ""
-                else
-                  .build_args |
-                  to_entries |
-                  map("\(.key)=\(.value)") |
-                  join(" ")
-                end
-              )
-            })')
+        # Check if CHANGED_FILES is empty
+        if [ -z "$CHANGED_FILES" ] || [ "$CHANGED_FILES" == "[]" ]; then
+        echo "No Dockerfiles have changed."
+        # Optionally, you can set assets to an empty JSON array
+        single_line_assets="[]"
+        else
+        echo "Changed Dockerfiles: $CHANGED_FILES"
+        
+        # Extract asset names from the changed Dockerfiles
+        # Assuming Dockerfile names are in the format '<asset_name>.Dockerfile'
+        changed_assets=$(echo "$CHANGED_FILES" | jq -r '.[]' | xargs -I{} basename {} .Dockerfile)
+        echo "Changed assets: $changed_assets"
+        
+        # Convert changed_assets to a JSON array
+        changed_assets_json=$(echo '["'$(echo $changed_assets | tr ' ' '","')'"]')
+        
+        # Filter assets based on the changed assets
+        single_line_assets=$(echo "$assets" | jq -rc --argjson changed_assets "$changed_assets_json" '
+        map(select(.name as $name | $changed_assets | index($name) != null)) |
+        map({
+          name: .name,
+          build_args: (
+            if (.build_args // null) == null then
+            ""
+            else
+            .build_args |
+            to_entries |
+            map("\(.key)=\(.value)") |
+            join(" ")
+            end
+            )
+          })')
+        fi
         echo "ASSETS_JSON=$single_line_assets"
         echo "ecr_registry=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
         echo "assets=$single_line_assets" >> $GITHUB_OUTPUT
