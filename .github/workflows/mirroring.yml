@@ -25,50 +25,37 @@ jobs:
   metadata:
     name: Metadata
     runs-on: ubuntu-latest
-    
+
     outputs:
       assets: ${{ steps.config.outputs.assets }}
       ecr_registry: ${{ steps.config.outputs.ecr_registry }}
     steps:
-    - uses: actions/checkout@v4
-#      with:
-#        fetch-depth: 2
-#
-#    - name: Get list of all changes
-#      uses: tj-actions/changed-files@v45
-#      id: changed-files
-#      with:
-#        files_yaml: |
-#          dockerfiles:
-#            - 'security-actions/build/dockerfiles/**'
-#          matrix:
-#            - '.github/build/docker/security-image-matrix.yml'
+      - uses: actions/checkout@v3
+      - name: Construct tooling matrix
+        if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+        id: config
+        run: |
+          matrix_file=".github/build/docker/security-image-matrix.yml"
+          assets=$(yq eval -o=json '.assets' $matrix_file)
+          # Construct the dependency matrix
+          # Format tooling build_args as key=value pair space separated string
+          single_line_assets=$(echo "$assets" | jq -rc 'map({
+            name: .name,
+            build_args: (
+              if (.build_args // null) == null then
+                ""
+              else
+                .build_args |
+                to_entries |
+                map("\(.key)=\(.value)") |
+                join(" ")
+              end
+            )
+          })')  
+          echo "ASSETS_JSON=$single_line_assets"
+          echo "ecr_registry=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
+          echo "assets=$single_line_assets" >> $GITHUB_OUTPUT
 
-    - name: Construct tooling matrix
-      if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
-      id: config
-      run: |
-        matrix_file=".github/build/docker/security-image-matrix.yml"
-        assets=$(yq eval -o=json '.assets' $matrix_file)
-        # Construct the dependency matrix
-        # Format tooling build_args as key=value pair space separated string
-        single_line_assets=$(echo "$assets" | jq -rc 'map({
-          name: .name,
-          build_args: (
-            if (.build_args // null) == null then
-              ""
-            else
-              .build_args |
-              to_entries |
-              map("\(.key)=\(.value)") |
-              join(" ")
-            end
-          )
-        })')  
-        echo "ASSETS_JSON=$single_line_assets"
-        echo "ecr_registry=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
-        echo "assets=$single_line_assets" >> $GITHUB_OUTPUT
-  
   # TODO: Enhance this job to run per asset frequency schedule
   build-publish-assets:
     runs-on: ubuntu-latest
@@ -102,7 +89,7 @@ jobs:
           registry: ${{ needs.metadata.outputs.ecr_registry }}
           username: ${{ steps.creds.outputs.aws-access-key-id }}
           password: ${{ steps.creds.outputs.aws-secret-access-key }}
-    
+
       - name: Set Docker build args
         id: format_build_args
         run: |
@@ -137,7 +124,7 @@ jobs:
           echo "image_name=${image%%:*}" >> $GITHUB_OUTPUT
           echo "image_sha=${image#*@}" >> $GITHUB_OUTPUT
           echo "image_tag=${full_image_version%%@*}" >> $GITHUB_OUTPUT
-          
+
 
       - name: Docker meta
         id: meta
