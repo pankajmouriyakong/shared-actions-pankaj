@@ -2,6 +2,9 @@ name: Mirroring
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - 'run-build-on-change-2'
   schedule:
     - cron:  '0 0 * * *' # Runs every midnight
 
