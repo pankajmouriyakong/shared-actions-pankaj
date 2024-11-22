@@ -9,7 +9,7 @@
         "BASE_TOOL_IMAGE:\\s*(?<depName>.*?):(?<currentValue>[\\w\\.\\-]+)"
       ],
       "depNameTemplate": "{{depName}}",
-      "versioning": "docker",
+      "versioningTemplate": "docker",
       "datasourceTemplate": "docker"
     },
     {
@@ -18,7 +18,7 @@
         "DB_IMAGE:\\s*(?<depName>.*?):(?<currentValue>[\\w\\.\\-]+)"
       ],
       "depNameTemplate": "{{depName}}",
-      "versioning": "docker",
+      "versioningTemplate": "docker",
       "datasourceTemplate": "docker"
     },
     {
@@ -27,7 +27,7 @@
         "BASE_IMAGE:\\s*(?<depName>.*?@sha256:[a-f0-9]+)"
       ],
       "depNameTemplate": "{{depName}}",
-      "versioning": "docker",
+      "versioningTemplate": "docker",
       "datasourceTemplate": "docker"
     }
   ]
