@@ -48,6 +48,17 @@ jobs:
           echo "$assets_json" > assets.json
           echo "assets_json=$assets_json" >> $GITHUB_OUTPUT
 
+      - name: Ensure JSON Format for Changed Files
+        id: ensure_json_changed_files
+        run: |
+          # Access the value from the workflow expression and store it in a shell variable
+          changed_files="${{ steps.diff.outputs.all_changed_files }}"
+          
+          # Ensure CHANGED_FILES is valid JSON and compact it
+          compact_changed_files=$(echo "$changed_files" | jq -c '.')
+          echo "$compact_changed_files" > changed_files.json
+          echo "changed_files=$compact_changed_files" >> $GITHUB_OUTPUT
+
       - name: Filter changed assets
         id: filter_assets
         env:
