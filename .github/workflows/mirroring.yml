@@ -81,25 +81,29 @@ jobs:
       - name: Set Docker build args
         id: format_build_args
         run: |
+          # Define and set platforms
           platforms="linux/amd64,linux/arm64"
           echo "platforms=$platforms" >> $GITHUB_ENV
 
-          # Get build_args from matrix and convert it to JSON
-          build_args="${{ toJson(matrix.asset.build_args) }}"
+          # Serialize build_args using toJson and ensure it's properly quoted
+          build_args='${{ toJson(matrix.asset.build_args) }}'
+
+          echo "build_args before processing: $build_args"  # Debugging: Print the build_args
 
           # Check if build_args is empty or null
           if [[ "$build_args" == "null" || -z "$build_args" ]]; then
             echo "build_args=" >> $GITHUB_ENV
           else
-            # Check if build_args is valid JSON
-            if echo "$build_args" | jq empty 2>/dev/null; then
-              # Convert the JSON formatted build_args to a key=value format compatible with Docker build
-              echo "$build_args" | jq -r 'to_entries | map("\(.key)=\(.value)") | .[]' >> $GITHUB_ENV
+            # Validate if build_args is valid JSON
+            if echo "$build_args" | jq empty >/dev/null 2>&1; then
+              # Convert JSON to key=value pairs, ensuring values are properly quoted
+              echo "$build_args" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
             else
-              echo "Invalid JSON format for build_args: $build_args"
+              echo "Invalid JSON format for build_args: $build_args" >&2
               exit 1
             fi
           fi
+        shell: bash
 
       - name: Parse vendor specific image tag
         id: base_tool_image_meta
