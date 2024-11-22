@@ -91,8 +91,14 @@ jobs:
           if [[ "$build_args" == "null" || -z "$build_args" ]]; then
             echo "build_args=" >> $GITHUB_ENV
           else
-            # Convert the JSON formatted build_args to a key=value format compatible with Docker build
-            echo "$build_args" | jq -r 'to_entries | map("\(.key)=\(.value)") | .[]' >> $GITHUB_ENV
+            # Check if build_args is valid JSON
+            if echo "$build_args" | jq empty 2>/dev/null; then
+              # Convert the JSON formatted build_args to a key=value format compatible with Docker build
+              echo "$build_args" | jq -r 'to_entries | map("\(.key)=\(.value)") | .[]' >> $GITHUB_ENV
+            else
+              echo "Invalid JSON format for build_args: $build_args"
+              exit 1
+            fi
           fi
 
       - name: Parse vendor specific image tag
