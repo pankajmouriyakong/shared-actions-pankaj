@@ -7,7 +7,6 @@ on:
       - 'run-build-on-change-2'
     paths:
       - '.github/build/docker/security-image-matrix.yml'
-      - 'path/to/other/relevant/files/**' # Add other relevant paths here
   schedule:
     - cron: '0 0 * * *' # Runs every midnight
 
