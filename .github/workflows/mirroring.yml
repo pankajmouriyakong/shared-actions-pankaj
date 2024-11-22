@@ -39,32 +39,18 @@ jobs:
           json: true
           json_raw_format: true
 
-      - name: Construct tooling matrix
-        id: config
+      - name: Convert YAML to JSON
+        id: convert_yaml_to_json
         run: |
           matrix_file=".github/build/docker/security-image-matrix.yml"
-          assets=$(yq eval -o=json '.assets' $matrix_file)
-          single_line_assets=$(echo "$assets" | jq -rc 'map({
-            name: .name,
-            build_args: (
-              if (.build_args // null) == null then
-                ""
-              else
-                .build_args |
-                to_entries |
-                map("\(.key)=\(.value)") |
-                join(" ")
-              end
-            )
-          })')  
-          echo "ASSETS_JSON=$single_line_assets"
-          echo "ecr_registry=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
-          echo "assets=$single_line_assets" >> $GITHUB_OUTPUT
+          assets_json=$(yq eval -o=json '.assets' $matrix_file)
+          echo "$assets_json" > assets.json
+          echo "assets_json=$assets_json" >> $GITHUB_OUTPUT
 
       - name: Filter changed assets
         id: filter_assets
         env:
-          ASSETS_JSON: ${{ steps.config.outputs.assets }}
+          ASSETS_JSON: ${{ steps.convert_yaml_to_json.outputs.assets_json }}
           CHANGED_FILES: ${{ steps.diff.outputs.all_changed_files }}
         run: |
           echo "$CHANGED_FILES" > changed_files.json
@@ -82,6 +68,11 @@ jobs:
             ')
           
           echo "filtered_assets=$filtered_assets" >> $GITHUB_OUTPUT
+
+      - name: Construct ECR registry
+        id: config
+        run: |
+          echo "ecr_registry=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
 
   build-publish-assets:
     runs-on: ubuntu-latest
@@ -122,7 +113,7 @@ jobs:
 
           build_args="${{ matrix.asset.build_args }}"
           if [[ -z ${build_args} ]]; then
-           echo "build_args=$build_args" >> $GITHUB_ENV
+            echo "build_args=$build_args" >> $GITHUB_ENV
           else
             echo "$build_args" | tr ' ' '\n' >> $GITHUB_ENV
           fi
@@ -130,7 +121,7 @@ jobs:
       - name: Parse vendor specific image tag
         id: base_tool_image_meta
         run: |
-          image=${{env.BASE_TOOL_IMAGE}}
+          image=${{ env.BASE_TOOL_IMAGE }}
           full_image_version=${image#*:}
           echo "full_image_version=$full_image_version" >> $GITHUB_OUTPUT
           echo "image_name=${image%%:*}" >> $GITHUB_OUTPUT
