@@ -71,6 +71,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Authenticate to AWS
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         id: creds
