@@ -24,7 +24,7 @@
     {
       "fileMatch": [".github/build/docker/security-image-matrix.yml"],
       "matchStrings": [
-        "BASE_IMAGE:\\s*(?<depName>.*?@sha256:[a-f0-9]+)"
+        "BASE_IMAGE:\\s*(?<depName>.*?)(?<currentValue>@sha256:[a-f0-9]+)"
       ],
       "depNameTemplate": "{{depName}}",
       "versioningTemplate": "docker",
