@@ -2,6 +2,12 @@ name: Mirroring
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/build/docker/security-image-matrix.yml'
+      - 'security-actions/build/dockerfiles/**'
+    branches:
+      - 'run-build-on-change'
   schedule:
     - cron:  '0 0 * * *' # Runs every midnight
 
@@ -26,28 +32,48 @@ jobs:
       assets: ${{ steps.config.outputs.assets }}
       ecr_registry: ${{ steps.config.outputs.ecr_registry }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+
+    - name: Get list of all changes
+      uses: tj-actions/changed-files@v45
+      id: changed-files
+      with:
+        files_yaml: |
+          dockerfiles:
+            - 'security-actions/build/dockerfiles/**'
+          matrix:
+            - '.github/build/docker/security-image-matrix.yml'
+
     - name: Construct tooling matrix
       if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
       id: config
       run: |
         matrix_file=".github/build/docker/security-image-matrix.yml"
         assets=$(yq eval -o=json '.assets' $matrix_file)
+        
+        # Filter assets based on changed Dockerfiles
+        changed_files="${{ steps.changed-files.outputs.dockerfiles_changed }}"
+        echo "Changed files: $changed_files"
+        
         # Construct the dependency matrix
         # Format tooling build_args as key=value pair space separated string
-        single_line_assets=$(echo "$assets" | jq -rc 'map({
-          name: .name,
-          build_args: (
-            if (.build_args // null) == null then
-              ""
-            else
-              .build_args |
-              to_entries |
-              map("\(.key)=\(.value)") |
-              join(" ")
-            end
-          )
-        })')  
+        single_line_assets=$(echo "$assets" | jq -rc --arg changed_files "$changed_files" '
+            map(select(.name as $name | $changed_files | contains($name))) | 
+            map({
+              name: .name,
+              build_args: (
+                if (.build_args // null) == null then
+                  ""
+                else
+                  .build_args |
+                  to_entries |
+                  map("\(.key)=\(.value)") |
+                  join(" ")
+                end
+              )
+            })')
         echo "ASSETS_JSON=$single_line_assets"
         echo "ecr_registry=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
         echo "assets=$single_line_assets" >> $GITHUB_OUTPUT
@@ -66,7 +92,7 @@ jobs:
       matrix:
         asset: ${{ fromJSON(needs.metadata.outputs.assets) }}
 
-    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || needs.metadata.outputs.assets != '[]' }}
 
     steps:
       - uses: actions/checkout@v4
