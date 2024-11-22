@@ -5,8 +5,11 @@ on:
   push:
     branches:
       - 'run-build-on-change-2'
+    paths:
+      - '.github/build/docker/security-image-matrix.yml'
+      - 'path/to/other/relevant/files/**' # Add other relevant paths here
   schedule:
-    - cron:  '0 0 * * *' # Runs every midnight
+    - cron: '0 0 * * *' # Runs every midnight
 
 permissions:
   contents: read
@@ -25,61 +28,20 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      filtered_assets: ${{ steps.filter_assets.outputs.filtered_assets }}
+      assets: ${{ steps.convert_yaml_to_json.outputs.assets }}
       ecr_registry: ${{ steps.config.outputs.ecr_registry }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
 
-      - name: Calculate file differences
-        id: diff
-        uses: tj-actions/changed-files@v45
-        with:
-          json: true
-          json_raw_format: true
-
       - name: Convert YAML to JSON
         id: convert_yaml_to_json
         run: |
           matrix_file=".github/build/docker/security-image-matrix.yml"
-          assets_json=$(yq eval -o=json '.assets' $matrix_file)
           assets_json=$(yq eval -o=json '.assets' $matrix_file | jq -c '.')
           echo "$assets_json" > assets.json
-          echo "assets_json=$assets_json" >> $GITHUB_OUTPUT
-
-      - name: Ensure JSON Format for Changed Files
-        id: ensure_json_changed_files
-        run: |
-          # Access the value from the workflow expression and store it in a shell variable
-          changed_files="${{ steps.diff.outputs.all_changed_files }}"
-          
-          # Ensure CHANGED_FILES is valid JSON and compact it
-          compact_changed_files=$(echo "$changed_files" | jq -c '.')
-          echo "$compact_changed_files" > changed_files.json
-          echo "changed_files=$compact_changed_files" >> $GITHUB_OUTPUT
-
-      - name: Filter changed assets
-        id: filter_assets
-        env:
-          ASSETS_JSON: ${{ steps.convert_yaml_to_json.outputs.assets_json }}
-          CHANGED_FILES: ${{ steps.diff.outputs.all_changed_files }}
-        run: |
-          echo "$CHANGED_FILES" > changed_files.json
-          echo "$ASSETS_JSON" > assets.json
-          
-          filtered_assets=$(jq -n \
-            --argjson assets "$(cat assets.json)" \
-            --argjson changed "$(cat changed_files.json)" \
-            '
-            $assets | map(
-              select(
-                ($changed[] | test(".*" + .name + ".*")) // false
-              )
-            )
-            ')
-          
-          echo "filtered_assets=$filtered_assets" >> $GITHUB_OUTPUT
+          echo "assets=$assets_json" >> $GITHUB_OUTPUT
 
       - name: Construct ECR registry
         id: config
@@ -97,7 +59,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        asset: ${{ fromJSON(needs.metadata.outputs.filtered_assets) }}
+        asset: ${{ fromJSON(needs.metadata.outputs.assets) }}
 
     steps:
       - uses: actions/checkout@v4
