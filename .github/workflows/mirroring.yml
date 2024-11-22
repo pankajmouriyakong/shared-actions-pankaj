@@ -81,11 +81,13 @@ jobs:
       - name: Set Docker build args
         id: format_build_args
         run: |
+          set -euo pipefail  # Ensure the script exits on error and treats unset variables as errors
+
           # Define and set platforms
           platforms="linux/amd64,linux/arm64"
           echo "platforms=$platforms" >> $GITHUB_ENV
 
-          # Serialize build_args using toJson and ensure it's properly quoted
+          # Serialize build_args using toJson and assign to a variable
           build_args='${{ toJson(matrix.asset.build_args) }}'
 
           echo "build_args before processing: $build_args"  # Debugging: Print the build_args
@@ -96,8 +98,9 @@ jobs:
           else
             # Validate if build_args is valid JSON
             if echo "$build_args" | jq empty >/dev/null 2>&1; then
-              # Convert JSON to key=value pairs, ensuring values are properly quoted
-              echo "$build_args" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
+              # Convert JSON to comma-separated key=value pairs
+              build_args_str=$(echo "$build_args" | jq -r 'to_entries | map("\(.key)=\(.value)") | join(",")')
+              echo "build_args=$build_args_str" >> $GITHUB_ENV
             else
               echo "Invalid JSON format for build_args: $build_args" >&2
               exit 1
