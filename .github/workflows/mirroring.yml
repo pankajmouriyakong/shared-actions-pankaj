@@ -73,22 +73,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      # Authenticate to AWS
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        id: creds
-        with:
-          aws-region: ${{env.REGION}}
-          role-to-assume: arn:aws:iam::${{env.AWS_ACCOUNT_ID}}:role/ecr-identity-provider-role
-          role-session-name: GitHub_to_AWS_via_FederatedOIDC
-
-      - name: Login to ECR
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ needs.metadata.outputs.ecr_registry }}
-          username: ${{ steps.creds.outputs.aws-access-key-id }}
-          password: ${{ steps.creds.outputs.aws-secret-access-key }}
+        uses: ./login-aws-cloud
     
       - name: Set Docker build args
         id: format_build_args
