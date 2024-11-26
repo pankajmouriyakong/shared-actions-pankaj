@@ -75,21 +75,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: Configure AWS Credentials
         uses: ./login-aws-cloud
-      # Authenticate to AWS
-#      - name: Configure AWS Credentials
-#        uses: aws-actions/configure-aws-credentials@v4
-#        id: creds
-#        with:
-#          aws-region: ${{env.REGION}}
-#          role-to-assume: arn:aws:iam::${{env.AWS_ACCOUNT_ID}}:role/ecr-identity-provider-role
-#          role-session-name: GitHub_to_AWS_via_FederatedOIDC
-#
-#      - name: Login to ECR
-#        uses: docker/login-action@v3
-#        with:
-#          registry: ${{ needs.metadata.outputs.ecr_registry }}
-#          username: ${{ steps.creds.outputs.aws-access-key-id }}
-#          password: ${{ steps.creds.outputs.aws-secret-access-key }}
     
       - name: Set Docker build args
         id: format_build_args
@@ -134,8 +119,8 @@ jobs:
           images: ${{ needs.metadata.outputs.ecr_registry }}/${{ matrix.asset.name }}
           sep-tags: ","
           tags: |
-            type=raw,enable={{is_default_branch}},value=latest
-            type=raw,enable={{is_default_branch}},value=${{ steps.base_tool_image_meta.outputs.image_tag }}
+            type=raw,enable=true,value=latest
+            type=raw,enable=true,value=${{ steps.base_tool_image_meta.outputs.image_tag }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
