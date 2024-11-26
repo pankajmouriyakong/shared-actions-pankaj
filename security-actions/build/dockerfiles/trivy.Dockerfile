@@ -1,6 +1,6 @@
 # ARGs for external input (These should be set during build)
 ARG BASE_TOOL_IMAGE
-#ARG BASE_IMAGE
+ARG BASE_IMAGE
 
 # Stage 1: Use aquasec/trivy as the base
 FROM $BASE_TOOL_IMAGE AS trivy-setup
