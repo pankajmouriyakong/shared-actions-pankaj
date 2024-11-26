@@ -1,0 +1,32 @@
+{
+  "name": "public-shared-actions",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reusable shared actions maintained by Kong",
+  "repository": "https://github.com/Kong/publoc-shared-actions",
+  "author": "Kong, Inc.",
+  "license": "UNLICENSED",
+  "main": "index.js",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "commit": "cz"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "@commitlint/cli": "^19.6.0",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@commitlint/config-lerna-scopes": "^19.5.0",
+    "@evilmartians/lefthook": "^1.8.4",
+    "commitizen": "^4.3.1",
+    "husky": "^9.1.7",
+    "lerna": "^8.1.9"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
