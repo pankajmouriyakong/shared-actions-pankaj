@@ -41,7 +41,7 @@ runs:
     - name: Generate docker-cis report
       # TODO: Define a tagging mechanism for dependency manager version updates 
       # Also for controlled rollouts
-      uses: docker://992382581569.dkr.ecr.us-east-1.amazonaws.com/trivy:latest
+      uses: docker://418272760313.dkr.ecr.us-east-1.amazonaws.com/trivy:latest
       with:
         entrypoint: trivy
         args:
