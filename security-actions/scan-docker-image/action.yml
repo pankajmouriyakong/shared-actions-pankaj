@@ -89,20 +89,20 @@ runs:
   using: composite
   steps:
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-region: us-east-1
-        role-to-assume: arn:aws:iam::418272760313:role/ecr-identity-provider-role
-        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+      uses: ./login-aws-cloud
+#      with:
+#        aws-region: us-east-1
+#        role-to-assume: arn:aws:iam::418272760313:role/ecr-identity-provider-role
+#        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+#
+#    - name: Sts GetCallerIdentity
+#      shell: bash
+#      run: |
+#        aws sts get-caller-identity
 
-    - name: Sts GetCallerIdentity
-      shell: bash
-      run: |
-        aws sts get-caller-identity
-
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v2
+#    - name: Login to Amazon ECR
+#      id: login-ecr
+#      uses: aws-actions/amazon-ecr-login@v2
 
     - name: Set Scan Job Metadata
       shell: bash
