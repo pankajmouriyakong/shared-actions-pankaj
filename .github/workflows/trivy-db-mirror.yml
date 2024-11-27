@@ -6,7 +6,7 @@ on:
     branches:
       - 'decouple-trivy-image-config'
   schedule:
-    - cron:  '0 0 * * *' # Runs every midnight
+    - cron:  '* 6 * * *' # Runs every 6 hrs
 
 
 env:
@@ -17,6 +17,40 @@ permissions:
   id-token: write
 
 jobs:
+  metadata:
+    name: Metadata
+    runs-on: ubuntu-latest
+
+    outputs:
+      assets: ${{ steps.config.outputs.assets }}
+      ecr_registry: ${{ steps.config.outputs.ecr_registry }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Construct tooling matrix
+        if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+        id: config
+        run: |
+          matrix_file=".github/build/docker/security-image-matrix.yml"
+          assets=$(yq eval -o=json '.assets' $matrix_file)
+          # Construct the dependency matrix
+          # Format tooling build_args as key=value pair space separated string
+          single_line_assets=$(echo "$assets" | jq -rc 'map({
+            name: .name,
+            build_args: (
+              if (.build_args // null) == null then
+                ""
+              else
+                .build_args |
+                to_entries |
+                map("\(.key)=\(.value)") |
+                join(" ")
+              end
+            )
+          })')  
+          echo "ASSETS_JSON=$single_line_assets"
+          echo "ecr_registry=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
+          echo "assets=$single_line_assets" >> $GITHUB_OUTPUT
+
   trivy-db-mirror:
     runs-on: ubuntu-latest
     steps:
@@ -30,6 +64,6 @@ jobs:
 
     - name: Pull and Cache Trivy Vuln DB
       run: |
-        oras pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/trivy-db/aquasecurity/trivy-db:2
+        oras pull ${{ needs.metadata.outputs.ecr_registry }}/trivy-db/aquasecurity/trivy-db:2
     
     
