@@ -1,32 +1,42 @@
 {
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:base"],
   "regexManagers": [
     {
       "fileMatch": [".github/build/docker/security-image-matrix.yml"],
       "matchStrings": [
-        "BASE_TOOL_IMAGE:\\s*(?<depName>.*?):(?<currentValue>[\\w\\.\\-]+)"
+        "BASE_TOOL_IMAGE:\\s*(?<depName>.*?)(:(?<currentValue>[\\w\\.\\-]+))?(?<digest>@sha256:[a-f0-9]+)?"
       ],
-      "depNameTemplate": "{{depName}}",
+      "depNameTemplate": "{{{ depName }}}",
       "versioningTemplate": "docker",
-      "datasourceTemplate": "docker"
+      "datasourceTemplate": "docker",
+      "extractVersionTemplate": "{{{ currentValue }}}{{{ digest }}}"
     },
     {
       "fileMatch": [".github/build/docker/security-image-matrix.yml"],
       "matchStrings": [
-        "DB_IMAGE:\\s*(?<depName>.*?):(?<currentValue>[\\w\\.\\-]+)"
+        "BASE_IMAGE:\\s*(?<depName>.*?)(:(?<currentValue>[\\w\\.\\-]+))?(?<digest>@sha256:[a-f0-9]+)?"
       ],
-      "depNameTemplate": "{{depName}}",
+      "depNameTemplate": "{{{ depName }}}",
       "versioningTemplate": "docker",
-      "datasourceTemplate": "docker"
+      "datasourceTemplate": "docker",
+      "extractVersionTemplate": "{{{ currentValue }}}{{{ digest }}}"
     },
     {
       "fileMatch": [".github/build/docker/security-image-matrix.yml"],
       "matchStrings": [
-        "BASE_IMAGE:\\s*(?<depName>.*?)(?<currentValue>@sha256:[a-f0-9]+)"
+        "DB_IMAGE:\\s*(?<depName>.*?)(:(?<currentValue>[\\w\\.\\-]+))?(?<digest>@sha256:[a-f0-9]+)?"
       ],
-      "depNameTemplate": "{{depName}}",
+      "depNameTemplate": "{{{ depName }}}",
+      "versioningTemplate": "docker",
+      "datasourceTemplate": "docker",
+      "extractVersionTemplate": "{{{ currentValue }}}{{{ digest }}}"
+    },
+    {
+      "fileMatch": [".github/build/docker/security-image-matrix.yml"],
+      "matchStrings": [
+        "DB_TAG:\\s*(?<depName>.*?)(:(?<currentValue>[\\w\\.\\-]+))?$"
+      ],
+      "depNameTemplate": "{{{ depName }}}",
       "versioningTemplate": "docker",
       "datasourceTemplate": "docker"
     }
