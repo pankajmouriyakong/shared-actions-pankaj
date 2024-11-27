@@ -54,21 +54,22 @@ jobs:
   trivy-db-mirror:
     runs-on: ubuntu-latest
     needs: metadata
+    strategy:
+      matrix:
+        asset: ${{ fromJson(needs.metadata.outputs.assets) }}
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Configure AWS Credentials
-      uses: ./login-aws-cloud
+      - name: Configure AWS Credentials
+        uses: ./login-aws-cloud
 
-    - name: Oras Setup
-      uses: oras-project/setup-oras@v1
+      - name: Oras Setup
+        uses: oras-project/setup-oras@v1
 
-    - name: Pull and Cache Trivy Vuln DB
-      run: |
-        DB_IMAGE=${{ matrix.asset.build_args.DB_IMAGE }}
-        echo $DB_IMAGE
-        trimmed_string=$(echo "$DB_IMAGE" | sed 's|^public\.ecr\.aws/||')
-        echo $trimmed_string
-        oras pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db/$trimmed_string
-    
-        
+      - name: Pull and Cache Trivy Vuln DB
+        run: |
+          DB_IMAGE=${{ matrix.asset.build_args.DB_IMAGE }}
+          echo "DB_IMAGE: $DB_IMAGE"
+          trimmed_string=$(echo "$DB_IMAGE" | sed 's|^public\.ecr\.aws/||')
+          echo "Trimmed String: $trimmed_string"
+          oras pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db/$trimmed_string
