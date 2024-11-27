@@ -9,9 +9,9 @@ on:
     - cron:  '0 0 * * *' # Runs every midnight
 
 
-#permissions:
-#  contents: read
-#  id-token: write
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   trivy-db-mirror:
@@ -24,4 +24,3 @@ jobs:
 
     - name: Configure AWS Credentials
       uses: oras-project/setup-oras@v1
-    
