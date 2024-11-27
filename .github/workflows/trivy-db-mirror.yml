@@ -17,10 +17,11 @@ jobs:
   trivy-db-mirror:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Configure AWS Credentials
-        uses: ./login-aws-cloud
+    - uses: actions/checkout@v4
 
-      - name: Configure AWS Credentials
-      - uses: oras-project/setup-oras@v1
-      - run: oras version
+    - name: Configure AWS Credentials
+      uses: ./login-aws-cloud
+
+    - name: Configure AWS Credentials
+      uses: oras-project/setup-oras@v1
+      run: oras version
