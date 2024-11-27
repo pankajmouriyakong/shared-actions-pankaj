@@ -37,6 +37,7 @@ jobs:
           DB_IMAGE=$(yq e '.assets[] | select(.name == "trivy-db") | .build_args.DB_IMAGE' .github/build/docker/security-image-matrix.yml)
           DB_TAG=$(yq e '.assets[] | select(.name == "trivy-db") | .build_args.DB_TAG' .github/build/docker/security-image-matrix.yml)
           echo "DB_IMAGE=${DB_IMAGE}" >> $GITHUB_ENV
+          echo "DB_TAG=${DB_TAG}" >> $GITHUB_ENV
 
       - name: Pull and Push to ECR
         run: |
