@@ -30,4 +30,4 @@ jobs:
 
       - name: Pull and Cache Trivy Vuln DB
         run: |
-          oras pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db/aquasecurity/trivy-db
+          oras pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db/aquasecurity/trivy-db:2
