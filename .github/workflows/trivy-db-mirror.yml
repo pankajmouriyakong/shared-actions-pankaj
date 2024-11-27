@@ -48,7 +48,7 @@ jobs:
             )
           })')  
           echo "ASSETS_JSON=$single_line_assets"
-          echo "ecr_registry=418272760313.dkr.ecr.us-east-1.amazonaws.com" >> $GITHUB_OUTPUT
+          echo "ecr_registry=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
           echo "assets=$single_line_assets" >> $GITHUB_OUTPUT
 
   trivy-db-mirror:
@@ -65,6 +65,7 @@ jobs:
 
     - name: Pull and Cache Trivy Vuln DB
       run: |
-        oras pull ${{ needs.metadata.outputs.ecr_registry }}/trivy-db/aquasecurity/trivy-db:2
+        
+        oras pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db/aquasecurity/trivy-db:2
     
     
