@@ -37,7 +37,7 @@ jobs:
       - name: Load Matrix File
         run: |
           echo "Loading matrix from security-image-matrix.yml"
-          cat security-image-matrix.yml
+          cat .github/build/docker/security-image-matrix.yml
 
       - name: Pull and Cache Trivy Vuln DB
         run: |
