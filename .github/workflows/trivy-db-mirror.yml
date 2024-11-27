@@ -24,3 +24,9 @@ jobs:
 
     - name: Configure AWS Credentials
       uses: oras-project/setup-oras@v1
+
+    - name: Pull and Cache Trivy Vuln DB
+      run: |
+        oras pull 418272760313.dkr.ecr.us-east-1.amazonaws.com/trivy-db/aquasecurity/trivy-db:2
+    
+    
