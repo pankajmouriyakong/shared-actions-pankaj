@@ -2,12 +2,8 @@ name: Mirroring Process for Trivy Vuln DB
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - 'decouple-trivy-image-config'
   schedule:
-    - cron:  '* 6 * * *' # Runs every 6 hrs
-
+    - cron: '0 */6 * * *'  # Runs every 6 hours at the top of the hour
 
 env:
   AWS_ACCOUNT_ID: 418272760313
@@ -26,6 +22,7 @@ jobs:
       ecr_registry: ${{ steps.config.outputs.ecr_registry }}
     steps:
       - uses: actions/checkout@v3
+
       - name: Construct tooling matrix
         if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
         id: config
@@ -46,25 +43,23 @@ jobs:
                 join(" ")
               end
             )
-          })')  
+          })')
           echo "ASSETS_JSON=$single_line_assets"
-          echo "ecr_registry=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
+          echo "ecr_registry=${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com" >> $GITHUB_OUTPUT
           echo "assets=$single_line_assets" >> $GITHUB_OUTPUT
 
   trivy-db-mirror:
     runs-on: ubuntu-latest
     needs: metadata
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Configure AWS Credentials
-      uses: ./login-aws-cloud
+      - name: Configure AWS Credentials
+        uses: ./login-aws-cloud
 
-    - name: Oras Setup
-      uses: oras-project/setup-oras@v1
+      - name: Oras Setup
+        uses: oras-project/setup-oras@v1
 
-    - name: Pull and Cache Trivy Vuln DB
-      run: |
-        oras pull ${{ needs.metadata.outputs.ecr_registry }}/trivy-db/aquasecurity/trivy-db:2
-    
-    
+      - name: Pull and Cache Trivy Vuln DB
+        run: |
+          oras pull ${{ needs.metadata.outputs.ecr_registry }}/trivy-db/aquasecurity/trivy-db:2
