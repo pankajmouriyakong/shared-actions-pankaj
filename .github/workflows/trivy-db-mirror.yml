@@ -69,6 +69,6 @@ jobs:
         echo $DB_IMAGE
         trimmed_string=$(echo "$DB_IMAGE" | sed 's|^public\.ecr\.aws/||')
         echo $trimmed_string
-        oras pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db/$trimmed_String
+        oras pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db/$trimmed_string
     
         
