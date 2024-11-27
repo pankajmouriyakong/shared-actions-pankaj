@@ -17,14 +17,10 @@ env:
 permissions:
   id-token: write
 
+
 jobs:
   trivy-db-mirror:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - name: trivy-db
-            file: .github/build/docker/security-image-matrix.yml
     steps:
       - uses: actions/checkout@v4
 
@@ -35,12 +31,14 @@ jobs:
         uses: oras-project/setup-oras@v1
 
       - name: Load Matrix File
+        id: load-matrix
         run: |
-          echo "Loading matrix from security-image-matrix.yml"
-          cat .github/build/docker/security-image-matrix.yml
+          echo "Loading matrix from security-matrix.yml"
+          DB_IMAGE=$(yq e '.assets[] | select(.name == "trivy-db") | .build_args.DB_IMAGE' .github/build/docker/security-image-matrix.yml)
+          echo "DB_IMAGE=${DB_IMAGE}" >> $GITHUB_ENV
 
       - name: Pull and Cache Trivy Vuln DB
         run: |
-          oras pull ${{ matrix.file.assets[2].build_args.DB_IMAGE }}
+          oras pull ${DB_IMAGE}
           oras tag ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db:2
-          oras push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db:.ecr.${{ env.REGION }}.amazonaws.com/trivy-db:2
+          oras push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db:2amazonaws.com/trivy-db:.ecr.${{ env.REGION }}.amazonaws.com/trivy-db:2
