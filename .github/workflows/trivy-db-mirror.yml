@@ -24,7 +24,7 @@ jobs:
       matrix:
         include:
           - name: trivy-db
-            file: security-image-matrix.yml
+            file: .github/build/docker/security-image-matrix.yml
     steps:
       - uses: actions/checkout@v4
 
