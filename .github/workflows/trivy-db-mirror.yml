@@ -24,7 +24,7 @@ jobs:
       matrix:
         include:
           - name: trivy-db
-            file: security-matrix.yml
+            file: security-image-matrix.yml
     steps:
       - uses: actions/checkout@v4
 
@@ -36,8 +36,8 @@ jobs:
 
       - name: Load Matrix File
         run: |
-          echo "Loading matrix from security-matrix.yml"
-          cat security-matrix.yml
+          echo "Loading matrix from security-image-matrix.yml"
+          cat security-image-matrix.yml
 
       - name: Pull and Cache Trivy Vuln DB
         run: |
