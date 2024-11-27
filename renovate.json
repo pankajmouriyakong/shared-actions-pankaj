@@ -34,9 +34,9 @@
     {
       "fileMatch": [".github/build/docker/security-image-matrix.yml"],
       "matchStrings": [
-        "DB_TAG:\\s*(?<currentValue>[\\w\\.\\-]+)"
+        "DB_TAG:\\s*(?<depName>.*?)(:(?<currentValue>[\\w\\.\\-]+))?$"
       ],
-      "depNameTemplate": "public.ecr.aws/aquasecurity/trivy-db",
+      "depNameTemplate": "{{{ depName }}}",
       "versioningTemplate": "docker",
       "datasourceTemplate": "docker"
     }
