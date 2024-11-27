@@ -30,15 +30,6 @@
       "versioningTemplate": "docker",
       "datasourceTemplate": "docker",
       "extractVersionTemplate": "{{{ currentValue }}}{{{ digest }}}"
-    },
-    {
-      "fileMatch": [".github/build/docker/security-image-matrix.yml"],
-      "matchStrings": [
-        "DB_TAG:\\s*(?<currentValue>[\\w.\\-]+)"
-      ],
-      "depNameTemplate": "public.ecr.aws/aquasecurity/trivy-db",
-      "versioningTemplate": "docker",
-      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
