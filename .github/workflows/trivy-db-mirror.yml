@@ -27,7 +27,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Construct tooling matrix
-        if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
         id: config
         run: |
           matrix_file=".github/build/docker/security-image-matrix.yml"
@@ -40,8 +39,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: metadata
     strategy:
+      fail-fast: false
       matrix:
-        asset: ${{ fromJson(needs.metadata.outputs.assets) }}
+        asset: ${{ fromJSON(needs.metadata.outputs.assets) }}
     steps:
       - uses: actions/checkout@v4
 
