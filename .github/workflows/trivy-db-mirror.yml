@@ -9,6 +9,10 @@ on:
     - cron:  '0 0 * * *' # Runs every midnight
 
 
+env:
+  AWS_ACCOUNT_ID: 418272760313
+  REGION: us-east-1
+
 permissions:
   id-token: write
 
@@ -21,11 +25,11 @@ jobs:
     - name: Configure AWS Credentials
       uses: ./login-aws-cloud
 
-    - name: Configure AWS Credentials
+    - name: Oras Setup
       uses: oras-project/setup-oras@v1
 
     - name: Pull and Cache Trivy Vuln DB
       run: |
-        oras push 418272760313.dkr.ecr.us-east-1.amazonaws.com/trivy-db/aquasecurity/trivy-db:2
+        oras pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/trivy-db/aquasecurity/trivy-db:2
     
     
