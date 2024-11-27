@@ -4,7 +4,7 @@
     {
       "fileMatch": [".github/build/docker/security-image-matrix.yml"],
       "matchStrings": [
-        "BASE_TOOL_IMAGE:\\s*(?<depName>.*?)(:(?<currentValue>[\\w\\.\\-]+))?(?<digest>@sha256:[a-f0-9]+)?"
+        "BASE_TOOL_IMAGE:\\s*(?<depName>.*?)(:(?<currentValue>[\\w.\\-]+))?(?<digest>@sha256:[a-f0-9]+)?"
       ],
       "depNameTemplate": "{{{ depName }}}",
       "versioningTemplate": "docker",
@@ -14,7 +14,7 @@
     {
       "fileMatch": [".github/build/docker/security-image-matrix.yml"],
       "matchStrings": [
-        "BASE_IMAGE:\\s*(?<depName>.*?)(:(?<currentValue>[\\w\\.\\-]+))?(?<digest>@sha256:[a-f0-9]+)?"
+        "BASE_IMAGE:\\s*(?<depName>.*?)(:(?<currentValue>[\\w.\\-]+))?(?<digest>@sha256:[a-f0-9]+)?"
       ],
       "depNameTemplate": "{{{ depName }}}",
       "versioningTemplate": "docker",
@@ -24,7 +24,7 @@
     {
       "fileMatch": [".github/build/docker/security-image-matrix.yml"],
       "matchStrings": [
-        "DB_IMAGE:\\s*(?<depName>.*?)(:(?<currentValue>[\\w\\.\\-]+))?(?<digest>@sha256:[a-f0-9]+)?"
+        "DB_IMAGE:\\s*(?<depName>.*?)(:(?<currentValue>[\\w.\\-]+))?(?<digest>@sha256:[a-f0-9]+)?"
       ],
       "depNameTemplate": "{{{ depName }}}",
       "versioningTemplate": "docker",
@@ -34,11 +34,17 @@
     {
       "fileMatch": [".github/build/docker/security-image-matrix.yml"],
       "matchStrings": [
-        "DB_TAG:\\s*(?<depName>.*?)(:(?<currentValue>[\\w\\.\\-]+))?$"
+        "DB_TAG:\\s*(?<currentValue>[\\w.\\-]+)"
       ],
-      "depNameTemplate": "{{{ depName }}}",
+      "depNameTemplate": "public.ecr.aws/aquasecurity/trivy-db",
       "versioningTemplate": "docker",
-      "datasourceTemplate": "docker",
+      "datasourceTemplate": "docker"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "matchDepNames": ["public.ecr.aws/aquasecurity/trivy-db"],
       "registryUrls": ["https://public.ecr.aws"]
     }
   ]
