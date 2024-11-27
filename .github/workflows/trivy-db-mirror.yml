@@ -22,8 +22,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        assets:
+        include:
           - name: trivy-db
+            file: security-matrix.yml
     steps:
       - uses: actions/checkout@v4
 
@@ -33,8 +34,13 @@ jobs:
       - name: Oras Setup
         uses: oras-project/setup-oras@v1
 
+      - name: Load Matrix File
+        run: |
+          echo "Loading matrix from security-matrix.yml"
+          cat security-matrix.yml
+
       - name: Pull and Cache Trivy Vuln DB
         run: |
-          oras pull ${{ matrix.assets.build_args.DB_IMAGE }}
+          oras pull ${{ matrix.file.assets[2].build_args.DB_IMAGE }}
           oras tag ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db:2
-          oras push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db:2
+          oras push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db:.ecr.${{ env.REGION }}.amazonaws.com/trivy-db:2
