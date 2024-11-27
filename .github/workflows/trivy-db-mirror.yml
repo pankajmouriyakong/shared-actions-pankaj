@@ -27,8 +27,8 @@ jobs:
       - name: Configure AWS Credentials
         uses: ./login-aws-cloud
 
-      - name: Oras Setup
-        uses: oras-project/setup-oras@v1
+      - name: Install regctl
+        uses: regclient/actions/regctl-installer@main
 
       - name: Load Matrix File
         id: load-matrix
@@ -37,8 +37,6 @@ jobs:
           DB_IMAGE=$(yq e '.assets[] | select(.name == "trivy-db") | .build_args.DB_IMAGE' .github/build/docker/security-image-matrix.yml)
           echo "DB_IMAGE=${DB_IMAGE}" >> $GITHUB_ENV
 
-      - name: Pull and Cache Trivy Vuln DB
+      - name: Pull and Push to ECR
         run: |
-          oras pull ${DB_IMAGE}
-          oras tag ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db:2
-          oras push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db:2
+          regctl copy image $DB_IMAGE 418272760313.dkr.ecr.us-east-1.amazonaws.com/trivy-db:2
