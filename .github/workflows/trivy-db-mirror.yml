@@ -13,12 +13,17 @@ env:
   AWS_ACCOUNT_ID: 418272760313
   REGION: us-east-1
 
+
 permissions:
   id-token: write
 
 jobs:
   trivy-db-mirror:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        assets:
+          - name: trivy-db
     steps:
       - uses: actions/checkout@v4
 
@@ -30,4 +35,6 @@ jobs:
 
       - name: Pull and Cache Trivy Vuln DB
         run: |
-          oras pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db/aquasecurity/trivy-db:2
+          oras pull ${{ matrix.assets.build_args.DB_IMAGE }}
+          oras tag ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db:2
+          oras push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/trivy-db:2
