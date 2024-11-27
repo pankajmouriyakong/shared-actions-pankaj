@@ -38,7 +38,8 @@
       ],
       "depNameTemplate": "{{{ depName }}}",
       "versioningTemplate": "docker",
-      "datasourceTemplate": "docker"
+      "datasourceTemplate": "docker",
+      "registryUrls": ["https://public.ecr.aws"]
     }
   ]
 }
