@@ -38,13 +38,13 @@ jobs:
       - name: Post 'cancelled' notification
         uses: ./slack-actions/workflow-notification
         with:
-          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_ALERT_SLACK_NOTIFICATION }}
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
           status: 'cancelled'
 
       - name: Post 'skipped' notification
         uses: ./slack-actions/workflow-notification
         with:
-          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_ALERT_SLACK_NOTIFICATION }}
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
           status: 'skipped'
 
       - name: Post 'success' notification with custom payload
