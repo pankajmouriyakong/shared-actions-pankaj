@@ -152,3 +152,21 @@ jobs:
           #   - https://github.com/docker/buildx/issues/1509#issuecomment-1378538197
           provenance: false
           outputs: type=image,oci-mediatypes=true
+
+  slack_notification:
+    name: Slack Notification for Image Mirroring Process
+    runs-on: ubuntu-latest
+    needs: [metadata, build-publish-assets]
+    if: always()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Send Slack Notification
+        uses: ./slack-actions/workflow-notification
+        with:
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
+          status: ${{ needs.build-publish-assets.result }}
+          success-message: ":test_tube: [TEST]: This is a *success* notification from `Kong/public-shared-actions`"
+          failure-message: ":test_tube: [TEST]: This is a *failure* notification from `Kong/public-shared-actions`"
+          cancelled-message: ":test_tube: [TEST]: Workflow was *cancelled* in `Kong/public-shared-actions`"
