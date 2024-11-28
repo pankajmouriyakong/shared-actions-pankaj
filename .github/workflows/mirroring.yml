@@ -73,7 +73,7 @@ jobs:
       matrix:
         asset: ${{ fromJSON(needs.metadata.outputs.assets) }}
 
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.schedule == matrix.asset.cron }}
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -133,6 +133,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build and Push Docker Image
+        if: ${{ github.event.schedule == matrix.asset.cron || github.event_name == 'workflow_dispatch' }}
         uses: docker/build-push-action@v5
         id: image
         with:
