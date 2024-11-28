@@ -2,7 +2,7 @@
 assets:
   - name: trivy
     build: true
-    cron: '0 0 * * *'
+    cron: '2 * * * *'
     # Will be exported as GH env
     # Must match args in dockerfile
     # Update renovate.json when docker image keys are modified in this file
@@ -14,7 +14,7 @@ assets:
 
   - name: semgrep
     build: true
-    cron: '0 6 * * *'
+    cron: '4 * * * *'
     build_args:
       # Update to distroless
       BASE_TOOL_IMAGE: docker.io/semgrep/semgrep:latest@sha256:027ea6e8a009cbf0031df5abe9d1491ca82656fe7c584257c198ab680d770eb7

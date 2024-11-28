@@ -6,8 +6,8 @@ on:
     branches:
       - 'run-build-on-change-2'
   schedule:
-    - cron: '0 0 * * *'    # For trivy (default schedule)
-    - cron: '0 6 * * *'    # For semgrep
+    - cron: '2 * * * *'    # For trivy (default schedule)
+    - cron: '4 * * * *'    # For semgrep
 
 
 permissions:
