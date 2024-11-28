@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Configure AWS Credentials
-        uses: ./login-aws-cloud
+        uses: ./login-aws-cloudf
 
       - name: Install regctl
         uses: regclient/actions/regctl-installer@main
