@@ -60,4 +60,3 @@ jobs:
           success-message: ":test_tube: [${{ github.workflow }}]: This is a *success* notification from [${{ github.repository }}]"
           failure-message: ":test_tube: [${{ github.workflow }}]: This is a *failure* notification from [${{ github.repository }}]"
           cancelled-message: ":test_tube: [${{ github.workflow }}]: Workflow was *cancelled* in [${{ github.repository }}]"
-          skipped-message: ":test_tube: [${{ github.workflow }}]: Workflow was *skipped* in [${{ github.repository }}]"
