@@ -39,6 +39,7 @@ jobs:
         assets=$(yq eval -o=json '.assets' $matrix_file)
         # Set default cron if not specified
         assets=$(echo "$assets" | jq 'map(if has("cron") then . else . + {cron: "0 0 * * *"} end)')
+        assets=$(echo "$assets" | jq '[.[] | select(.build == true)]')
         # Construct the dependency matrix
         # Format tooling build_args as key=value pair space separated string
         single_line_assets=$(echo "$assets" | jq -rc 'map({

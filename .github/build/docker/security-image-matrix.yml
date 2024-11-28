@@ -1,6 +1,7 @@
 ---
 assets:
   - name: trivy
+    build: true
     cron: '0 0 * * *'
     # Will be exported as GH env
     # Must match args in dockerfile
@@ -12,6 +13,7 @@ assets:
       BASE_IMAGE: gcr.io/distroless/base@sha256:7a4bffcb07307d97aa731b50cb6ab22a68a8314426f4e4428335939b5b1943a5
 
   - name: semgrep
+    build: true
     cron: '0 6 * * *'
     build_args:
       # Update to distroless
@@ -19,6 +21,7 @@ assets:
       BASE_IMAGE: docker.io/semgrep/semgrep:latest@sha256:027ea6e8a009cbf0031df5abe9d1491ca82656fe7c584257c198ab680d770eb7
 
   - name: trivy-db
+    build: false
     build_args:
       DB_IMAGE: public.ecr.aws/aquasecurity/trivy-db:2
       DB_TAG: 2
