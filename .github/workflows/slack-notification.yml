@@ -11,7 +11,7 @@ on:
       - slack-notification-psa
     tags:
       - '*'
-  workflow_dispatch: {}
+  workflow_dispatch: 
 
 jobs:
   slack-workflow-notifications:
