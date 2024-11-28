@@ -6,7 +6,8 @@ on:
     branches:
       - 'run-build-on-change-2'
   schedule:
-    - cron:  '0 0 * * *' # Runs every midnight
+    - cron: '0 0 * * *'    # For trivy (default schedule)
+    - cron: '0 6 * * *'    # For semgrep
 
 
 permissions:
@@ -36,10 +37,13 @@ jobs:
       run: |
         matrix_file=".github/build/docker/security-image-matrix.yml"
         assets=$(yq eval -o=json '.assets' $matrix_file)
+        # Set default cron if not specified
+        assets=$(echo "$assets" | jq 'map(if has("cron") then . else . + {cron: "0 0 * * *"} end)')
         # Construct the dependency matrix
         # Format tooling build_args as key=value pair space separated string
         single_line_assets=$(echo "$assets" | jq -rc 'map({
           name: .name,
+          cron: .cron,
           build_args: (
             if (.build_args // null) == null then
               ""
@@ -69,7 +73,7 @@ jobs:
       matrix:
         asset: ${{ fromJSON(needs.metadata.outputs.assets) }}
 
-    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.schedule == matrix.asset.cron }}
 
     steps:
       - uses: actions/checkout@v4
