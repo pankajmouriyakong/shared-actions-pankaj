@@ -168,6 +168,6 @@ jobs:
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
           status: ${{ needs.build-publish-assets.result }}
-          success-message: ":test_tube: [${{ github.workflow }}]: This is a *success* notification from [${{ github.repository }}]"
-          failure-message: ":test_tube: [${{ github.workflow }}]: This is a *failure* notification from [${{ github.repository }}]"
-          cancelled-message: ":test_tube: [${{ github.workflow }}]: Workflow was *cancelled* in [${{ github.repository }}]"
+          success-message: ":white_check_mark: ${{ github.workflow }} workflow successfully ran within ${{ github.repository }}"
+          failure-message: ":x: This is a *failure* notification from ${{ github.repository }} for workflow ${{ github.workflow }}"
+          cancelled-message: ":no_entry_sign: Workflow ${{ github.workflow }} was *cancelled* in ${{ github.repository }}"
