@@ -154,6 +154,11 @@ jobs:
           provenance: false
           outputs: type=image,oci-mediatypes=true
 
+  # TODO
+  # Get webhook creation approval from Slack Admin
+  # Update webhook URL as secret within Github PSA repo
+  # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION
+  # Slack channel "notify-public-shared-actions" already created
   slack_notification:
     name: Slack Notification for Image Mirroring Process
     runs-on: ubuntu-latest

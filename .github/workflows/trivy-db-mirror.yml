@@ -43,6 +43,11 @@ jobs:
         run: |
           regctl image copy $DB_IMAGE 418272760313.dkr.ecr.us-east-1.amazonaws.com/trivy-db:$DB_TAG
 
+  # TODO
+  # Get webhook creation approval from Slack Admin
+  # Update webhook URL as secret within Github PSA repo
+  # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION
+  # Slack channel "notify-public-shared-actions" already created
   slack_notification:
     name: Slack Notification for Trivy DB Mirroring Process
     runs-on: ubuntu-latest
