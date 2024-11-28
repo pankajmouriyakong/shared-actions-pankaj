@@ -1,4 +1,4 @@
-name: Mirroring Process for Trivy Vuln DB
+name: Mirroring Trivy VulnDB
 
 on:
   workflow_dispatch:
@@ -57,6 +57,6 @@ jobs:
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
           status: ${{ needs.trivy-db-mirror.result }}
-          success-message: ":test_tube: ${{ github.workflow }}: Workflow successfully ran within ${{ github.repository }}"
-          failure-message: ":test_tube: ${{ github.workflow }}: This is a *failure* notification from ${{ github.repository }}"
-          cancelled-message: ":test_tube: ${{ github.workflow }}: Workflow was *cancelled* in ${{ github.repository }}"
+          success-message: ":test_tube: ${{ github.workflow }} workflow successfully ran within ${{ github.repository }}"
+          failure-message: ":test_tube: This is a *failure* notification from ${{ github.repository }} for workflow ${{ github.workflow }}"
+          cancelled-message: ":test_tube: Workflow ${{ github.workflow }} was *cancelled* in ${{ github.repository }}"
