@@ -1,4 +1,4 @@
-name: Mirroring Process for Trivy Vuln DB
+name: Mirroring Trivy VulnDB
 
 on:
   workflow_dispatch:
@@ -42,3 +42,26 @@ jobs:
       - name: Pull and Push to ECR
         run: |
           regctl image copy $DB_IMAGE 418272760313.dkr.ecr.us-east-1.amazonaws.com/trivy-db:$DB_TAG
+
+  # TODO
+  # Get webhook creation approval from Slack Admin
+  # Update webhook URL as secret within Github PSA repo
+  # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION
+  # Slack channel "notify-public-shared-actions" already created
+  slack_notification:
+    name: Slack Notification for Trivy DB Mirroring Process
+    runs-on: ubuntu-latest
+    needs: trivy-db-mirror
+    if: always()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Send Slack Notification
+        uses: ./slack-actions/workflow-notification
+        with:
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
+          status: ${{ needs.trivy-db-mirror.result }}
+          success-message: ":white_check_mark: ${{ github.workflow }} workflow successfully ran within ${{ github.repository }}"
+          failure-message: ":x: This is a *failure* notification from ${{ github.repository }} for workflow ${{ github.workflow }}"
+          cancelled-message: ":no_entry_sign: Workflow ${{ github.workflow }} was *cancelled* in ${{ github.repository }}"
