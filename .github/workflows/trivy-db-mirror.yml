@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'decouple-trivy-image-config'
+      - 'grype'
   schedule:
     - cron:  '0 */6 * * *'  # Runs every 6 hrs
 
@@ -12,6 +12,7 @@ on:
 env:
   AWS_ACCOUNT_ID: 418272760313
   REGION: us-east-1
+  ECR_REPO_NAME: trivy-db
 
 
 permissions:
@@ -41,7 +42,7 @@ jobs:
 
       - name: Pull and Push to ECR
         run: |
-          regctl image copy $DB_IMAGE 418272760313.dkr.ecr.us-east-1.amazonaws.com/trivy-db:$DB_TAG
+          regctl image copy $DB_IMAGE ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.ECR_REPO_NAME }}:$DB_TAG
 
   # TODO
   # Get webhook creation approval from Slack Admin
