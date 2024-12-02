@@ -1,0 +1,57 @@
+name: Grype DB Publisher
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'grype'
+
+
+permissions:
+  contents: read
+  discussions: read
+  issues: read
+  pull-requests: read
+  id-token: write
+
+env:
+  AWS_ACCOUNT_ID: 418272760313
+  REGION: us-east-1
+  S3_BASE_URL: "https://my-grype-databases.s3.amazonaws.com/databases"
+
+jobs:
+  grype-db-index-setup:
+    name: grype-db-index-setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: ./login-aws-cloud
+
+      - name: download listing.json file
+        id: listing-json
+        run: |
+          curl -o listing.json https://toolbox-data.anchore.io/grype/databases/listing.json
+          jq -r '.available[][] | .url' listing.json > urls.txt
+          wget -i urls.txt -P databases
+
+      # To Review: Use AWS action if possible to avoid scripting
+      - name: Upload the tar files to S3
+        needs: listing-json
+        id: upload-to-s3
+        run: |
+          aws s3 cp databases s3://my-grype-databases/databases/ --recursive
+
+      - name: Craft Kong owned listing.json file
+        id: craft-listing-json
+        run: |
+          echo ${{ env.S3_BASE_URL }}
+          jq 'walk(if type == "object" and .url then .url |= gsub("https://grype.anchore.io/databases/"; "https://my-grype-databases.s3.us-east-1.amazonaws.com/databases/") else . end)' listing.json > kong-listing.json
+          cat kong-listing.json
+
+      - name: Upload Kong-listing.json file to S3
+        needs: craft-listing-json
+        run: |
+          aws s3 cp kong-listing.json s3://my-grype-databases/listing.json
+          
