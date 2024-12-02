@@ -1,4 +1,4 @@
-name: Grype DB Publisher
+name: Grype DB Mirror
 
 on:
   workflow_dispatch:
@@ -22,8 +22,8 @@ env:
   GRYPE_UPSTREAM_INDEX_URL: "https://toolbox-data.anchore.io/grype/databases/listing.json"
 
 jobs:
-  grype-db-sync:
-    name: grype-db-sync
+  grype-db-mirror:
+    name: grype-db-mirror
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,15 +31,27 @@ jobs:
       - name: Configure AWS Credentials
         uses: ./login-aws-cloud
 
-      - name: download listing.json file
+      - name: download listing.json file from upstream
         id: listing-json
         run: |
-          curl -o listing.json ${{ env.GRYPE_UPSTREAM_INDEX_URL }}
+          set -e
+          curl -s -o listing.json ${{ env.GRYPE_UPSTREAM_INDEX_URL }}
+          if [ ! -s listing.json ]; then
+            echo "Error: listing.json file is empty or could not be downloaded"
+            exit 1
+          fi
           jq -r '.available[][] | .url' listing.json > urls.txt
-          wget -i urls.txt -P databases
+          wget -i urls.txt -P databases || {
+            echo "Error: Failed to download database files";
+            exit 1;
+          }
+
+#          curl -o listing.json ${{ env.GRYPE_UPSTREAM_INDEX_URL }}
+#          jq -r '.available[][] | .url' listing.json > urls.txt
+#          wget -i urls.txt -P databases
 
       # To Review: Use AWS action if possible to avoid scripting
-      - name: Upload the tar files to S3
+      - name: Upload the db tar files to S3
         id: upload-to-s3
         run: |
           aws s3 cp databases s3://${{ env.S3_DB_BUCKET_NAME }}/databases/ --recursive
