@@ -38,7 +38,6 @@ jobs:
 
       # To Review: Use AWS action if possible to avoid scripting
       - name: Upload the tar files to S3
-        needs: listing-json
         id: upload-to-s3
         run: |
           aws s3 cp databases s3://my-grype-databases/databases/ --recursive
@@ -51,7 +50,6 @@ jobs:
           cat kong-listing.json
 
       - name: Upload Kong-listing.json file to S3
-        needs: craft-listing-json
         run: |
           aws s3 cp kong-listing.json s3://my-grype-databases/listing.json
           
