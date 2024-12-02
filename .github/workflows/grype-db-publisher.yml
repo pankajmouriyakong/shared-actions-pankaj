@@ -17,8 +17,8 @@ permissions:
 env:
   AWS_ACCOUNT_ID: 418272760313
   REGION: us-east-1
-  S3_DB_BASE_URL: "https://my-grype-databases.s3.amazonaws.com/databases/"
   S3_DB_BUCKET_NAME: my-grype-databases
+  S3_DB_BASE_URL: "https://my-grype-databases.s3.amazonaws.com/databases/"
   GRYPE_UPSTREAM_INDEX_URL: "https://toolbox-data.anchore.io/grype/databases/listing.json"
 
 jobs:
@@ -31,6 +31,13 @@ jobs:
       - name: Configure AWS Credentials
         uses: ./login-aws-cloud
 
+      # TODO before merging this PR to PSA
+      # For the final implementation following infra resources required to be created
+      # A S3 bucket, replace the S3 bucket name in above ENVs S3_DB_BUCKET_NAME and S3_DB_BASE_URL
+      # IAM role which has S3 put permissions to put db tar files and listing.json to the Bucket
+      # Bucket permission should allow the IAM role:
+      # to putObjects with a condition which only allows put from IAM role ARN
+      # and public read for PSA to be able to read and download tar and index file.
       - name: download listing.json file from upstream
         id: listing-json
         run: |
