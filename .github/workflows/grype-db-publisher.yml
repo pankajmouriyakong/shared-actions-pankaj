@@ -49,6 +49,7 @@ jobs:
           jq 'walk(if type == "object" and .url then .url |= gsub("https://grype.anchore.io/databases/"; "https://my-grype-databases.s3.us-east-1.amazonaws.com/databases/") else . end)' listing.json > kong-listing.json
           cat kong-listing.json
 
+      # Upload king-listing.json
       - name: Upload Kong-listing.json file to S3
         run: |
           aws s3 cp kong-listing.json s3://my-grype-databases/listing.json
