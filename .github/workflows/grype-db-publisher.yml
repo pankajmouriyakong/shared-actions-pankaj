@@ -42,7 +42,7 @@ jobs:
       - name: Upload the tar files to S3
         id: upload-to-s3
         run: |
-          aws s3 cp databases s3://${{ env.S3_DB_BUCKET_NAME }}databases/ --recursive
+          aws s3 cp databases s3://${{ env.S3_DB_BUCKET_NAME }}/databases/ --recursive
 
       - name: Craft Kong owned listing.json file
         id: craft-listing-json
