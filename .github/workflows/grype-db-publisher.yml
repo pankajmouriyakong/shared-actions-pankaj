@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - 'grype'
+  schedule:
+    - cron: '0 0 * * *'
 
 
 permissions:
