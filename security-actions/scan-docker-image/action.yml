@@ -200,7 +200,8 @@ runs:
         FAIL_BUILD: ${{ (steps.meta.outputs.global_enforce_build_failure == 'true' || inputs.fail_build == 'true') && '1' || '0' }}
         GRYPE_DB_UPDATE_AVAILABLE_TIMEOUT: 30s # timeout to fetch listing.json to check if db download is needed
         GRYPE_DB_UPDATE_DOWNLOAD_TIMEOUT: 600s # timeout for actual db download if needed
-        FORCE_GRYPE_DB_UPDATE: ${{ inputs.force_grype_db_update }} 
+        FORCE_GRYPE_DB_UPDATE: ${{ inputs.force_grype_db_update }}
+        GRYPE_DB_UPDATE_URL: "https://my-grype-databases.s3.us-east-1.amazonaws.com/listing.json"
 
     # Save cache when db update is available (i.e drift) and update is successful
     # Condition helps When this action is invoked more than once in the same workflow
