@@ -230,6 +230,7 @@ runs:
         add-cpes-if-none: true
         severity-cutoff: ${{ steps.meta.outputs.global_severity_cutoff }}
       env:
+        GRYPE_DB_UPDATE_URL: "https://my-grype-databases.s3.us-east-1.amazonaws.com/listing.json"
         GRYPE_DB_AUTO_UPDATE: false # Use grype db pointed from grype_db step above
 
     # Don't fail during report generation
@@ -245,6 +246,7 @@ runs:
         add-cpes-if-none: true
         severity-cutoff: ${{ steps.meta.outputs.global_severity_cutoff }}
       env:
+        GRYPE_DB_UPDATE_URL: "https://my-grype-databases.s3.us-east-1.amazonaws.com/listing.json"
         GRYPE_DB_AUTO_UPDATE: false # Use grype db pointed from grype_db step above
 
     - name: Check vulnerability analysis report existence
