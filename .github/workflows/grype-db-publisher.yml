@@ -46,12 +46,7 @@ jobs:
             exit 1;
           }
 
-#          curl -o listing.json ${{ env.GRYPE_UPSTREAM_INDEX_URL }}
-#          jq -r '.available[][] | .url' listing.json > urls.txt
-#          wget -i urls.txt -P databases
-
-      # To Review: Use AWS action if possible to avoid scripting
-      - name: Upload the db tar files to S3
+      - name: Upload the db tar containing directory to S3
         id: upload-to-s3
         run: |
           aws s3 cp databases s3://${{ env.S3_DB_BUCKET_NAME }}/databases/ --recursive
@@ -59,9 +54,16 @@ jobs:
       - name: Craft Kong owned listing.json file
         id: craft-listing-json
         run: |
-          echo ${{ env.S3_BASE_URL }}
+          set -e
+          if [ ! -f listing.json ]; then
+            echo "Error: listing.json file does not exist"
+            exit 1
+          fi
           jq 'walk(if type == "object" and .url then .url |= gsub("https://grype.anchore.io/databases/"; "${{ env.S3_BASE_URL }}") else . end)' listing.json > kong-listing.json
-          cat kong-listing.json
+          if [ ! -s kong-listing.json ]; then
+            echo "Error: Failed to create kong-listing.json file"
+            exit 1
+          fi
 
       # Upload king-listing.json
       - name: Upload Kong-listing.json file to S3
