@@ -17,11 +17,13 @@ permissions:
 env:
   AWS_ACCOUNT_ID: 418272760313
   REGION: us-east-1
-  S3_BASE_URL: "https://my-grype-databases.s3.amazonaws.com/databases"
+  S3_DB_BASE_URL: "https://my-grype-databases.s3.amazonaws.com/databases/"
+  S3_DB_BUCKET_NAME: my-grype-databases
+  GRYPE_UPSTREAM_INDEX_URL: "https://toolbox-data.anchore.io/grype/databases/listing.json"
 
 jobs:
-  grype-db-index-setup:
-    name: grype-db-index-setup
+  grype-db-sync:
+    name: grype-db-sync
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,7 +34,7 @@ jobs:
       - name: download listing.json file
         id: listing-json
         run: |
-          curl -o listing.json https://toolbox-data.anchore.io/grype/databases/listing.json
+          curl -o listing.json ${{ env.GRYPE_UPSTREAM_INDEX_URL }}
           jq -r '.available[][] | .url' listing.json > urls.txt
           wget -i urls.txt -P databases
 
@@ -40,17 +42,17 @@ jobs:
       - name: Upload the tar files to S3
         id: upload-to-s3
         run: |
-          aws s3 cp databases s3://my-grype-databases/databases/ --recursive
+          aws s3 cp databases s3://${{ env.S3_DB_BUCKET_NAME }}databases/ --recursive
 
       - name: Craft Kong owned listing.json file
         id: craft-listing-json
         run: |
           echo ${{ env.S3_BASE_URL }}
-          jq 'walk(if type == "object" and .url then .url |= gsub("https://grype.anchore.io/databases/"; "https://my-grype-databases.s3.us-east-1.amazonaws.com/databases/") else . end)' listing.json > kong-listing.json
+          jq 'walk(if type == "object" and .url then .url |= gsub("https://grype.anchore.io/databases/"; "${{ env.S3_BASE_URL }}") else . end)' listing.json > kong-listing.json
           cat kong-listing.json
 
       # Upload king-listing.json
       - name: Upload Kong-listing.json file to S3
         run: |
-          aws s3 cp kong-listing.json s3://my-grype-databases/listing.json
+          aws s3 cp kong-listing.json s3://${{ env.S3_DB_BUCKET_NAME }}/listing.json
           
