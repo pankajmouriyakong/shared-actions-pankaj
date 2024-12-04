@@ -51,7 +51,7 @@ jobs:
           git status
           echo "Printing git diff"
           git diff
-          git add pnpm-lock.yaml
+          git add -A
           git commit -m "adding pnpm-lock.yml"
           
 
