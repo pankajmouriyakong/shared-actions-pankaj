@@ -20,5 +20,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: pnpm install
+      - name: Install PNPM
+        shell: bash
+        run: |
+          npm i -g pnpm@^8.0.0
+          pnpm --version
