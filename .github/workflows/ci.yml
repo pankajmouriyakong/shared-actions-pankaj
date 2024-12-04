@@ -35,12 +35,12 @@ jobs:
           git config --global user.name 'PankajMouriya'
           git config --global user.email 'pankaj.mouriya@konghq.com'
 
-      - name: Create Initial Tag (if none exists)
-        run: |
-          if [ -z "$(git tag)" ]; then
-            git tag -a v0.1.0 -m "Initial baseline tag"
-            git push origin v0.1.0
-          fi
+#      - name: Create Initial Tag (if none exists)
+#        run: |
+#          if [ -z "$(git tag)" ]; then
+#            git tag -a v0.1.0 -m "Initial baseline tag"
+#            git push origin v0.1.0
+#          fi
 
       - name: Lerna Dry Run
         run: pnpm lerna version --conventional-commits --yes --no-push --loglevel verbose
