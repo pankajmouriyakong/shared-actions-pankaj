@@ -1,9 +1,9 @@
 {
-  "name": "public-shared-actions",
+  "name": "Public-shared-actions",
   "version": "1.0.0",
   "private": true,
-  "description": "Reusable shared actions maintained by Kong",
-  "repository": "https://github.com/Kong/publoc-shared-actions",
+  "description": "Reusable Public shared actions maintained by Kong",
+  "repository": "https://github.com/Kong/public-shared-actions",
   "author": "Kong, Inc.",
   "license": "UNLICENSED",
   "main": "index.js",
@@ -12,7 +12,11 @@
     "pnpm": ">=9"
   },
   "scripts": {
-    "commit": "cz"
+    "commit": "cz",
+    "lerna": "lerna",
+    "version": "pnpm i --no-frozen-lockfile && git add .",
+    "version:ci": "lerna version --yes --create-release github",
+    "version:dry-run": "pnpm run version:ci --no-push"
   },
   "keywords": [],
   "devDependencies": {
@@ -21,6 +25,7 @@
     "@commitlint/config-lerna-scopes": "^19.5.0",
     "@evilmartians/lefthook": "^1.8.4",
     "commitizen": "^4.3.1",
+    "conventional-changelog-metahub": "^4.0.1",
     "husky": "^9.1.7",
     "lerna": "^8.1.9"
   },

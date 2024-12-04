@@ -23,12 +23,21 @@ importers:
       commitizen:
         specifier: ^4.3.1
         version: 4.3.1(@types/node@22.10.0)(typescript@5.7.2)
+      conventional-changelog-metahub:
+        specifier: ^4.0.1
+        version: 4.0.1
       husky:
         specifier: ^9.1.7
         version: 9.1.7
       lerna:
         specifier: ^8.1.9
         version: 8.1.9(encoding@0.1.13)
+
+  security-actions/scan-docker-image: {}
+
+  security-actions/scan-rust: {}
+
+  security-actions/semgrep: {}
 
 packages:
 
@@ -129,6 +138,7 @@ packages:
 
   '@evilmartians/lefthook@1.8.4':
     resolution: {integrity: sha512-n5aODynRZKSYmDajD8UCd5yy5ste2lJUTSGmv+D+4OP0UUWZqF4qJ/r7+2Ifo6K6WdsknVhVsPsEl4LugTbrug==}
+    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -710,6 +720,10 @@ packages:
   console-control-strings@1.1.0:
     resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
 
+  conventional-changelog-angular@5.0.13:
+    resolution: {integrity: sha512-i/gipMxs7s8L/QeuavPF2hLnJgH6pEZAttySB6aiQLWcX3puWDL3ACVmvBhJGxnAy52Qc15ua26BufY6KpmrVA==}
+    engines: {node: '>=10'}
+
   conventional-changelog-angular@7.0.0:
     resolution: {integrity: sha512-ROjNchA9LgfNMTTFSIWPzebCwOGFdgkEq45EnvvrmSLvCtAw0HSmrCs7/ty+wAeYUZyNay0YMUNYFTRL72PkBQ==}
     engines: {node: '>=16'}
@@ -721,6 +735,10 @@ packages:
   conventional-changelog-core@5.0.1:
     resolution: {integrity: sha512-Rvi5pH+LvgsqGwZPZ3Cq/tz4ty7mjijhr3qR4m9IBXNbxGGYgTVVO+duXzz9aArmHxFtwZ+LRkrNIMDQzgoY4A==}
     engines: {node: '>=14'}
+
+  conventional-changelog-metahub@4.0.1:
+    resolution: {integrity: sha512-iiEjdMsI2CEFC+eXoTOTTG64QvNAUOTRFBUNRIzxczbzYCYC4PJyh0gNGpRGo1F8uCueQfXrQL2PFtDq50EtUA==}
+    engines: {node: '>=10.13'}
 
   conventional-changelog-preset-loader@3.0.0:
     resolution: {integrity: sha512-qy9XbdSLmVnwnvzEisjxdDiLA4OmV3o8db+Zdg4WiFw14fP3B6XNz98X0swPPpkTd/pc1K7+adKgEDM1JCUMiA==}
@@ -2033,6 +2051,14 @@ packages:
 
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
+
+  q@1.5.1:
+    resolution: {integrity: sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==}
+    engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
+    deprecated: |-
+      You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
+
+      (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
@@ -3450,6 +3476,11 @@ snapshots:
 
   console-control-strings@1.1.0: {}
 
+  conventional-changelog-angular@5.0.13:
+    dependencies:
+      compare-func: 2.0.0
+      q: 1.5.1
+
   conventional-changelog-angular@7.0.0:
     dependencies:
       compare-func: 2.0.0
@@ -3471,6 +3502,11 @@ snapshots:
       normalize-package-data: 3.0.3
       read-pkg: 3.0.0
       read-pkg-up: 3.0.0
+
+  conventional-changelog-metahub@4.0.1:
+    dependencies:
+      conventional-changelog-angular: 5.0.13
+      lodash: 4.17.21
 
   conventional-changelog-preset-loader@3.0.0: {}
 
@@ -4934,6 +4970,8 @@ snapshots:
   protocols@2.0.1: {}
 
   proxy-from-env@1.1.0: {}
+
+  q@1.5.1: {}
 
   queue-microtask@1.2.3: {}
 

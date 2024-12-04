@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+jobs:
+  security-actions-scan-docker-image:
+    name: scan-docker-image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Filter the changes
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            scan-docker-image:
+              - 'security-actions/scan-docker-image/**'
+
+      - name: Install PNPM
+        shell: bash
+        run: |
+          npm i -g pnpm
+          pnpm --version
+
+
+      - name: Commit lint
+        if: github.event_name == 'pull_request'
+        uses: wagoid/commitlint-github-action@v5
+        with:
+          failOnWarnings: true
+
+      - name: Dependency Cache
+        id: dependency-cache
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: pnpm-20-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Build & Test action
+        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' && steps.filter.outputs.scan-docker-image == 'true'}}
+        shell: bash
+        run: |
+          git checkout ${{ github.head_ref }}
+          pnpm install  --frozen-lockfile
+          pnpm lint
+          pnpm run package
+
+
