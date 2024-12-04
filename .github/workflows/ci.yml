@@ -35,7 +35,14 @@ jobs:
 
       - name: Install Dependencies
         shell: bash
-        run: pnpm install
+        run: |
+          pnpm install
+          pnpm add -D conventional-changelog-metahub
+          echo "Printing package.json"
+          cat package.json
+          ls 
+      
+      
 
       - name: Configure Git
         run: |
