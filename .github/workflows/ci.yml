@@ -34,3 +34,6 @@ jobs:
         run: |
           git config --global user.name 'PankajMouriya'
           git config --global user.email 'pankaj.mouriya@konghq.com'
+
+      - name: Lerna Dry Run
+        run: pnpm lerna version --conventional-commits --yes --no-push --loglevel verbose
