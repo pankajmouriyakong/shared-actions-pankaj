@@ -36,7 +36,7 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: |
-          pnpm install
+          pnpm install --frozen-lockfile
           pnpm add -D conventional-changelog-metahub -w
           echo "Printing package.json"
           cat package.json
@@ -58,4 +58,3 @@ jobs:
       - name: Lerna Dry Run
         run: | 
           pnpm lerna version --conventional-commits --yes
-          pnpm version:ci
