@@ -44,6 +44,9 @@ jobs:
           git status
           echo "Printing git diff"
           git diff
+          git add pnpm-lock.yaml
+          git commit -m "adding pnpm-lock.yml"
+          
 
       - name: Lerna Dry Run
         run: pnpm lerna version --conventional-commits --yes
