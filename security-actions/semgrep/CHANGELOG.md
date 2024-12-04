@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/pankajmouriyakong/shared-actions-pankaj/compare/semgrep@1.1.0...semgrep@1.2.0) (2024-12-04)
+
+
+### ✨ Features
+
+* **security-actions:** update semgrep image version ([90be677](https://github.com/pankajmouriyakong/shared-actions-pankaj/commit/90be677c19767fde77b33404ec9a4dd687ce927e))
+
+
+
+
+
 # 1.1.0 (2024-12-04)
 
 
