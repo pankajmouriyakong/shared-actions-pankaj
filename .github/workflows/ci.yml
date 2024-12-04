@@ -43,4 +43,4 @@ jobs:
 #          fi
 
       - name: Lerna Dry Run
-        run: pnpm lerna version --conventional-commits --yes --no-push --loglevel verbose
+        run: pnpm lerna version --conventional-commits --yes
