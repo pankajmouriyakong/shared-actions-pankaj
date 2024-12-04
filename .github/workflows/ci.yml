@@ -18,12 +18,12 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18.17.0'
+          node-version: '20'
 
       - name: Install PNPM
         shell: bash
         run: |
-          npm i -g pnpm@^8.0.0
+          pnpm i -g pnpm
           pnpm --version
 
       - name: Install Dependencies
