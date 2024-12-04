@@ -29,3 +29,8 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: pnpm i
+
+      - name: Configure Git
+        run: |
+          git config --global user.name 'PankajMouriya'
+          git config --global user.email 'pankaj.mouriya@konghq.com'
