@@ -56,4 +56,6 @@ jobs:
           
 
       - name: Lerna Dry Run
-        run: pnpm lerna version --conventional-commits --yes
+        run: | 
+          pnpm lerna version --conventional-commits --yes
+          pnpm version:ci
