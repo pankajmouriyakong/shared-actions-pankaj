@@ -37,7 +37,6 @@ jobs:
         shell: bash
         run: |
           pnpm install
-          pnpm add -D conventional-changelog-metahub
           echo "Printing package.json"
           cat package.json
           ls 
