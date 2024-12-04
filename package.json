@@ -21,6 +21,7 @@
     "@commitlint/config-lerna-scopes": "^19.5.0",
     "@evilmartians/lefthook": "^1.8.4",
     "commitizen": "^4.3.1",
+    "conventional-changelog-metahub": "^4.0.1",
     "husky": "^9.1.7",
     "lerna": "^8.1.9"
   },
