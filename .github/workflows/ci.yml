@@ -28,7 +28,7 @@ jobs:
 
       - name: Install Dependencies
         shell: bash
-        run: pnpm i
+        run: pnpm install --frozen-lockfile
 
       - name: Configure Git
         run: |
