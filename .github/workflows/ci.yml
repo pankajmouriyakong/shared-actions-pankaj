@@ -23,7 +23,7 @@ jobs:
       - name: Install PNPM
         shell: bash
         run: |
-          pnpm i -g pnpm
+          npm i -g pnpm
           pnpm --version
 
       - name: Install Dependencies
