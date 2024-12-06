@@ -4,6 +4,10 @@ on:
   pull_request:
     branches:
       - independent-releases
+      - *
+  push:
+    branches:
+      - *
   workflow_dispatch: {}
 
 permissions:
@@ -11,7 +15,7 @@ permissions:
   security-events: read
   pull-requests: read
 
-  
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
