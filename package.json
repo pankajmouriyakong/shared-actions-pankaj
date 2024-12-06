@@ -12,7 +12,11 @@
     "pnpm": ">=9"
   },
   "scripts": {
-    "commit": "cz"
+    "commit": "cz",
+    "lerna": "lerna",
+    "version": "pnpm i --no-frozen-lockfile && git add .",
+    "version:ci": "lerna version --yes --create-release github",
+    "version:dry-run": "pnpm run version:ci --no-push"
   },
   "keywords": [],
   "devDependencies": {
