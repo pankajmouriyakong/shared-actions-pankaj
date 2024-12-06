@@ -1,7 +1,7 @@
 name: Independent Releases for testing
 
 on:
-  pull_requests:
+  pull_request:
     branches:
       - independent-releases
 
