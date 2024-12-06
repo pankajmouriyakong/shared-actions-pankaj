@@ -4,8 +4,14 @@ on:
   pull_request:
     branches:
       - independent-releases
-  workflow_dispatch: 
+  workflow_dispatch: {}
 
+permissions:
+  # required for all workflows
+  security-events: read
+  pull-requests: read
+
+  
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
