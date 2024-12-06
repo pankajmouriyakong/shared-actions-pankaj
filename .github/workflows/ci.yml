@@ -61,7 +61,7 @@ jobs:
           git config --global user.name 'PankajMouriya'
           git config --global user.email 'pankaj.mouriya@konghq.com'
           git add -A
-          git commit -m "chore: updating pnpm-lock file"
+          git commit -m "chore: updating pnpm-lock file" || true
           git status
           echo "Printing git diff"
           git diff
