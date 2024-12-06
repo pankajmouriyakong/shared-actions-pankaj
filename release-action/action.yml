@@ -1,0 +1,60 @@
+name: "Release Action"
+description: "Reusable action for independent releases"
+inputs:
+  app_id:
+    description: "GitHub App ID"
+    required: true
+  private_key:
+    description: "GitHub App private key"
+    required: true
+  node_version:
+    description: "Node.js version"
+    default: "20"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Generate privileged push token
+      id: github-app-token
+      uses: tibdex/github-app-token@v1.8.0
+      with:
+        app_id: ${{ inputs.app_id }}
+        private_key: ${{ inputs.private_key }}
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        token: ${{ steps.github-app-token.outputs.token }}
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ inputs.node_version }}
+
+    - name: Install PNPM
+      shell: bash
+      run: |
+        npm i -g pnpm
+        pnpm --version
+
+    - name: Dependency Cache
+      id: dependency-cache
+      uses: actions/cache@v3
+      with:
+        path: '**/node_modules'
+        key: pnpm-${{ inputs.node_version }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+    - name: Install Dependencies
+      if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' }}
+      shell: bash
+      run: pnpm i
+
+    - name: Release new versions
+      env:
+        GH_TOKEN: ${{ steps.github-app-token.outputs.token }}
+      shell: bash
+      run: |
+        git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
+        git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
+        pnpm version:ci
