@@ -1,0 +1,60 @@
+name: Independent Releases for testing
+
+on:
+  pull_request:
+    branches:
+      - independent-releases
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install PNPM
+        shell: bash
+        run: |
+          npm i -g pnpm
+          pnpm --version
+
+      - name: Dependency Cache
+        id: dependency-cache
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: pnpm-20-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Build and test action
+        shell: bash
+        run: |
+          git checkout ${{ github.head_ref }}
+          pnpm install --frozen-lockfile 
+          pnpm lint
+          cat package.json
+          ls 
+
+      - name: Configure Git
+        if: ${{ github.event_name == 'pull_request' }}
+        shell: bash
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add -A
+          git commit -m "chore: updating pnpm-lock file" || true
+          git status
+          echo "Printing git diff"
+          git diff
+
+      - name: Lerna Dry run
+        run: |
+          pnpm lerna version --conventional-commits --yes --no-push --loglevel verbose
+
