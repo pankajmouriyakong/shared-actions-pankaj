@@ -8,4 +8,14 @@ jobs:
   actions-tagger:
     runs-on: ubuntu-latest
     steps:
-      - uses: Actions-R-Us/actions-tagger@latest
+      - name: Parse SemVer from tag
+        id: parse-version
+        run: |
+          echo "##[debug]Tag: ${{ github.event.release.tag_name }}"
+          VERSION=$(echo "${{ github.event.release.tag_name }}" | sed 's/.*@//')  # Extract version after '@'
+          echo "version=$VERSION" >> $GITHUB_ENV
+
+      - name: Run Actions Tagger
+        uses: Actions-R-Us/actions-tagger@latest
+        env:
+          TAG_VERSION: ${{ env.version }}
