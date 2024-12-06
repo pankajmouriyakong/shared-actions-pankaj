@@ -10,6 +10,12 @@ inputs:
   node_version:
     description: "Node.js version"
     default: "20"
+  bot_username:
+    description: "GitHub Bot username"
+    required: true
+  bot_email:
+    description: "GitHub Bot email"
+    required: true
 
 runs:
   using: "composite"
@@ -49,6 +55,6 @@ runs:
         GH_TOKEN: ${{ steps.github-app-token.outputs.token }}
       shell: bash
       run: |
-        git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
-        git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
+        git config --local user.name "${{ inputs.bot_username }}"
+        git config --local user.email "${{ inputs.bot_email }}"
         pnpm version:ci

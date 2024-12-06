@@ -23,3 +23,5 @@ jobs:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
           node_version: '20'
+          bot_username: ${{ var.GH_APP__KONG__BOT_USERNAME }}
+          bot_email: ${{ var.GH_APP__KONG__BOT_EMAIL }}
