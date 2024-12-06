@@ -1,5 +1,5 @@
 {
-  "name": "Scan Docker Image",
+  "name": "ScanDockerImage",
   "version": "1.0.0",
   "description": "The repo generates SBOMs & scans Docker images for CVE, CIS",
   "main": "index.js",
