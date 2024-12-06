@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/pankajmouriyakong/shared-actions-pankaj/compare/ScanDockerImage@1.3.0...ScanDockerImage@1.4.0) (2024-12-06)
+
+
+### ✨ Features
+
+* update tools versions ([f76748f](https://github.com/pankajmouriyakong/shared-actions-pankaj/commit/f76748fbf3e6501ee79b10c5de27669ed6e0d612))
+
+
+
+
+
 # [1.3.0](https://github.com/pankajmouriyakong/shared-actions-pankaj/compare/ScanDockerImage@1.2.0...ScanDockerImage@1.3.0) (2024-12-06)
 
 
