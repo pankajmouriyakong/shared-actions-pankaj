@@ -14,10 +14,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Generate privileged push token to bypass branch protection settings
+        id: github-app-token
+        uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+
       - name: Checkout code
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          token: ${{ steps.github-app-token.outputs.token }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -48,6 +56,7 @@ jobs:
           ls 
 
       - name: Configure Git
+        shell: bash
         run: |
           git config --global user.name 'PankajMouriya'
           git config --global user.email 'pankaj.mouriya@konghq.com'
@@ -69,5 +78,8 @@ jobs:
 
       # Create a GH release
       - name: Lerna create GH releases
+        env:
+          GH_TOKEN: ${{ steps.github-app-token.outputs.token }}
+        shell: bash
         run: |
           pnpm lerna version --create-release github --yes
