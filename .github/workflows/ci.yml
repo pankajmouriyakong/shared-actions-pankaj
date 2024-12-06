@@ -7,7 +7,7 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  semgrep-release:
+  test-release:
     name: semgrep-release
     runs-on: ubuntu-latest
 
