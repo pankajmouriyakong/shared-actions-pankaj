@@ -5,6 +5,10 @@ on:
     branches:
       - independent-releases
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -41,8 +45,12 @@ jobs:
           echo "Printing package.json"
           cat package.json
           ls 
-      
-      
+
+      - name: Commitlint
+#        if: github.event_name == 'pull_request'
+        uses: wagoid/commitlint-github-action@v6
+        with:
+          failOnWarnings: true
 
       - name: Configure Git
         run: |
@@ -51,7 +59,6 @@ jobs:
           git status
           echo "Printing git diff"
           git diff
-          
 
       - name: Lerna create tag
         run: | 
