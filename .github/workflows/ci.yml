@@ -1,7 +1,7 @@
-name: Independent Releases
+name: Independent Releases for testing
 
 on:
-  push:
+  pull_requests:
     branches:
       - independent-releases
 
