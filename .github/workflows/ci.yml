@@ -46,12 +46,6 @@ jobs:
           cat package.json
           ls 
 
-      - name: Commitlint
-#        if: github.event_name == 'pull_request'
-        uses: wagoid/commitlint-github-action@v6
-        with:
-          failOnWarnings: true
-
       - name: Configure Git
         run: |
           git config --global user.name 'PankajMouriya'
@@ -60,6 +54,17 @@ jobs:
           echo "Printing git diff"
           git diff
 
+#      - name: Lerna Dry run
+#        run: |
+#          pnpm lerna version --conventional-commits --yes --no-push --loglevel verbose
+
+      # This will create a GitHub tag for a specific project
+      # We can merge both the tag and release as well
       - name: Lerna create tag
         run: | 
           pnpm lerna version --conventional-commits --yes
+
+      # Create a GH release
+      - name: Lerna create GH releases
+        run: |
+          pnpm lerna version --create-release github --yes
