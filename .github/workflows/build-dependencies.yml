@@ -4,64 +4,26 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch: {}
-
-permissions:
-  # required for all workflows
-  security-events: read
-  pull-requests: read
 
 
 jobs:
-  build-and-test:
+  release:
+    if: ${{ github.event_name == 'pull_request' && github.ref == 'refs/heads/main' && github.repository_owner == 'pankajmouriyakong' }}
+    name: Release
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Run Release Action
+        uses: ./release-action
         with:
-          node-version: '20'
-
-      - name: Install PNPM
-        shell: bash
-        run: |
-          npm i -g pnpm
-          pnpm --version
-
-      - name: Dependency Cache
-        id: dependency-cache
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: pnpm-20-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Build and test action
-        shell: bash
-        run: |
-          git checkout ${{ github.head_ref }}
-          pnpm install --frozen-lockfile 
-          pnpm lint
-          cat package.json
-          ls 
-
-      - name: Configure Git
-        if: ${{ github.event_name == 'pull_request' }}
-        shell: bash
-        run: |
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config user.name "github-actions[bot]"
-          git add -A
-          git commit -m "chore: updating pnpm-lock file" || true
-          git status
-          echo "Printing git diff"
-          git diff
-
-      - name: Lerna Dry run
-        run: |
-          pnpm lerna version --conventional-commits --yes --no-push --loglevel verbose
-
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+          node_version: '20'
+          bot_username: ${{ vars.GH_APP__KONG__BOT_USERNAME }}
+          bot_email: ${{ vars.GH_APP__KONG__BOT_EMAIL }}
+          release_command: 'pnpm version:dry-run'

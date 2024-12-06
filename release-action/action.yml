@@ -16,6 +16,13 @@ inputs:
   bot_email:
     description: "GitHub Bot email"
     required: true
+  release_command:
+    description: "Command to release new versions"
+    required: true
+    type: choice
+    options:
+      - "pnpm version:ci"
+      - "pnpm version:dry-run"
 
 runs:
   using: "composite"
@@ -57,4 +64,4 @@ runs:
       run: |
         git config --local user.name "${{ inputs.bot_username }}"
         git config --local user.email "${{ inputs.bot_email }}"
-        pnpm version:ci
+        ${{ inputs.release_command }}

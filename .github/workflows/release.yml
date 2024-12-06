@@ -3,11 +3,10 @@ on:
   push:
     branches:
       - main
-      - independent-releases
 
 jobs:
   release:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/independent-releases' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository_owner == 'pankajmouriyakong' }}
     name: Release
     runs-on: ubuntu-latest
 
@@ -25,3 +24,4 @@ jobs:
           node_version: '20'
           bot_username: ${{ vars.GH_APP__KONG__BOT_USERNAME }}
           bot_email: ${{ vars.GH_APP__KONG__BOT_EMAIL }}
+          release_command: 'pnpm version:ci'
