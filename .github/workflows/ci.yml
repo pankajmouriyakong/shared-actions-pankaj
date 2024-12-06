@@ -40,8 +40,9 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: |
-          pnpm install --frozen-lockfile
-          pnpm add -D conventional-changelog-metahub -w
+#          pnpm install --frozen-lockfile
+#          pnpm add -D conventional-changelog-metahub -w
+          pnpm i --no-frozen-lockfile && git add .
           echo "Printing package.json"
           cat package.json
           ls 
