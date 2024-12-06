@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - independent-releases
+  push:
+    branches:
+      - independent-releases
   workflow_dispatch: {}
 
 jobs:
