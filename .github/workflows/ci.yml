@@ -1,29 +1,22 @@
-name: Releases
+name: Independent Releases for testing
+
 on:
-  push:
+  pull_request:
     branches:
       - main
-  workflow_dispatch: {}
+
 
 jobs:
-  release:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository_owner == 'pankajmouriyakong'}}
-    name: Release
+  semgrep-release:
+    if: ${{ github.event_name == 'pull_request' && github.ref == 'refs/heads/independent-releases' && github.repository_owner == 'pankajmouriyakong'}}
+    name: semgrep-release
     runs-on: ubuntu-latest
 
     steps:
-      - name: Generate privileged push token to bypass branch protection settings
-        id: github-app-token
-        uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
-        with:
-          app_id: ${{ secrets.APP_ID }}
-          private_key: ${{ secrets.PRIVATE_KEY }}
-
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          token: ${{ steps.github-app-token.outputs.token }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -55,4 +48,4 @@ jobs:
         run: |
           git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
           git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
-          pnpm version:ci
+          version:dry-run
