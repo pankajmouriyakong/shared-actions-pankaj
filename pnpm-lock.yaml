@@ -33,6 +33,8 @@ importers:
         specifier: ^8.1.9
         version: 8.1.9(encoding@0.1.13)
 
+  security-actions/scan-docker-image: {}
+
   security-actions/semgrep: {}
 
 packages:
