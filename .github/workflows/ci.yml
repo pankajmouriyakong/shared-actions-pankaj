@@ -9,7 +9,6 @@ on:
 
 jobs:
   semgrep-release:
-    if: ${{ github.event_name == 'pull_request' && github.ref == 'refs/heads/independent-releases' && github.repository_owner == 'pankajmouriyakong'}}
     name: semgrep-release
     runs-on: ubuntu-latest
 
