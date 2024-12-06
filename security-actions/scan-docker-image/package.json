@@ -1,6 +1,6 @@
 {
   "name": "ScanDockerImage",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "The repo generates SBOMs & scans Docker images for CVE, CIS",
   "main": "index.js",
   "repository": {

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/pankajmouriyakong/shared-actions-pankaj/compare/semgrep@1.4.0...semgrep@1.5.0) (2024-12-06)
+
+
+### ✨ Features
+
+* update yaml ([1e1466e](https://github.com/pankajmouriyakong/shared-actions-pankaj/commit/1e1466ec871b45979a0a610a65d35b742a66cc5e))
+
+
+
+
+
 # [1.4.0](https://github.com/pankajmouriyakong/shared-actions-pankaj/compare/semgrep@1.3.0...semgrep@1.4.0) (2024-12-06)
 
 
