@@ -4,10 +4,6 @@ on:
   pull_request:
     branches:
       - main
-      - independent-releases
-#  push:
-#    branches:
-#      - independent-releases
   workflow_dispatch: {}
 
 jobs:
@@ -45,10 +41,8 @@ jobs:
         run: pnpm i
 
       - name: Release new versions
-        env:
-          GH_TOKEN: ${{ steps.github-app-token.outputs.token }}
         shell: bash
         run: |
           git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
           git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
-          version:dry-run
+          pnpm version:dry-run
