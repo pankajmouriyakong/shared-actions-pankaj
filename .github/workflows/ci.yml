@@ -10,7 +10,7 @@ on:
 #  pull-requests: read
 
 jobs:
-  release:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
