@@ -1,0 +1,14 @@
+{
+  "name": "semgrep",
+  "version": "1.6.0",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pankajmouriyakong/shared-actions-pankaj.git",
+    "directory": "security-actions/semgrep"
+  },
+  "private": false,
+  "author": "Kong, Inc.",
+  "license": "UNLICENSED"
+}

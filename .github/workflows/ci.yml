@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+jobs:
+  test-release:
+    name: test-release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install PNPM
+        shell: bash
+        run: |
+          npm i -g pnpm
+          pnpm --version
+
+      - name: Dependency Cache
+        id: dependency-cache
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: pnpm-20-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install Dependencies
+        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' }}
+        shell: bash
+        run: pnpm i
+
+      - name: Release new versions
+        shell: bash
+        run: |
+          git checkout ${{ github.head_ref }}
+          git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
+          git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
+          pnpm version:dry-run
