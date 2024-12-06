@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/pankajmouriyakong/shared-actions-pankaj/compare/ScanDockerImage@1.1.0...ScanDockerImage@1.2.0) (2024-12-06)
+
+
+### ✨ Features
+
+* update trivy version ([06b088f](https://github.com/pankajmouriyakong/shared-actions-pankaj/commit/06b088f7ba8552f72f6d3ecea80b8b338d65625c))
+
+
+
+
+
 # 1.1.0 (2024-12-06)
 
 
