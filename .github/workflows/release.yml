@@ -48,6 +48,7 @@ jobs:
         shell: bash
         run: pnpm i
 
+      # This step will create a tag and also release
       - name: Release new versions
         env:
           GH_TOKEN: ${{ steps.github-app-token.outputs.token }}
