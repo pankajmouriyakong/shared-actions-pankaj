@@ -5,9 +5,9 @@ on:
     branches:
       - independent-releases
 
-permissions:
-  contents: read
-  pull-requests: read
+#permissions:
+#  contents: read
+#  pull-requests: read
 
 jobs:
   release:
