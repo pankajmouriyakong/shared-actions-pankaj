@@ -43,6 +43,7 @@ jobs:
       - name: Release new versions
         shell: bash
         run: |
+          git checkout ${{ github.head_ref }}
           git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
           git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
           pnpm version:dry-run
