@@ -71,7 +71,7 @@ jobs:
 
       # Success Notification
       - name: Send Success Notification
-        if: ${{ job.status == 'success' }}
+        #if: ${{ job.status == 'success' }}
         uses: edge/simple-slack-notify@v1
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
