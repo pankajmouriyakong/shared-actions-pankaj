@@ -49,7 +49,7 @@ jobs:
           git checkout ${{ github.head_ref }}
           git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
           git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
-          pnpm vedrsion:dry-rundd
+          pnpm version:dry-run
 
   # TODO when raising PR in Public shared actions
   # A Slack Webhook will be provisioned
