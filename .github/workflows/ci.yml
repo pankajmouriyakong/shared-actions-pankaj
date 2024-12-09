@@ -41,7 +41,7 @@ jobs:
       - name: Install Dependencies
         if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' }}
         shell: bash
-        run: pnspm i
+        run: pnpm i
 
       - name: Release new versions
         shell: bash
