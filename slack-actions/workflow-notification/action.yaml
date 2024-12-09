@@ -30,7 +30,7 @@ inputs:
     default: ':black_circle: Workflow cancelled'
   skipped-message:
     description: The message to display when the workflow is skipped. Accepts markdown syntax.
-    required: false
+    required: true
     default: ':white_circle: Workflow skipped'
 
 runs:
