@@ -3,9 +3,9 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+#  pull_request:
+#    branches:
+#      - main
   workflow_dispatch: {}
 
 jobs:
@@ -68,7 +68,7 @@ jobs:
           pnpm version:ci
 
   # TODO when raising PR in Public shared actions
-  # A Slack Webhook will be provisioned
+  # A Slack Webhook will be provisioned depending upon the notification type
   # Update webhook URL as secret within Github PSA repo
   # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION
   # Slack channel "notify-public-shared-actions" already created
