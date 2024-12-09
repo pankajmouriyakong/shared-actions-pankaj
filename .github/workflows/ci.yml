@@ -49,32 +49,29 @@ jobs:
           git checkout ${{ github.head_ref }}
           git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
           git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
-          spnpm version:dry-run
+          pnpm version:dry-run
 
   # TODO when raising PR in Public shared actions
-  # A Slack Webhook will be provisioned
+  # A Slack Webhook will be provisioned depending upon notification type
   # Update webhook URL as secret within Github PSA repo
-  # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION
-  # Slack channel "notify-public-shared-actions" already created
   notify-slack:
     name: Slack Notification
-    if: always()
-    # if: ${{ always() && github.event_name == 'pull_request' && github.ref == 'refs/heads/main' }}
+    if: ${{ always() && github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     needs:
       - test-release
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v3
-#      - name: Get aggregate Workflow status
-#        uses: technote-space/workflow-conclusion-action@v3
 
       # Success Notification
+      # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_SUCCESS
+      # Slack channel "notify-public-shared-actions"
       - name: Send Success Notification
         if: ${{ needs.test-release.result == 'success' }}
         uses: edge/simple-slack-notify@v1
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SUCCESS }}
         with:
           status: success
           success_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow completed successfully :github-mona:'
@@ -84,11 +81,13 @@ jobs:
              { "title": "Revision", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/commit/${env.GITHUB_SHA}|${env.GITHUB_SHA.substring(0,7)}>", "short": true }]
 
       # Failure Notification
+      # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_FAILURE
+      # Slack channel "alert-public-shared-actions"
       - name: Send Failure Notification
         if: ${{ needs.test-release.result == 'failure' }}
         uses: edge/simple-slack-notify@v1
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_FAILURE }}
         with:
           status: failure
           failure_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow failed :github-mona:'
