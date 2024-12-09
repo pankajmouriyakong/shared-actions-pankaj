@@ -65,7 +65,7 @@ jobs:
           git checkout ${{ github.head_ref }}
           git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
           git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
-          pnpdm version:ci
+          pnpm version:ci
 
   # TODO when raising PR in Public shared actions
   # A Slack Webhook will be provisioned depending upon notification type
@@ -74,6 +74,7 @@ jobs:
   notify-slack:
     name: Slack Notification
     # if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: always()
     runs-on: ubuntu-latest
     needs:
       - release
