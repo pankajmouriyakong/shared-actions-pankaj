@@ -66,8 +66,8 @@ jobs:
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v3
-      - name: Get aggregate Workflow status
-        uses: technote-space/workflow-conclusion-action@v3
+#      - name: Get aggregate Workflow status
+#        uses: technote-space/workflow-conclusion-action@v3
 
       # Success Notification
       - name: Send Success Notification
@@ -76,7 +76,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
         with:
-          status: success
+          status: ${{ job.status }}
           success_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow completed successfully :github-mona:'
           fields: |
             [{ "title": "Repository", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}|${env.GITHUB_REPOSITORY}>", "short": true },
@@ -90,7 +90,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
         with:
-          status: failure
+          status: ${{ job.status }}
           failure_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow failed :github-mona:'
           fields: |
             [{ "title": "Repository", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}|${env.GITHUB_REPOSITORY}>", "short": true },
