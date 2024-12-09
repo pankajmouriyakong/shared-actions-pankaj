@@ -76,12 +76,12 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
         with:
-          status: 'success'
-          success_text: '<${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}/actions/runs/${{ env.GITHUB_RUN_ID }}|${{ env.GITHUB_WORKFLOW }} (${{ env.GITHUB_RUN_NUMBER }})> workflow completed successfully :github-mona:'
+          status: ${{ env.WORKFLOW_CONCLUSION }}
+          success_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow completed successfully :github-mona:'
           fields: |
-            [{ "title": "Repository", "value": "<${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}|${{ env.GITHUB_REPOSITORY }}>", "short": true },
-             { "title": "Branch", "value": "<${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}/tree/${{ env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11) }}|${{ env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11) }}>", "short": true },
-             { "title": "Revision", "value": "<${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}/commit/${{ env.GITHUB_SHA }}|${{ env.GITHUB_SHA.substring(0,7) }}>", "short": true }]
+            [{ "title": "Repository", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}|${env.GITHUB_REPOSITORY}>", "short": true },
+             { "title": "Branch", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/tree/${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}|${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}>", "short": true },
+             { "title": "Revision", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/commit/${env.GITHUB_SHA}|${env.GITHUB_SHA.substring(0,7)}>", "short": true }]
 
       # Failure Notification
       - name: Send Failure Notification
@@ -90,9 +90,9 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
         with:
-          status: 'failure'
-          failure_text: '<${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}/actions/runs/${{ env.GITHUB_RUN_ID }}|${{ env.GITHUB_WORKFLOW }} (${{ env.GITHUB_RUN_NUMBER }})> workflow failed :github-fire:'
+          status: ${{ env.WORKFLOW_CONCLUSION }}
+          failure_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow failed :github-fire:'
           fields: |
-            [{ "title": "Repository", "value": "<${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}|${{ env.GITHUB_REPOSITORY }}>", "short": true },
-             { "title": "Branch", "value": "<${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}/tree/${{ env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11) }}|${{ env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11) }}>", "short": true },
-             { "title": "Revision", "value": "<${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}/commit/${{ env.GITHUB_SHA }}|${{ env.GITHUB_SHA.substring(0,7) }}>", "short": true }]
+            [{ "title": "Repository", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}|${env.GITHUB_REPOSITORY}>", "short": true },
+             { "title": "Branch", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/tree/${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}|${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}>", "short": true },
+             { "title": "Revision", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/commit/${env.GITHUB_SHA}|${env.GITHUB_SHA.substring(0,7)}>", "short": true }]
