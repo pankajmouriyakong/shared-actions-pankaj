@@ -1,4 +1,4 @@
-name: Releases
+name: Publish Release
 on:
   push:
     branches:
@@ -7,11 +7,16 @@ on:
 
 jobs:
   release:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository_owner == 'pankajmouriyakong'}}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     name: Release
     runs-on: ubuntu-latest
 
     steps:
+      # ToDo when raising PR in Public shared actions
+      # Either a GitHub application or a Bot PAT should be used below
+      # Recommended approach is to use a GitHub App https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/differences-between-github-apps-and-oauth-apps#machine-vs-bot-accounts
+      # Create a GH org Application, create a Private key
+      # Add the private key and app_id as PSA repo secret and use below
       - name: Generate privileged push token to bypass branch protection settings
         id: github-app-token
         uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
@@ -57,3 +62,32 @@ jobs:
           git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
           git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
           pnpm version:ci
+
+  # TODO when raising PR in Public shared actions
+  # A Slack Webhook will be provisioned
+  # Update webhook URL as secret within Github PSA repo
+  # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION
+  # Slack channel "notify-public-shared-actions" already created
+  notify-slack:
+    name: Slack Notification
+    if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    needs:
+      - release
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+      - name: Get aggregate Workflow status
+        uses: technote-space/workflow-conclusion-action@v3
+      - name: Send notification
+        uses: edge/simple-slack-notify@v1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
+        with:
+          status: ${{ job.status }}
+          success_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow completed successfully :github-mona:'
+          failure_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow failed :github-fire:'
+          fields: |
+            [{ "title": "Repository", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}|${env.GITHUB_REPOSITORY}>", "short": true },
+             { "title": "Branch", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/tree/${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}|${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}>", "short": true },
+             { "title": "Revision", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/commit/${env.GITHUB_SHA}|${env.GITHUB_SHA.substring(0,7)}>", "short": true }]

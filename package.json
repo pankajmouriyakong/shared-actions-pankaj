@@ -1,9 +1,9 @@
 {
-  "name": "shared-actions-pankaj",
+  "name": "Public-shared-actions",
   "version": "1.0.0",
   "private": true,
-  "description": "Reusable shared actions maintained by Kong",
-  "repository": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
+  "description": "Reusable Public shared actions maintained by Kong",
+  "repository": "https://github.com/Kong/public-shared-actions",
   "author": "Kong, Inc.",
   "license": "UNLICENSED",
   "main": "index.js",

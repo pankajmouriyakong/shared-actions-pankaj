@@ -1,11 +1,11 @@
 {
-  "name": "semgrep",
-  "version": "1.6.0",
-  "description": "",
+  "name": "@security-actions/semgrep",
+  "version": "1.0.0",
+  "description": "This action uses Semgrep CI command to scan all supported platforms on a specified scan path",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pankajmouriyakong/shared-actions-pankaj.git",
+    "url": "https://github.com/Kong/public-shared-actions",
     "directory": "security-actions/semgrep"
   },
   "private": false,
