@@ -65,7 +65,7 @@ jobs:
           git checkout ${{ github.head_ref }}
           git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
           git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
-          pnpm version:ci
+          pnpdm version:ci
 
   # TODO when raising PR in Public shared actions
   # A Slack Webhook will be provisioned depending upon notification type
@@ -88,7 +88,7 @@ jobs:
         if: ${{ needs.release.result == 'success' }}
         uses: edge/simple-slack-notify@v1
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SUCCESS }}
         with:
           status: success
           success_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow completed successfully :github-mona:'
@@ -104,7 +104,7 @@ jobs:
         if: ${{ needs.release.result == 'failure' }}
         uses: edge/simple-slack-notify@v1
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_FAILURE }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
         with:
           status: failure
           failure_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow failed :github-mona:'
