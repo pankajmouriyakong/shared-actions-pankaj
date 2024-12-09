@@ -50,3 +50,32 @@ jobs:
           git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
           git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
           pnpm version:dry-run
+
+  # TODO when raising PR in Public shared actions
+  # A Slack Webhook will be provisioned
+  # Update webhook URL as secret within Github PSA repo
+  # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION
+  # Slack channel "notify-public-shared-actions" already created
+  notify-slack:
+    name: Slack Notification
+    if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    needs:
+      - test-release
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+      - name: Get aggregate Workflow status
+        uses: technote-space/workflow-conclusion-action@v3
+      - name: Send notification
+        uses: edge/simple-slack-notify@v1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_SLACK_NOTIFICATION }}
+        with:
+          status: ${{ job.status }}
+          success_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow completed successfully :github-mona:'
+          failure_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow failed :github-fire:'
+          fields: |
+            [{ "title": "Repository", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}|${env.GITHUB_REPOSITORY}>", "short": true },
+             { "title": "Branch", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/tree/${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}|${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}>", "short": true },
+             { "title": "Revision", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/commit/${env.GITHUB_SHA}|${env.GITHUB_SHA.substring(0,7)}>", "short": true }]
