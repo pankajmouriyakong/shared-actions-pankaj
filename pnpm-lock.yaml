@@ -35,6 +35,8 @@ importers:
 
   security-actions/scan-docker-image: {}
 
+  security-actions/scan-rust: {}
+
   security-actions/semgrep: {}
 
 packages:
