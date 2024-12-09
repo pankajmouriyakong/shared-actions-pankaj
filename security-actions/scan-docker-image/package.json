@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pankajmouriyakong/shared-actions-pankaj.git",
+    "url": "https://github.com/Kong/public-shared-actions",
     "directory": "security-actions/scan-docker-image"
   },
   "private": false,
