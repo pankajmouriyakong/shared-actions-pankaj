@@ -10,13 +10,13 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  test-release:
-    name: test-release
+  security-actions-scan-docker-image:
+    name: scan-docker-image
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -25,11 +25,26 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Filter the changes
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            scan-docker-image:
+              - 'security-actions/scan-docker-image/**'
+
       - name: Install PNPM
         shell: bash
         run: |
           npm i -g pnpm
           pnpm --version
+
+
+      - name: Commitlint
+        if: github.event_name == 'pull_request'
+        uses: wagoid/commitlint-github-action@v5
+        with:
+          failOnWarnings: true
 
       - name: Dependency Cache
         id: dependency-cache
@@ -38,16 +53,13 @@ jobs:
           path: '**/node_modules'
           key: pnpm-20-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Install Dependencies
-        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' }}
-        shell: bash
-        run: pnpm i
-
-      - name: Release new versions
+      - name: Build & Test action
+        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' && steps.filter.outputs.scan-docker-image == 'true'}}
         shell: bash
         run: |
           git checkout ${{ github.head_ref }}
-          git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
-          git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
-          pnpm version:dry-run
+          pnpm install  --frozen-lockfile
+          pnpm lint
+          pnpm run package
+
 
