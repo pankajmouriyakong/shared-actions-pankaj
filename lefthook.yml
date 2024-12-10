@@ -1,0 +1,4 @@
+# .lefthook.yml
+hooks:
+  commit-msg:
+    run: npx commitlint --config commitlint.config.js --edit $1
