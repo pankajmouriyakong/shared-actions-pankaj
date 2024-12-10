@@ -16,7 +16,8 @@
     "lerna": "lerna",
     "version": "pnpm i --no-frozen-lockfile && git add .",
     "version:ci": "lerna version --yes --create-release github",
-    "version:dry-run": "pnpm run version:ci --no-push"
+    "version:dry-run": "pnpm run version:ci --no-push",
+    "prepare": "husky install"
   },
   "keywords": [],
   "devDependencies": {
