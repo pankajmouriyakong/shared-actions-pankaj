@@ -1,5 +1,0 @@
-# .lefthook.yml
-commit-msg:
-  scripts:
-    "commitlint.sh":
-      runner: bash

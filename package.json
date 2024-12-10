@@ -16,7 +16,8 @@
     "lerna": "lerna",
     "version": "pnpm i --no-frozen-lockfile && git add .",
     "version:ci": "lerna version --yes --create-release github",
-    "version:dry-run": "pnpm run version:ci --no-push"
+    "version:dry-run": "pnpm run version:ci --no-push",
+    "prepare": "husky install"
   },
   "keywords": [],
   "devDependencies": {
@@ -27,12 +28,15 @@
     "commitizen": "^4.3.1",
     "conventional-changelog-metahub": "^4.0.1",
     "cz-conventional-changelog": "^3.3.0",
-    "lefthook": "^1.9.0",
-    "lerna": "^8.1.9"
+    "lerna": "^8.1.9",
+    "husky": "^8.0.0"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "husky": "^9.1.7"
   }
 }
