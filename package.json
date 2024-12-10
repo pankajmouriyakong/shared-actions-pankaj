@@ -23,9 +23,10 @@
     "@commitlint/cli": "^19.6.0",
     "@commitlint/config-conventional": "^19.6.0",
     "@commitlint/config-lerna-scopes": "^19.5.0",
-    "@evilmartians/lefthook": "^1.8.4",
+    "@evilmartians/lefthook": "^1.9.0",
     "commitizen": "^4.3.1",
     "conventional-changelog-metahub": "^4.0.1",
+    "cz-conventional-changelog": "^3.3.0",
     "lerna": "^8.1.9"
   },
   "config": {

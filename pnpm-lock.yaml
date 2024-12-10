@@ -18,26 +18,40 @@ importers:
         specifier: ^19.5.0
         version: 19.5.0(lerna@8.1.9(encoding@0.1.13))
       '@evilmartians/lefthook':
-        specifier: ^1.8.4
-        version: 1.8.4
+        specifier: ^1.9.0
+        version: 1.9.0
       commitizen:
         specifier: ^4.3.1
         version: 4.3.1(@types/node@22.10.0)(typescript@5.7.2)
       conventional-changelog-metahub:
         specifier: ^4.0.1
         version: 4.0.1
-      husky:
-        specifier: ^9.1.7
-        version: 9.1.7
+      cz-conventional-changelog:
+        specifier: ^3.3.0
+        version: 3.3.0(@types/node@22.10.0)(typescript@5.7.2)
       lerna:
         specifier: ^8.1.9
         version: 8.1.9(encoding@0.1.13)
+
+  code-build-actions/build-js-sdk: {}
+
+  code-check-actions/lua-lint: {}
+
+  code-check-actions/rust-lint: {}
+
+  security-actions/login-aws-cloud: {}
+
+  security-actions/sca: {}
 
   security-actions/scan-docker-image: {}
 
   security-actions/scan-rust: {}
 
   security-actions/semgrep: {}
+
+  security-actions/sign-docker-image: {}
+
+  slack-actions/workflow-notification: {}
 
 packages:
 
@@ -136,8 +150,8 @@ packages:
   '@emnapi/wasi-threads@1.0.1':
     resolution: {integrity: sha512-iIBu7mwkq4UQGeMEM8bLwNK962nXdhodeScX4slfQnRhEMMzvYivHhutCIk8uojvmASXXPC2WNEjwxFWk72Oqw==}
 
-  '@evilmartians/lefthook@1.8.4':
-    resolution: {integrity: sha512-n5aODynRZKSYmDajD8UCd5yy5ste2lJUTSGmv+D+4OP0UUWZqF4qJ/r7+2Ifo6K6WdsknVhVsPsEl4LugTbrug==}
+  '@evilmartians/lefthook@1.9.0':
+    resolution: {integrity: sha512-a6+eZ/6TlE3ILu0B1GGUC90X3nysSfcUZo5mQMwY0aF2Djw5Faf6EYZ7Il8oCxxgNmsZ2tGn9EgOPNQTqT2G+g==}
     cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
@@ -1214,11 +1228,6 @@ packages:
   human-signals@2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
-
-  husky@9.1.7:
-    resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
-    engines: {node: '>=18'}
-    hasBin: true
 
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
@@ -2723,7 +2732,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@evilmartians/lefthook@1.8.4': {}
+  '@evilmartians/lefthook@1.9.0': {}
 
   '@hutson/parse-repository-url@3.0.2': {}
 
@@ -4005,8 +4014,6 @@ snapshots:
       - supports-color
 
   human-signals@2.1.0: {}
-
-  husky@9.1.7: {}
 
   iconv-lite@0.4.24:
     dependencies:
