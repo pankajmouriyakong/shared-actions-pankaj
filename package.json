@@ -28,15 +28,12 @@
     "commitizen": "^4.3.1",
     "conventional-changelog-metahub": "^4.0.1",
     "cz-conventional-changelog": "^3.3.0",
-    "lerna": "^8.1.9",
-    "husky": "^8.0.0"
+    "husky": "^9.1.7",
+    "lerna": "^8.1.9"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  },
-  "dependencies": {
-    "husky": "^9.1.7"
   }
 }
