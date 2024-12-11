@@ -28,6 +28,7 @@ jobs:
 
   build:
     needs: [ changes ]
+    if: ${{ needs.changes.outputs.packages != '[]' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
