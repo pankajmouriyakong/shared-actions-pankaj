@@ -2,12 +2,10 @@ name: Publish Release
 on:
   push:
     branches:
-#      - main
-      - independent-releases
+      - main
   pull_request:
     branches:
       - main
-      - independent-releases
   workflow_dispatch: {}
 
 jobs:
@@ -66,7 +64,7 @@ jobs:
 
       # This step will create a tag and also release
       - name: Provision tags and make a release
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/independent-releases' }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         env:
           GH_TOKEN: ${{ steps.github-app-token.outputs.token }}
         shell: bash
