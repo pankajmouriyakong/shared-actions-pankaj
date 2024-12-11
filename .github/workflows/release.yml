@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+      - independent-releases
   workflow_dispatch: {}
 
 jobs:
@@ -53,16 +57,26 @@ jobs:
         shell: bash
         run: pnpm i
 
-      # This step will create a tag and also release
-      - name: Release new versions
-        env:
-          GH_TOKEN: ${{ steps.github-app-token.outputs.token }}
+      - name: Setup Git Config
         shell: bash
         run: |
           git checkout ${{ github.head_ref }}
           git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
           git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
+
+      # This step will create a tag and also release
+      - name: Provision tags and make a release
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        env:
+          GH_TOKEN: ${{ steps.github-app-token.outputs.token }}
+        shell: bash
+        run: |
           pnpm version:ci
+
+      # Run version:dry-run if on any other branch
+      - name: Dry-run for tagging and releases
+        if: ${{ github.event_name == 'pull_request' && startsWith(github.ref, 'refs/heads/') && github.ref != 'refs/heads/main' }}
+        run: pnpm version:dry-run
 
   # TODO when raising PR in Public shared actions
   # A Slack Webhook will be provisioned depending upon notification type
