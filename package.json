@@ -17,7 +17,8 @@
     "version": "pnpm i --no-frozen-lockfile && git add .",
     "version:ci": "lerna version --yes --create-release github",
     "version:dry-run": "pnpm run version:ci --no-push",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '.eslintignore'"
   },
   "keywords": [],
   "devDependencies": {
@@ -29,7 +30,11 @@
     "conventional-changelog-metahub": "^4.0.1",
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^9.1.7",
-    "lerna": "^8.1.9"
+    "lerna": "^8.1.9",
+    "eslint": "^8.33.0",
+    "@rushstack/eslint-patch": "^1.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0"
   },
   "config": {
     "commitizen": {

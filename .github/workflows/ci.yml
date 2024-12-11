@@ -16,7 +16,7 @@ jobs:
       packages: ${{ steps.filter.outputs.changes }}
     steps:
       - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
@@ -26,8 +26,55 @@ jobs:
             semgrep: 'security-actions/semgrep/**'
             sign-docker-image: 'security-actions/sign-docker-image/**'
 
+  setup-dependencies:
+    needs: changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.changes.outputs.packages != '[]' }}
+    outputs:
+      nodeVersion: ${{ steps.node-version.outputs.nodeVersion }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Node Version
+        id: node-version
+        run: |
+          nodeVersion="$(node --version | grep -oE '[0-9]+' | head -n1)"
+          echo "nodeVersion=$nodeVersion" >> $GITHUB_OUTPUT
+
+      - name: Install PNPM
+        run: |
+          npm install -g pnpm
+          pnpm --version
+          if [ -n "${{ github.head_ref }}" ]; then
+            git checkout ${{ github.head_ref }}
+          fi
+
+      - name: Dependency Cache
+        id: dependency-cache
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: pnpm-${{ steps.node-version.outputs.nodeVersion }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install Dependencies
+        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' }}
+        run: |
+          pnpm install --frozen-lockfile
+
+      - name: Commit lint
+        uses: wagoid/commitlint-github-action@v5
+        with:
+          failOnWarnings: true
+
   build:
-    needs: [ changes ]
+    needs: [ changes, setup-dependencies ]
     if: ${{ needs.changes.outputs.packages != '[]' }}
     runs-on: ubuntu-latest
     strategy:
@@ -39,34 +86,27 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
 
       - name: Install PNPM
-        shell: bash
         run: |
-          npm i -g pnpm
+          npm install -g pnpm
           pnpm --version
-          git checkout ${{ github.head_ref }}
-          pnpm install  --frozen-lockfile
-
-      - name: Commit lint
-        if: github.event_name == 'pull_request'
-        uses: wagoid/commitlint-github-action@v5
-        with:
-          failOnWarnings: true
 
       - name: Dependency Cache
-        id: dependency-cache
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: pnpm-20-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: pnpm-${{ needs.setup-dependencies.outputs.nodeVersion }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Build & Test action
-        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' && steps.filter.outputs.scan-docker-image == 'true'}}
-        shell: bash
+      - name: Restore Dependencies
+        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' }}
+        run: |
+          pnpm install --frozen-lockfile
+
+      - name: Run Tests
         run: |
           pnpm lint
-          pnpm run package
