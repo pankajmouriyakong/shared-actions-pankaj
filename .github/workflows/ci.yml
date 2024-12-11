@@ -2,9 +2,9 @@ name: CI
 
 on:
   pull_request:
-    branches: [ independent-releases ]
+    branches: [independent-releases]
   push:
-    branches: [ independent-releases ]
+    branches: [independent-releases]
   workflow_dispatch:
 
 jobs:
@@ -26,14 +26,10 @@ jobs:
             semgrep: 'security-actions/semgrep/**'
             sign-docker-image: 'security-actions/sign-docker-image/**'
 
-  build:
-    needs: [ changes ]
-    if: ${{ needs.changes.outputs.packages != '[]' }}
+  setup-dependencies:
+    needs: changes
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        package: ${{ fromJSON(needs.changes.outputs.packages) }}
+    if: ${{ needs.changes.outputs.packages != '[]' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -50,13 +46,6 @@ jobs:
           nodeVersion="$(node --version | grep -oE '[0-9]+' | head -n1)"
           echo "nodeVersion=$nodeVersion" >> $GITHUB_OUTPUT
 
-      - name: Dependency Cache
-        id: dependency-cache
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: pnpm-${{ steps.node-version.outputs.node-version }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-
       - name: Install PNPM
         run: |
           npm i -g pnpm
@@ -64,6 +53,13 @@ jobs:
           if [ -n "${{ github.head_ref }}" ]; then
             git checkout ${{ github.head_ref }}
           fi
+
+      - name: Dependency Cache
+        id: dependency-cache
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: pnpm-${{ steps.node-version.outputs.nodeVersion }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install Dependencies
         if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' }}
@@ -75,6 +71,35 @@ jobs:
         with:
           failOnWarnings: true
 
+      # Optionally, you could upload node_modules as an artifact here
+      # But usually the cache is enough
+
+  build:
+    needs: [ changes, setup-dependencies ]
+    if: ${{ needs.changes.outputs.packages != '[]' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJSON(needs.changes.outputs.packages) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Node setup not strictly necessary again if using PNPM from setup-dependencies job
+      # But if needed, you can do it again quickly since it's cached
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Restore the cache (no installation needed, just reuse the cache)
+      - name: Dependency Cache
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: pnpm-${{ fromJSON(needs.setup-dependencies.outputs.nodeVersion) }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - name: Run Tests
-        run: |
-          pnpm lint
+        run: pnpm lint
