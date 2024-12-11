@@ -41,13 +41,13 @@ jobs:
 
       - name: Setup Node
         uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Node Version
         id: node-version
         run: |
-          nodeVersion="$(node --version)" 
-          >> $GITHUB_OUTPUT
-          ${{ steps.image_manifest_metadata.outputs.manifest_sha }}
+          nodeVersion="$(node --version | grep -oE '[0-9]+' | head -n1)"
           echo "nodeVersion=$nodeVersion" >> $GITHUB_OUTPUT
 
       - name: Install PNPM
@@ -58,12 +58,6 @@ jobs:
           git checkout ${{ github.head_ref }}
           pnpm install  --frozen-lockfile
 
-      - name: Commit lint
-        if: github.event_name == 'pull_request'
-        uses: wagoid/commitlint-github-action@v5
-        with:
-          failOnWarnings: true
-
       - name: Dependency Cache
         id: dependency-cache
         uses: actions/cache@v3
@@ -71,9 +65,15 @@ jobs:
           path: '**/node_modules'
           key: pnpm-${{ steps.node-version.outputs.node-version }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Build & Test action
+      - name: Install Dependencies
         if: ${{ steps.dependency-cache.outputs.cache-hit != 'true'}}
         shell: bash
         run: |
-          pnpm lint
+          pnpm i
           pnpm run package
+
+      - name: Commit lint
+        if: github.event_name == 'pull_request'
+        uses: wagoid/commitlint-github-action@v5
+        with:
+          failOnWarnings: true
