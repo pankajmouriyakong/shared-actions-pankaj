@@ -25,6 +25,10 @@ jobs:
             scan-rust: 'security-actions/scan-rust/**'
             semgrep: 'security-actions/semgrep/**'
             sign-docker-image: 'security-actions/sign-docker-image/**'
+            code-build-actions: 'code-build-actions/build-js-sdk/**'
+            code-check-actions: 'code-check-actions/lua-lint/**'
+            code-check-actions: 'code-check-actions/rust-lint/**'
+            slack-actions: 'slack-actions/workflow-notification/**'
 
   setup-dependencies:
     needs: changes
