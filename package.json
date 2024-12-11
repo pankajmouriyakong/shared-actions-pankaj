@@ -18,8 +18,7 @@
     "version:ci": "lerna version --yes --create-release github",
     "version:dry-run": "pnpm run version:ci --no-push",
     "prepare": "husky install",
-    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '.eslintignore'",
-    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '.eslintignore' --fix"
+    "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '.eslintignore'"
   },
   "keywords": [],
   "devDependencies": {

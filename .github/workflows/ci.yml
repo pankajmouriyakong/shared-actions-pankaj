@@ -84,12 +84,27 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Restore the cache (no installation needed, just reuse the cache)
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install PNPM
+        run: |
+          npm install -g pnpm
+          pnpm --version
+
       - name: Dependency Cache
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: pnpm-${{ steps.node-version.outputs.nodeVersion }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: pnpm-${{ needs.setup-dependencies.outputs.nodeVersion }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Restore Dependencies
+        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' }}
+        run: |
+          pnpm install --frozen-lockfile
 
       - name: Run Tests
-        run: pnpm lint
+        run: |
+          pnpm lint
