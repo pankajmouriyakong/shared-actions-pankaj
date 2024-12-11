@@ -2,7 +2,8 @@ name: Publish Release
 on:
   push:
     branches:
-      - main
+#      - main
+      - independent-releases
   pull_request:
     branches:
       - main
@@ -11,7 +12,6 @@ on:
 
 jobs:
   release:
-    # if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     name: Release
     runs-on: ubuntu-latest
 
@@ -66,7 +66,7 @@ jobs:
 
       # This step will create a tag and also release
       - name: Provision tags and make a release
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/independent-releases' }}
         env:
           GH_TOKEN: ${{ steps.github-app-token.outputs.token }}
         shell: bash

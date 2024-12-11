@@ -42,8 +42,6 @@ importers:
 
   code-check-actions/rust-lint: {}
 
-  security-actions/login-aws-cloud: {}
-
   security-actions/sca: {}
 
   security-actions/scan-docker-image: {}
@@ -155,7 +153,6 @@ packages:
 
   '@evilmartians/lefthook@1.9.0':
     resolution: {integrity: sha512-a6+eZ/6TlE3ILu0B1GGUC90X3nysSfcUZo5mQMwY0aF2Djw5Faf6EYZ7Il8oCxxgNmsZ2tGn9EgOPNQTqT2G+g==}
-    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 

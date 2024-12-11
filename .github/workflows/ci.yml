@@ -3,10 +3,10 @@ name: CI
 on:
   pull_request:
     branches:
-      - main
+      - independent-releases
   push:
     branches:
-      - main
+      - independent-releases
   workflow_dispatch: {}
 
 jobs:
