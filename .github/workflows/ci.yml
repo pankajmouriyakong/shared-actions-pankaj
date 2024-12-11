@@ -2,9 +2,9 @@ name: CI
 
 on:
   pull_request:
-    branches: [independent-releases]
+    branches: [ independent-releases ]
   push:
-    branches: [independent-releases]
+    branches: [ independent-releases ]
   workflow_dispatch:
 
 jobs:
@@ -30,6 +30,8 @@ jobs:
     needs: changes
     runs-on: ubuntu-latest
     if: ${{ needs.changes.outputs.packages != '[]' }}
+    outputs:
+      nodeVersion: ${{ steps.node-version.outputs.nodeVersion }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -48,7 +50,7 @@ jobs:
 
       - name: Install PNPM
         run: |
-          npm i -g pnpm
+          npm install -g pnpm
           pnpm --version
           if [ -n "${{ github.head_ref }}" ]; then
             git checkout ${{ github.head_ref }}
