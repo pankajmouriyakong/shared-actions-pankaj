@@ -30,6 +30,7 @@ jobs:
     needs: [ changes ]
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         package: ${{ fromJSON(needs.changes.outputs.packages) }}
     steps:
