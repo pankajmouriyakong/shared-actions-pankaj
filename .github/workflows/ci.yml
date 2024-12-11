@@ -42,7 +42,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 18
 
       - name: Node Version
         id: node-version
@@ -77,4 +77,6 @@ jobs:
 
       - name: Run Tests
         run: |
-          pnpm test
+          pnpm lint
+          pnpm run test:unit
+          pnpm run package
