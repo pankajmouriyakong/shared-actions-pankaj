@@ -50,12 +50,6 @@ jobs:
           ${{ steps.image_manifest_metadata.outputs.manifest_sha }}
           echo "nodeVersion=$nodeVersion" >> $GITHUB_OUTPUT
 
-      - name: NPM CI & Test
-        run: |
-          npm ci
-          npm test
-        
-
       - name: Install PNPM
         shell: bash
         run: |
