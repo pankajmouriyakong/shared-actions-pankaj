@@ -75,7 +75,7 @@ jobs:
 
       # Run version:dry-run if on any other branch
       - name: Dry-run for tagging and releases
-        if: ${{ github.event_name == 'pull_request' && startsWith(github.ref, 'refs/heads/') && github.ref != 'refs/heads/main' }}
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref != 'main' }}
         run: pnpm version:dry-run
 
   # TODO when raising PR in Public shared actions
