@@ -39,9 +39,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '20'
+      - name: Install Node
+        id: install-node
+        uses: actions/setup-node@v4
+        run: |
+          nodeVersion="$(node --version)" 
+          >> $GITHUB_OUTPUT
+          ${{ steps.image_manifest_metadata.outputs.manifest_sha }}
+          echo "nodeVersion=$nodeVersion" >> $GITHUB_OUTPUT
+
+      - name: NPM CI & Test
+        run: |
+          npm ci
+          npm test
+        
 
       - name: Install PNPM
         shell: bash
@@ -62,10 +73,10 @@ jobs:
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: pnpm-20-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: pnpm-${{ steps.install-node.outputs.node-version }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Build & Test action
-        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' && steps.filter.outputs.scan-docker-image == 'true'}}
+        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true'}}
         shell: bash
         run: |
           pnpm lint
