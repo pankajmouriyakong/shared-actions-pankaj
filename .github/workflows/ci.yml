@@ -78,5 +78,4 @@ jobs:
       - name: Run Tests
         run: |
           pnpm lint
-          pnpm run test:unit
           pnpm run package

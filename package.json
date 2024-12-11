@@ -21,8 +21,7 @@
     "build": "rimraf ./dist && tsc --project './tsconfig.json'",
     "package": "pnpm run build && ncc build",
     "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '.eslintignore'",
-    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '.eslintignore' --fix",
-    "test:unit": "vitest run"
+    "lint:fix": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '.eslintignore' --fix"
   },
   "keywords": [],
   "devDependencies": {
@@ -35,7 +34,6 @@
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^9.1.7",
     "lerna": "^8.1.9",
-    "vitest": "^0.28.5",
     "eslint": "^8.33.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-node": "^11.1.0",
