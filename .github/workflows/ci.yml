@@ -16,7 +16,7 @@ jobs:
       packages: ${{ steps.filter.outputs.changes }}
     steps:
       - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
@@ -50,14 +50,6 @@ jobs:
           nodeVersion="$(node --version | grep -oE '[0-9]+' | head -n1)"
           echo "nodeVersion=$nodeVersion" >> $GITHUB_OUTPUT
 
-      - name: Install PNPM
-        shell: bash
-        run: |
-          npm i -g pnpm
-          pnpm --version
-          git checkout ${{ github.head_ref }}
-          pnpm install  --frozen-lockfile
-
       - name: Dependency Cache
         id: dependency-cache
         uses: actions/cache@v3
@@ -65,15 +57,25 @@ jobs:
           path: '**/node_modules'
           key: pnpm-${{ steps.node-version.outputs.node-version }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Install Dependencies
-        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true'}}
-        shell: bash
+      - name: Install PNPM
         run: |
-          pnpm i
-          pnpm run package
+          npm i -g pnpm
+          pnpm --version
+          if [ -n "${{ github.head_ref }}" ]; then
+            git checkout ${{ github.head_ref }}
+          fi
+
+      - name: Install Dependencies
+        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' }}
+        run: |
+          pnpm install --frozen-lockfile
 
       - name: Commit lint
-        if: github.event_name == 'pull_request'
         uses: wagoid/commitlint-github-action@v5
         with:
           failOnWarnings: true
+
+      - name: Run Tests
+        run: |
+          cd ${{ matrix.package }}
+          pnpm test
