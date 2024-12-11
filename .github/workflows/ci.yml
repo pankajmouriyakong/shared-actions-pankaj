@@ -71,9 +71,6 @@ jobs:
         with:
           failOnWarnings: true
 
-      # Optionally, you could upload node_modules as an artifact here
-      # But usually the cache is enough
-
   build:
     needs: [ changes, setup-dependencies ]
     if: ${{ needs.changes.outputs.packages != '[]' }}
@@ -87,19 +84,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Node setup not strictly necessary again if using PNPM from setup-dependencies job
-      # But if needed, you can do it again quickly since it's cached
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
       # Restore the cache (no installation needed, just reuse the cache)
       - name: Dependency Cache
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: pnpm-${{ fromJSON(needs.setup-dependencies.outputs.nodeVersion) }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: pnpm-${{ steps.node-version.outputs.nodeVersion }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Run Tests
         run: pnpm lint
