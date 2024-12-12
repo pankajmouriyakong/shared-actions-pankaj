@@ -5,7 +5,7 @@ on:
       - main
   pull_request:
     branches:
-      - main
+      - independent-releases
   workflow_dispatch: {}
 
 jobs:
