@@ -49,7 +49,7 @@ runs:
     
     # Don't fail during report generation
     - name: Vulnerability analysis of SBOM
-      uses: anchore/scan-action@v3.3.5
+      uses: anchore/scan-action@v3.0.0
       continue-on-error: true
       id: scan
       with:
