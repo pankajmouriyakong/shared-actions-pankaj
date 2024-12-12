@@ -1,6 +1,3 @@
 node_modules
-dist
 **/dist/*
-public
 bin
-__template__
