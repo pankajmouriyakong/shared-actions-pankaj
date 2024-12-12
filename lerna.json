@@ -14,7 +14,7 @@
   "command": {
     "version": {
       "message": "chore(release): publish [skip ci]",
-      "allowBranch": ["main", "independent-releases"],
+      "allowBranch": ["main", "test-ci-workflow-4"],
       "conventionalCommits": true,
       "changelogPreset": "metahub"
     }
