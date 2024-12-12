@@ -1,38 +1,20 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+const {
+  utils: { getPackages }
+} = require('@commitlint/config-lerna-scopes')
+
 module.exports = {
-  parserPreset: 'conventional-changelog-conventionalcommits',
+  extends: ['@commitlint/config-conventional', '@commitlint/config-lerna-scopes'],
   rules: {
-    'body-leading-blank': [1, 'always'],
-    'body-max-line-length': [2, 'always', 100],
-    'footer-leading-blank': [1, 'always'],
-    'footer-max-line-length': [2, 'always', 100],
-    'header-max-length': [2, 'always', 100],
-    'subject-case': [
-      2,
-      'never',
-      ['sentence-case', 'start-case', 'pascal-case', 'upper-case'],
-    ],
-    'subject-empty': [2, 'never'],
-    'subject-full-stop': [2, 'never', '.'],
-    'type-case': [2, 'always', 'lower-case'],
-    'type-empty': [2, 'never'],
-    'type-enum': [
+    // see: https://github.com/conventional-changelog/commitlint/blob/master/docs/reference-rules.md
+    'scope-enum': async (ctx) => [
       2,
       'always',
-      [
-        'build',
-        'chore',
-        'ci',
-        'docs',
-        'feat',
-        'fix',
-        'perf',
-        'refactor',
-        'revert',
-        'style',
-        'test',
-      ],
-    ],
+      [...(await getPackages(ctx)), 'release', 'deps', 'ci', '*']
+    ]
   },
+  helpUrl: 'https://github.com/Kong/public-shared-actions',
   prompt: {
     questions: {
       type: {
@@ -55,13 +37,13 @@ module.exports = {
           },
           style: {
             description:
-                            'Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)',
+                'Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)',
             title: 'Styles',
             emoji: '💎',
           },
           refactor: {
             description:
-                            'A code change that neither fixes a bug nor adds a feature',
+                'A code change that neither fixes a bug nor adds a feature',
             title: 'Code Refactoring',
             emoji: '📦',
           },
@@ -77,13 +59,13 @@ module.exports = {
           },
           build: {
             description:
-                            'Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)',
+                'Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)',
             title: 'Builds',
             emoji: '🛠',
           },
           ci: {
             description:
-                            'Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)',
+                'Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)',
             title: 'Continuous Integrations',
             emoji: '⚙️',
           },
@@ -100,12 +82,11 @@ module.exports = {
         },
       },
       scope: {
-        description:
-                    'What is the scope of this change (e.g. component or file name)',
+        description: 'What is the scope of this change (e.g., package name)',
+        // The enum for scopes is dynamically managed by commitlint and lerna-scopes
       },
       subject: {
-        description:
-                    'Write a short, imperative tense description of the change',
+        description: 'Write a short, imperative tense description of the change',
       },
       body: {
         description: 'Provide a longer description of the change',
@@ -115,7 +96,7 @@ module.exports = {
       },
       breakingBody: {
         description:
-                    'A BREAKING CHANGE commit requires a body. Please enter a longer description of the commit itself.',
+            'A BREAKING CHANGE commit requires a body. Please enter a longer description of the commit itself.',
       },
       breaking: {
         description: 'Describe the breaking changes',
@@ -125,11 +106,12 @@ module.exports = {
       },
       issuesBody: {
         description:
-                    'If issues are closed, the commit requires a body. Please enter a longer description of the commit itself.',
+            'If issues are closed, the commit requires a body. Please enter a longer description of the commit itself.',
       },
       issues: {
-        description: 'Add issue references (e.g. "fix #123", "re #123").',
+        description:
+            'Add issue references (e.g., "fix #123", "re #123").',
       },
     },
   },
-}
+};
