@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-const {
+const {  // eslint-disable-line
   utils: { getPackages }
 } = require('@commitlint/config-lerna-scopes')
 
