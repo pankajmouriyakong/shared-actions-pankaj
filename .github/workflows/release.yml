@@ -82,7 +82,7 @@ jobs:
   # Create two SLACK Webhooks SLACK_WEBHOOK_URL_NOTIFY_RELEASE_SUCCESS and SLACK_WEBHOOK_URL_NOTIFY_RELEASE_FAILURE
   notify-slack:
     name: Slack Notification
-    if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ always() && github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     needs:
       - release
