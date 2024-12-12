@@ -8,6 +8,7 @@ module.exports = {
   extends: ['@commitlint/config-conventional', '@commitlint/config-lerna-scopes'],
   rules: {
     // see: https://github.com/conventional-changelog/commitlint/blob/master/docs/reference-rules.md
+    'scope-empty': [2, 'never'],
     'scope-enum': async (ctx) => [
       2,
       'always',
