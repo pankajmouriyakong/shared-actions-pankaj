@@ -1,10 +1,10 @@
 name: Publish Release
 
 on:
-#  workflow_run:
-#    workflows: ["ci"]
-#    types:
-#      - completed
+  workflow_run:
+    workflows: ["ci"]
+    types:
+      - completed
   workflow_dispatch: {}
 
 jobs:
@@ -84,6 +84,13 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+        
+      - name: Setup Git Config
+        shell: bash
+        run: |
+          git checkout ${{ github.head_ref }}
+          git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
+          git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
 
       - name: Dry-run for tagging and releases
         shell: bash
