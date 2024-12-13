@@ -84,7 +84,7 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-        
+
       - name: Setup Git Config
         shell: bash
         run: |
