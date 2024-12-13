@@ -7,11 +7,11 @@ on:
 #    branches:
 #      - main
   workflow_run:
-    workflows: [ "CI" ]
+    workflows: [ "ci" ]
     types:
       - completed
     branches:
-      - 'main'
+#      - 'main'
       - 'independent-releases'
   workflow_dispatch: {}
 
