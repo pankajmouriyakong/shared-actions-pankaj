@@ -124,7 +124,7 @@ runs:
      # Upload Cosign Artifacts (public cert and signatures)
      # Uploaded artifact name must be unique across each workflow run / job
     - name: Upload Cosign Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       if: ${{ inputs.local_save_cosign_assets == 'true' && inputs.cosign_output_prefix != '' }}
       with:
         name: signed-image-assets-${{inputs.cosign_output_prefix}}
