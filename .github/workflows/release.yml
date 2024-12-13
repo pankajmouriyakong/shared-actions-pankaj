@@ -11,7 +11,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_run' && github.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/main' }}
     steps:
       # ToDo when raising PR in Public shared actions
       # Either a GitHub application or a Bot PAT should be used below
