@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  changes:
+  files-changed:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -34,9 +34,9 @@ jobs:
             validate: 'pr-previews/validate/**'
 
   setup-dependencies:
-    needs: changes
+    needs: files-changed
     runs-on: ubuntu-latest
-    if: ${{ needs.changes.outputs.packages != '[]' }}
+    if: ${{ needs.files-changed.outputs.packages != '[]' }}
     outputs:
       nodeVersion: ${{ steps.node-version.outputs.nodeVersion }}
     steps:
@@ -59,9 +59,6 @@ jobs:
         run: |
           npm install -g pnpm
           pnpm --version
-          if [ -n "${{ github.head_ref }}" ]; then
-            git checkout ${{ github.head_ref }}
-          fi
 
       - name: Dependency Cache
         id: dependency-cache
@@ -81,13 +78,13 @@ jobs:
           failOnWarnings: true
 
   build:
-    needs: [ changes, setup-dependencies ]
-    if: ${{ needs.changes.outputs.packages != '[]' }}
+    needs: [ files-changed, setup-dependencies ]
+    if: ${{ needs.files-changed.outputs.packages != '[]' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        package: ${{ fromJSON(needs.changes.outputs.packages) }}
+        package: ${{ fromJSON(needs.files-changed.outputs.packages) }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -117,3 +114,12 @@ jobs:
       - name: Run Tests
         run: |
           pnpm lint
+
+
+  no-file-change:
+    needs: [ files-changed ]
+    if: ${{ needs.files-changed.outputs.packages == '[]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: No Changes Detected
+        run: echo "No changes detected in the monitored packages. Skipping build and tests."
