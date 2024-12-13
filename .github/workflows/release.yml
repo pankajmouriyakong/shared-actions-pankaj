@@ -10,10 +10,7 @@ on:
     workflows: [ "ci" ]
     types:
       - completed
-    branches:
-#      - 'main'
-      - 'independent-releases'
-  workflow_dispatch: {}
+#  workflow_dispatch: {}
 
 jobs:
   release:
