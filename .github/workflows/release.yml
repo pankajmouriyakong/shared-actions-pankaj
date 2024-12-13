@@ -1,0 +1,133 @@
+name: Publish Release
+
+on:
+  workflow_run:
+    workflows: ["ci"]
+    types:
+      - completed
+  workflow_dispatch: {}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: [ci]
+    if: ${{ github.event_name == 'workflow_run' && github.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/main' }}
+    steps:
+      # ToDo when raising PR in Public shared actions
+      # Either a GitHub application or a Bot PAT should be used below
+      # Recommended approach is to use a GitHub App https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/differences-between-github-apps-and-oauth-apps#machine-vs-bot-accounts
+      # Create a GH org Application, create a Private key
+      # Add the private key and app_id as PSA repo secret and use below
+      - name: Generate privileged push token to bypass branch protection settings
+        id: github-app-token
+        uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ steps.github-app-token.outputs.token }}
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Setup Git Config
+        shell: bash
+        run: |
+          git checkout ${{ github.head_ref }}
+          git config --local user.name "${{ vars.GH_USERNAME }}"
+          git config --local user.email "${{ vars.GH_EMAIL }}"
+
+      # This step will create a tag and also release
+      - name: Provision tags and make a release
+        if: ${{ github.event_name == 'workflow_run' && github.ref == 'refs/heads/main' }}
+        env:
+          GH_TOKEN: ${{ steps.github-app-token.outputs.token }}
+        shell: bash
+        run: |
+          pnpm version:ci
+
+  dry-run:
+    name: Dry Run
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Dry-run for tagging and releases
+        shell: bash
+        run: pnpm version:dry-run
+
+  notify-slack:
+    name: Slack Notification
+    if: ${{ always() && github.event_name == 'workflow_run' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    needs:
+      - release
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      # Success Notification
+      # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_RELEASE_SUCCESS
+      # Slack channel "notify-public-shared-actions"
+      - name: Send Success Notification
+        if: ${{ needs.release.result == 'success' }}
+        uses: edge/simple-slack-notify@v1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_RELEASE_SUCCESS }}
+        with:
+          status: success
+          success_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow completed successfully'
+          fields: |
+            [{ "title": "Repository", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}|${env.GITHUB_REPOSITORY}>", "short": true },
+             { "title": "Branch", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/tree/${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}|${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}>", "short": true },
+             { "title": "Revision", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/commit/${env.GITHUB_SHA}|${env.GITHUB_SHA.substring(0,7)}>", "short": true }]
+
+      # Failure Notification
+      # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_RELEASE_FAILURE
+      # Slack channel "alert-public-shared-actions"
+      - name: Send Failure Notification
+        if: ${{ needs.release.result == 'failure' }}
+        uses: edge/simple-slack-notify@v1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_RELEASE_FAILURE }}
+        with:
+          status: failure
+          failure_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow failed'
+          fields: |
+            [{ "title": "Repository", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}|${env.GITHUB_REPOSITORY}>", "short": true },
+             { "title": "Branch", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/tree/${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}|${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}>", "short": true },
+             { "title": "Revision", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/commit/${env.GITHUB_SHA}|${env.GITHUB_SHA.substring(0,7)}>", "short": true }]
