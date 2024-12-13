@@ -13,6 +13,19 @@ For example:
 - uses:  Kong/public-shared-actions/code-build-actions/build-js-sdk@v1.6.0
 ```
 
+# Commits using Interactive prompts
+One can commit changes either using the standing `git commit -m ""`  or follow the prompts defined in commintlint.config.js
+
+## Benefits of Prompts in `commitlint.config.js`
+Prompts in `commitlint.config.js` make it easier for devs to craft compliant commit messages by interactively guiding them through the process. 
+This ensures consistency and adherence to commit message standards without requiring users to memorize the rules.
+
+## How It Works
+To use the interactive prompt method
+1. Stage your changes for commits by running `git add .`
+2. Run `pnpm commit` to enter into interactive mode.
+3. Prompt will guide you further and help you commit a compliant commit message.
+
 # Setting Up Lefthook for Commit Message Verification
 
 This guide will help you install and configure Lefthook to enforce commit message standards locally.

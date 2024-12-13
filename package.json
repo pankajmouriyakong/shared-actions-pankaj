@@ -24,7 +24,7 @@
     "@commitlint/cli": "^17.6.6",
     "@commitlint/config-conventional": "^17.6.6",
     "@commitlint/config-lerna-scopes": "^17.6.6",
-    "@evilmartians/lefthook": "^1.9.0",
+    "@evilmartians/lefthook": "^1.9.2",
     "@rushstack/eslint-patch": "^1.2.0",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",

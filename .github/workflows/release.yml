@@ -36,28 +36,20 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.github-app-token.outputs.token }}
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
         with:
-          node-version: '20'
+          version: 9
+          run_install: false
 
-      - name: Install PNPM
-        shell: bash
-        run: |
-          npm i -g pnpm
-          pnpm --version
-
-      - name: Dependency Cache
-        id: dependency-cache
-        uses: actions/cache@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v4
         with:
-          path: '**/node_modules'
-          key: pnpm-20-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          node-version: 20
+          cache: 'pnpm'
 
-      - name: Install Dependencies
-        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' }}
-        shell: bash
-        run: pnpm i
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Setup Git Config
         shell: bash
