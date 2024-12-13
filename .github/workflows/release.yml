@@ -1,11 +1,15 @@
 name: Publish Release
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+#  push:
+#    branches:
+#      - main
+#  pull_request:
+#    branches:
+#      - main
+  workflow_run:
+    workflows: [ "ci" ]
+    types:
+      - completed
   workflow_dispatch: {}
 
 jobs:
@@ -73,7 +77,7 @@ jobs:
 
       # Run version:dry-run if on any other branch
       - name: Dry-run for tagging and releases
-        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref != 'main' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.pull_request.base.ref != 'main' }}
         run: pnpm version:dry-run
 
   # TODO when raising PR in Public shared actions
