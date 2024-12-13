@@ -51,6 +51,12 @@ importers:
 
   code-check-actions/rust-lint: {}
 
+  pr-previews/cleanup: {}
+
+  pr-previews/up-to-date: {}
+
+  pr-previews/validate: {}
+
   security-actions/sca: {}
 
   security-actions/scan-docker-image: {}

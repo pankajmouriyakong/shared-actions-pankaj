@@ -59,6 +59,8 @@ jobs:
       - name: Install Dependencies
         run: |
           pnpm install --frozen-lockfile
+          echo "ls node modules"
+          ls | grep "node_modules"
 
 #      - name: Commit lint
 #        uses: wagoid/commitlint-github-action@v5
