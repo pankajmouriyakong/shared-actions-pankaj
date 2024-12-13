@@ -44,31 +44,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
+
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Node Version
-        id: node-version
-        run: |
-          nodeVersion="$(node --version | grep -oE '[0-9]+' | head -n1)"
-          echo "nodeVersion=$nodeVersion" >> $GITHUB_OUTPUT
-
-      - name: Install PNPM
-        run: |
-          npm install -g pnpm
-          pnpm --version
-
-      - name: Dependency Cache
-        id: dependency-cache
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: pnpm-${{ steps.node-version.outputs.nodeVersion }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          cache: 'pnpm'
 
       - name: Install Dependencies
-        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' }}
         run: |
           pnpm install --frozen-lockfile
 
@@ -90,24 +78,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Install PNPM
-        run: |
-          npm install -g pnpm
-          pnpm --version
-
-      - name: Dependency Cache
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: pnpm-${{ needs.setup-dependencies.outputs.nodeVersion }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          cache: 'pnpm'
 
       - name: Restore Dependencies
-        if: ${{ steps.dependency-cache.outputs.cache-hit != 'true' }}
         run: |
           pnpm install --frozen-lockfile
 
