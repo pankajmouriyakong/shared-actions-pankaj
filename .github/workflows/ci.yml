@@ -2,9 +2,9 @@ name: ci
 
 on:
   pull_request:
-    branches: [ independent-releases ]
+    branches: [ main ]
   push:
-    branches: [ independent-releases ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
