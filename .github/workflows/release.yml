@@ -1,11 +1,5 @@
 name: Publish Release
 on:
-#  push:
-#    branches:
-#      - main
-#  pull_request:
-#    branches:
-#      - main
   workflow_run:
     workflows: [ "ci" ]
     types:
@@ -15,6 +9,12 @@ on:
 jobs:
   release:
     name: Release
+    if: >
+      ${{ 
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'independent-releases'
+      }}
     runs-on: ubuntu-latest
 
     steps:
