@@ -80,6 +80,4 @@ To verify that Lefthook is correctly set up:
 - Ensure that all developers in your team follow this setup to maintain consistent commit message standards.
 - Refer to the [Lefthook Usage Guide](https://github.com/evilmartians/lefthook/blob/master/docs/usage.md) for more advanced configurations and usage scenarios.
 
-By setting up Lefthook, you ensure that all developers adhere to the commit message conventions.
-
-
+By setting up Lefthook, you ensure that all developers adhere to the commit message conventions
