@@ -1,7 +1,8 @@
 name: Publish Release
+
 on:
   workflow_run:
-    workflows: [ "ci" ]
+    workflows: ["ci"]
     types:
       - completed
   workflow_dispatch: {}
@@ -9,14 +10,9 @@ on:
 jobs:
   release:
     name: Release
-    if: >
-      ${{ 
-        github.event.workflow_run.conclusion == 'success' &&
-        github.event.workflow_run.event == 'push' &&
-        github.event.workflow_run.head_branch == 'main'
-      }}
     runs-on: ubuntu-latest
-
+    needs: [ci]
+    if: ${{ github.event_name == 'workflow_run' && github.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/main' }}
     steps:
       # ToDo when raising PR in Public shared actions
       # Either a GitHub application or a Bot PAT should be used below
@@ -55,30 +51,48 @@ jobs:
         shell: bash
         run: |
           git checkout ${{ github.head_ref }}
-          git config --local user.name "${{ vars.GH_APP__KONG__BOT_USERNAME }}"
-          git config --local user.email "${{ vars.GH_APP__KONG__BOT_EMAIL }}"
+          git config --local user.name "${{ vars.GH_USERNAME }}"
+          git config --local user.email "${{ vars.GH_EMAIL }}"
 
       # This step will create a tag and also release
       - name: Provision tags and make a release
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        if: ${{ github.event_name == 'workflow_run' && github.ref == 'refs/heads/main' }}
         env:
           GH_TOKEN: ${{ steps.github-app-token.outputs.token }}
         shell: bash
         run: |
           pnpm version:ci
 
-      # Run version:dry-run if on any other branch
+  dry-run:
+    name: Dry Run
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Dry-run for tagging and releases
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.pull_request.base.ref != 'main' }}
+        shell: bash
         run: pnpm version:dry-run
 
-  # TODO when raising PR in Public shared actions
-  # A Slack Webhook will be provisioned depending upon notification type
-  # Update webhook URL as secret within Github PSA repo
-  # Create two SLACK Webhooks SLACK_WEBHOOK_URL_NOTIFY_RELEASE_SUCCESS and SLACK_WEBHOOK_URL_NOTIFY_RELEASE_FAILURE
   notify-slack:
     name: Slack Notification
-    if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ always() && github.event_name == 'workflow_run' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     needs:
       - release
