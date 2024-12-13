@@ -122,7 +122,7 @@ jobs:
       # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_RELEASE_SUCCESS
       # Slack channel "notify-public-shared-actions"
       - name: Send Success Notification
-        if: ${{ needs.release.result == 'success' }}
+        if: ${{ needs.build.result == 'success' }}
         uses: edge/simple-slack-notify@v1
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_RELEASE_SUCCESS }}
@@ -138,7 +138,7 @@ jobs:
       # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_RELEASE_FAILURE
       # Slack channel "alert-public-shared-actions"
       - name: Send Failure Notification
-        if: ${{ needs.release.result == 'failure' }}
+        if: ${{ needs.build.result == 'failure' }}
         uses: edge/simple-slack-notify@v1
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_RELEASE_FAILURE }}
