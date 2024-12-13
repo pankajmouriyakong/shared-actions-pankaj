@@ -59,8 +59,6 @@ jobs:
       - name: Install Dependencies
         run: |
           pnpm install --frozen-lockfile
-          echo "ls node modules"
-          ls | grep "node_modules"
 
 #      - name: Commit lint
 #        uses: wagoid/commitlint-github-action@v5
@@ -104,3 +102,49 @@ jobs:
     steps:
       - name: No Changes Detected
         run: echo "No changes detected in the monitored packages. Skipping build and tests."
+
+  # TODO when raising PR in Public shared actions
+  # A Slack Webhook will be provisioned depending upon notification type
+  # Update webhook URL as secret within Github PSA repo
+  # Create two SLACK Webhooks SLACK_WEBHOOK_URL_NOTIFY_RELEASE_SUCCESS and SLACK_WEBHOOK_URL_NOTIFY_RELEASE_FAILURE
+  notify-slack:
+    name: Slack Notification
+    if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      # Success Notification
+      # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_RELEASE_SUCCESS
+      # Slack channel "notify-public-shared-actions"
+      - name: Send Success Notification
+        if: ${{ needs.release.result == 'success' }}
+        uses: edge/simple-slack-notify@v1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_RELEASE_SUCCESS }}
+        with:
+          status: success
+          success_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow completed successfully'
+          fields: |
+            [{ "title": "Repository", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}|${env.GITHUB_REPOSITORY}>", "short": true },
+             { "title": "Branch", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/tree/${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}|${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}>", "short": true },
+             { "title": "Revision", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/commit/${env.GITHUB_SHA}|${env.GITHUB_SHA.substring(0,7)}>", "short": true }]
+
+      # Failure Notification
+      # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_RELEASE_FAILURE
+      # Slack channel "alert-public-shared-actions"
+      - name: Send Failure Notification
+        if: ${{ needs.release.result == 'failure' }}
+        uses: edge/simple-slack-notify@v1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_RELEASE_FAILURE }}
+        with:
+          status: failure
+          failure_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow failed'
+          fields: |
+            [{ "title": "Repository", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}|${env.GITHUB_REPOSITORY}>", "short": true },
+             { "title": "Branch", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/tree/${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}|${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}>", "short": true },
+             { "title": "Revision", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/commit/${env.GITHUB_SHA}|${env.GITHUB_SHA.substring(0,7)}>", "short": true }]
