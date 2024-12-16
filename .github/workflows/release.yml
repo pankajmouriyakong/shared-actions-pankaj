@@ -9,10 +9,62 @@ on:
   workflow_dispatch: {}
 
 jobs:
+  files-changed:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.repository_owner == 'Kong' }}
+    permissions:
+      pull-requests: read
+    outputs:
+      packages: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          predicate-quantifier: 'every'
+          filters: |
+            scan-docker-image: 
+              - 'security-actions/scan-docker-image/**'
+              - '!**/*.md'
+            sca: 
+              - 'security-actions/sca/**'
+              - '!**/*.md'
+            scan-rust: 
+              - 'security-actions/scan-rust/**'
+              - '!**/*.md'
+            semgrep: 
+              - 'security-actions/semgrep/**'
+              - '!**/*.md'
+            sign-docker-image: 
+              - 'security-actions/sign-docker-image/**'
+              - '!**/*.md'
+            code-build-actions: 
+              - 'code-build-actions/build-js-sdk/**'
+              - '!**/*.md'
+            lua-lint: 
+              - 'code-check-actions/lua-lint/**'
+              - '!**/*.md'
+            rust-lint: 
+              - 'code-check-actions/rust-lint/**'
+              - '!**/*.md'
+            slack-actions: 
+              - 'slack-actions/workflow-notification/**'
+              - '!**/*.md'
+            cleanup: 
+              - 'pr-previews/cleanup/**'
+              - '!**/*.md'
+            up-to-date: 
+              - 'pr-previews/up-to-date/**'
+              - '!**/*.md'
+            validate: 
+              - 'pr-previews/validate/**'
+              - '!**/*.md'
+
   release:
     name: Release
+    needs: files-changed
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ needs.files-changed.outputs.packages != '[]'}}
     steps:
       # ToDo when raising PR in Public shared actions
       # Either a GitHub application or a Bot PAT should be used below
@@ -66,8 +118,9 @@ jobs:
 
   dry-run:
     name: Dry Run
+    needs: files-changed
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && needs.files-changed.outputs.packages != '[]' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -98,44 +151,37 @@ jobs:
         shell: bash
         run: pnpm version:dry-run
 
-  notify-slack:
+  # TODO when raising PR in Public shared actions
+  # A Slack Webhook will be provisioned depending upon notification type
+  # Update webhook URL as secret within Github PSA repo
+  # Create two SLACK Webhooks SLACK_WEBHOOK_URL_NOTIFY_RELEASE_SUCCESS and SLACK_WEBHOOK_URL_NOTIFY_RELEASE_FAILURE
+  slack_notification:
     name: Slack Notification
-    if: ${{ always() && github.event_name == 'workflow_run' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
-    needs:
-      - release
+    needs: release
+    if: ${{ always() && github.event_name == 'workflow_run' && github.ref == 'refs/heads/main' }}
     steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       # Success Notification
       # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_RELEASE_SUCCESS
       # Slack channel "notify-public-shared-actions"
       - name: Send Success Notification
         if: ${{ needs.release.result == 'success' }}
-        uses: edge/simple-slack-notify@v1
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_RELEASE_SUCCESS }}
+        uses: ./slack-actions/workflow-notification
         with:
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_RELEASE_SUCCESS }}
           status: success
-          success_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow completed successfully'
-          fields: |
-            [{ "title": "Repository", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}|${env.GITHUB_REPOSITORY}>", "short": true },
-             { "title": "Branch", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/tree/${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}|${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}>", "short": true },
-             { "title": "Revision", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/commit/${env.GITHUB_SHA}|${env.GITHUB_SHA.substring(0,7)}>", "short": true }]
-
+          success-message: ":white_check_mark: ${{ github.workflow }} workflow successfully ran within ${{ github.repository }}"
+    
       # Failure Notification
       # Secret Name: SLACK_WEBHOOK_URL_NOTIFY_RELEASE_FAILURE
       # Slack channel "alert-public-shared-actions"
       - name: Send Failure Notification
         if: ${{ needs.release.result == 'failure' }}
-        uses: edge/simple-slack-notify@v1
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_RELEASE_FAILURE }}
+        uses: ./slack-actions/workflow-notification
         with:
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_RELEASE_FAILURE }}
           status: failure
-          failure_text: '<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|${env.GITHUB_WORKFLOW} (${env.GITHUB_RUN_NUMBER})> workflow failed'
-          fields: |
-            [{ "title": "Repository", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}|${env.GITHUB_REPOSITORY}>", "short": true },
-             { "title": "Branch", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/tree/${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}|${env.GITHUB_HEAD_REF || env.GITHUB_REF.substring(11)}>", "short": true },
-             { "title": "Revision", "value": "<${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/commit/${env.GITHUB_SHA}|${env.GITHUB_SHA.substring(0,7)}>", "short": true }]
+          failure-message: ":x: This is a *failure* notification from ${{ github.repository }} for workflow ${{ github.workflow }}"
