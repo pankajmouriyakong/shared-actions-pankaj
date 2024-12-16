@@ -44,6 +44,8 @@ jobs:
               - 'pr-previews/up-to-date/**'
             validate: 
               - 'pr-previews/validate/**'
+            other:
+            - '!*.md'
 
   setup-dependencies:
     needs: files-changed
