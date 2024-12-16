@@ -22,40 +22,28 @@ jobs:
           filters: |
             scan-docker-image: 
               - 'security-actions/scan-docker-image/**'
-              - '!README.md'
             sca: 
               - 'security-actions/sca/**'
-              - '!README.md'
             scan-rust: 
               - 'security-actions/scan-rust/**'
-              - '!README.md'
             semgrep: 
               - 'security-actions/semgrep/**'
-              - '!README.md'
             sign-docker-image: 
               - 'security-actions/sign-docker-image/**'
-              - '!README.md'
             code-build-actions: 
               - 'code-build-actions/build-js-sdk/**'
-              - '!README.md'
             lua-lint: 
               - 'code-check-actions/lua-lint/**'
-              - '!**/*.md'
             rust-lint: 
               - 'code-check-actions/rust-lint/**'
-              - '!**/*.md'
             slack-actions: 
               - 'slack-actions/workflow-notification/**'
-              - '!**/*.md'
             cleanup: 
               - 'pr-previews/cleanup/**'
-              - '!**/*.md'
             up-to-date: 
               - 'pr-previews/up-to-date/**'
-              - '!**/*.md'
             validate: 
               - 'pr-previews/validate/**'
-              - '!**/*.md'
 
   setup-dependencies:
     needs: files-changed
