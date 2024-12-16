@@ -27,6 +27,7 @@ jobs:
               - 'security-actions/sca/**'
             scan-rust: 
               - 'security-actions/scan-rust/**'
+              - '!**/*.md'
             semgrep: 
               - 'security-actions/semgrep/**'
               - '!**/*.md'
