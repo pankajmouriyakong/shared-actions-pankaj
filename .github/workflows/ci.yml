@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
-        if: ${{ github.repository_owner == 'Kong' }}
+        if: ${{ github.repository_owner == 'pankajmouriyakong' }}
         id: filter
         with:
           predicate-quantifier: 'every'
