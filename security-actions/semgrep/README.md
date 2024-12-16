@@ -1,4 +1,5 @@
 # Semgrep SAST - Github Action
+Only for testing action
 
 This action uses Semgrep CI command to scan all supported platforms on a specified scan path
 
