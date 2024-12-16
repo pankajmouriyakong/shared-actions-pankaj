@@ -31,7 +31,7 @@ jobs:
               - '!**/*.md'
             semgrep: 
               - 'security-actions/semgrep/**'
-              - 'security-actions/semgrep/!**/*.md'
+              - '!security-actions/semgrep/*.md'
             sign-docker-image: 
               - 'security-actions/sign-docker-image/**'
               - '!**/*.md'
