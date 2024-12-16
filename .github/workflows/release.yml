@@ -11,7 +11,7 @@ on:
 jobs:
   files-changed:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.repository_owner == 'Kong' }}
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.repository_owner == 'pankajmouriyakong' }}
     permissions:
       pull-requests: read
     outputs:
