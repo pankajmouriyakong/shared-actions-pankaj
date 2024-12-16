@@ -27,7 +27,7 @@ jobs:
             scan-rust: 
               - 'security-actions/scan-rust/**'
             semgrep: 
-              - 'security-actions/semgrep/**'
+              - '!security-actions/semgrep/**'
             sign-docker-image: 
               - 'security-actions/sign-docker-image/**'
             code-build-actions: 
@@ -44,8 +44,6 @@ jobs:
               - 'pr-previews/up-to-date/**'
             validate: 
               - 'pr-previews/validate/**'
-            other:
-            - '!*.md'
 
   setup-dependencies:
     needs: files-changed
