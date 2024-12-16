@@ -21,6 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
+        if: ${{ github.repository_owner == 'Kong' }}
         id: filter
         with:
           predicate-quantifier: 'every'
@@ -97,7 +98,7 @@ jobs:
 
   build:
     needs: [ files-changed, setup-dependencies ]
-    if: ${{ needs.files-changed.outputs.packages != '[]' && github.repository_owner == 'Kong' }}
+    if: ${{ needs.files-changed.outputs.packages != '[]' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
