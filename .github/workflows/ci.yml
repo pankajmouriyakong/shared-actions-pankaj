@@ -25,16 +25,16 @@ jobs:
               - '!**/*.md'
             sca: 
               - 'security-actions/sca/**'
-              - '!**/*.md'
+              - '!*.md'
             scan-rust: 
               - 'security-actions/scan-rust/**'
-              - '!**/*.md'
+              - '!*.md'
             semgrep: 
               - 'security-actions/semgrep/**'
-              - '!security-actions/**/*.md'
+              - '!*.md'
             sign-docker-image: 
               - 'security-actions/sign-docker-image/**'
-              - '!**/*.md'
+              - '!*.md'
             code-build-actions: 
               - 'code-build-actions/build-js-sdk/**'
               - '!**/*.md'
