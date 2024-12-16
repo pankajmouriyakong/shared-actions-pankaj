@@ -20,21 +20,42 @@ jobs:
         id: filter
         with:
           filters: |
-            scan-docker-image: 'security-actions/scan-docker-image/**'
-            sca: 'security-actions/sca/**'
-            scan-rust: 'security-actions/scan-rust/**'
-            semgrep: 'security-actions/semgrep/**'
-            sign-docker-image: 'security-actions/sign-docker-image/**'
-            code-build-actions: 'code-build-actions/build-js-sdk/**'
-            lua-lint: 'code-check-actions/lua-lint/**'
-            rust-lint: 'code-check-actions/rust-lint/**'
-            slack-actions: 'slack-actions/workflow-notification/**'
-            cleanup: 'pr-previews/cleanup/**'
-            up-to-date: 'pr-previews/up-to-date/**'
-            validate: 'pr-previews/validate/**'
-            global-exclusions:
+            scan-docker-image: 
+              - 'security-actions/scan-docker-image/**'
               - '!**/*.md'
-              - '!**/*.jpeg'
+            sca: 
+              - 'security-actions/sca/**'
+              - '!**/*.md'
+            scan-rust: 
+              - 'security-actions/scan-rust/**'
+              - '!**/*.md'
+            semgrep: 
+              - 'security-actions/semgrep/**'
+              - '!**/*.md'
+            sign-docker-image: 
+              - 'security-actions/sign-docker-image/**'
+              - '!**/*.md'
+            code-build-actions: 
+              - 'code-build-actions/build-js-sdk/**'
+              - '!**/*.md'
+            lua-lint: 
+              - 'code-check-actions/lua-lint/**'
+              - '!**/*.md'
+            rust-lint: 
+              - 'code-check-actions/rust-lint/**'
+              - '!**/*.md'
+            slack-actions: 
+              - 'slack-actions/workflow-notification/**'
+              - '!**/*.md'
+            cleanup: 
+              - 'pr-previews/cleanup/**'
+              - '!**/*.md'
+            up-to-date: 
+              - 'pr-previews/up-to-date/**'
+              - '!**/*.md'
+            validate: 
+              - 'pr-previews/validate/**'
+              - '!**/*.md'
 
   setup-dependencies:
     needs: files-changed
