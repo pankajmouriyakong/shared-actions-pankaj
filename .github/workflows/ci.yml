@@ -22,22 +22,22 @@ jobs:
           filters: |
             scan-docker-image: 
               - 'security-actions/scan-docker-image/**'
-              - '!**/*.md'
+              - '!README.md'
             sca: 
               - 'security-actions/sca/**'
-              - '!*.md'
+              - '!README.md'
             scan-rust: 
               - 'security-actions/scan-rust/**'
-              - '!*.md'
+              - '!README.md'
             semgrep: 
               - 'security-actions/semgrep/**'
-              - '!*.md'
+              - '!README.md'
             sign-docker-image: 
               - 'security-actions/sign-docker-image/**'
-              - '!*.md'
+              - '!README.md'
             code-build-actions: 
               - 'code-build-actions/build-js-sdk/**'
-              - '!**/*.md'
+              - '!README.md'
             lua-lint: 
               - 'code-check-actions/lua-lint/**'
               - '!**/*.md'
