@@ -15,8 +15,6 @@ jobs:
   files-changed:
     runs-on: ubuntu-latest
     if: ${{ github.repository_owner == 'Kong' }}
-    permissions:
-      pull-requests: read
     outputs:
       packages: ${{ steps.filter.outputs.changes }}
     steps:
