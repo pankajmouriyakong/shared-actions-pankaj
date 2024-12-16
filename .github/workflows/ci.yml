@@ -19,6 +19,7 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: filter
         with:
+          predicate-quantifier: 'every'
           filters: |
             scan-docker-image: 'security-actions/scan-docker-image/**'
             sca: 'security-actions/sca/**'
@@ -32,6 +33,9 @@ jobs:
             cleanup: 'pr-previews/cleanup/**'
             up-to-date: 'pr-previews/up-to-date/**'
             validate: 'pr-previews/validate/**'
+            global-exclusions:
+              - '!**/*.md'
+              - '!**/*.jpeg'
 
   setup-dependencies:
     needs: files-changed
