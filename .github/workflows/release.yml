@@ -52,7 +52,7 @@ jobs:
       - name: Provision tags and make a release
         if: ${{ github.event_name == 'workflow_run' && github.ref == 'refs/heads/feat-test-main-110' }}
         env:
-          GITHUB_TOKEN: ${{ secrets.TEST_FINE_GRAINED_PAT }}
+          GH_TOKEN: ${{ secrets.TEST_FINE_GRAINED_PAT }}
         shell: bash
         run: |
           pnpm version:ci
