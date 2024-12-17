@@ -1,5 +1,5 @@
 # Security actions
-
+Test Action
 ## Action implemented
 
 - [SCA](./action.yml) is a unified action for composition analysis. The action produces an SBOM, CVE reports for a given image / directory / file.
