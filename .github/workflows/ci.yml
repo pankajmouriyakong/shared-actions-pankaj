@@ -2,9 +2,9 @@ name: ci
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ feat-test-main-110 ]
   push:
-    branches: [ main ]
+    branches: [ feat-test-main-110 ]
   workflow_dispatch:
 
 permissions:
@@ -14,7 +14,7 @@ permissions:
 jobs:
   files-changed:
     runs-on: ubuntu-latest
-    if: ${{ github.repository_owner == 'Kong' }}
+    if: ${{ github.repository_owner == 'pankajmouriyakong' }}
     outputs:
       packages: ${{ steps.filter.outputs.changes }}
     steps:
@@ -141,7 +141,7 @@ jobs:
     name: Slack Notification
     runs-on: ubuntu-latest
     needs: build
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/feat-test-main-110' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
