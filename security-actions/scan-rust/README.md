@@ -1,5 +1,5 @@
 # Rust SCA
-
+TEST Action
 This action uses grype for source code analysis. It will only support scanning source code directories / files and will not support the container images
 
 

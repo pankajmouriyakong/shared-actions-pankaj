@@ -1,5 +1,5 @@
 # Security actions
-
+TEST ACTION
 ## Action implemented
 
 - [Scan Docker Image](./action.yml) is a action for container SCA image scanning and CIS benchmarks. The action produces an SBOM, CVE, and CIS benchmark scanning and reports for a given image.
