@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.1](https://github.com/Kong/public-shared-actions/compare/@security-actions/sca@3.1.0...@security-actions/sca@3.1.1) (2024-12-17)
+
+
+### 🐛 Bug Fixes
+
+* **sca:** update readme ([#87](https://github.com/Kong/public-shared-actions/issues/87)) ([73f49e2](https://github.com/Kong/public-shared-actions/commit/73f49e214ee6470e3cdab1e19aeae3cccdb2a7e4))
+
+
+
+
+
 # 3.1.0 (2024-12-17)
 
 
