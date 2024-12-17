@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.1](https://github.com/Kong/public-shared-actions/compare/@security-actions/semgrep@3.1.0...@security-actions/semgrep@3.1.1) (2024-12-17)
+
+
+### 🐛 Bug Fixes
+
+* **semgrep:** update readme ([#91](https://github.com/Kong/public-shared-actions/issues/91)) ([50805c5](https://github.com/Kong/public-shared-actions/commit/50805c5ff4d89b3e1edfe863cf802db4b44391fb))
+
+
+
+
+
 # 3.1.0 (2024-12-17)
 
 
