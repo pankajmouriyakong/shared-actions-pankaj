@@ -335,7 +335,6 @@ runs:
         path: trivy-db-cache
         token: ${{ inputs.trivy_db_cache_token }}
 
-
     - name: Setup Trivy DB from cache
       if: inputs.trivy_db_cache != ''
       shell: bash
