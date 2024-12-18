@@ -14,7 +14,7 @@
   "scripts": {
     "commit": "cz",
     "lerna": "lerna",
-    "version": "pnpm i --no-frozen-lockfile --config.auto-install-peers=false --config.strict-peer-dependencies=false && git add .",
+    "version": "pnpm i --no-frozen-lockfile && git add .",
     "version:ci": "lerna version --yes --create-release github",
     "version:dry-run": "pnpm run version:ci --no-push",
     "lint": "eslint '**/*.{js,jsx,ts,tsx,vue}' --ignore-path '.eslintignore'"
