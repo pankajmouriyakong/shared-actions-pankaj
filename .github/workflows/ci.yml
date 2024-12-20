@@ -2,9 +2,9 @@ name: CI
 
 on:
   pull_request:
-    branches: [ feat-changes-main-112 ]
+    branches: [ main ]
   push:
-    branches: [ feat-changes-main-112 ]
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
