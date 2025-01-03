@@ -2,9 +2,9 @@ name: CI
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ feat-changes-main-117 ]
   push:
-    branches: [ main ]
+    branches: [ feat-changes-main-117 ]
   workflow_dispatch:
 
 permissions:
@@ -36,7 +36,6 @@ jobs:
           pnpm install --frozen-lockfile
 
       - name: Commit lint
-        if: github.event_name == 'pull_request'
         uses: wagoid/commitlint-github-action@v5
         with:
           failOnWarnings: true
@@ -48,7 +47,7 @@ jobs:
     name: Slack Notification
     runs-on: ubuntu-latest
     needs: setup-and-lint
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/feat-changes-main-117' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
