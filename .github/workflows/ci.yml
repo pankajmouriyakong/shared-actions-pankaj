@@ -36,7 +36,6 @@ jobs:
           pnpm install --frozen-lockfile
 
       - name: Commit lint
-        if: github.event_name == 'pull_request'
         uses: wagoid/commitlint-github-action@v5
         with:
           failOnWarnings: true
