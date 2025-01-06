@@ -127,7 +127,7 @@ runs:
         fail: true
 
     - name: Download Grype
-      uses: anchore/scan-action/download-grype@v4.1.2
+      uses: anchore/scan-action/download-grype@v4.0.0
 
     # Skip Cache Restoration: If skip_grype_db_cache is true, skip the restoration of the cache.
     # Check for any existing cache to reuse
