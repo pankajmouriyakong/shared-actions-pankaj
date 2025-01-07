@@ -84,7 +84,7 @@ jobs:
                 text:
                   type: "plain_text"
                   emoji: true
-                  text: "Workflow Success"
+                  text: "Release Workflow Success"
               - type: "section"
                 text:
                   type: "mrkdwn"
