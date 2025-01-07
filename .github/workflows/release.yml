@@ -51,17 +51,18 @@ jobs:
           git config --local user.email "117922193+kong-security-bot@users.noreply.github.com"
 
       # This step will create a tag and also release
-      # - name: Provision tags and make a release
-      #   if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') }}
-      #   env:
-      #     GH_TOKEN: ${{ secrets.SECURITY_BOT_PSA_PAT }}
-      #   shell: bash
-      #   run: |
-      #     pnpm version:ci
-      
-      - name: Dry-run for tagging and releases
+      - name: Provision tags and make a release
+        if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') }}
+        env:
+          GH_TOKEN: ${{ secrets.SECURITY_BOT_PSA_PAT }}
         shell: bash
-        run: pnpm version:dry-run
+        run: |
+          pnpm version:ci
+          RELEASE_COMMIT="$(git rev-parse HEAD)"
+          echo "release_commit=$RELEASE_COMMIT" >> "$GITHUB_OUTPUT"
+      # - name: Dry-run for tagging and releases
+      #   shell: bash
+      #   run: pnpm version:dry-run
 
   slack_notification:
     name: Slack Notification
@@ -100,7 +101,7 @@ jobs:
                   - type: "mrkdwn"
                     text: "*TriggerByCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ steps.slack-variables.outputs.short-commit-hash }}>"
                   - type: "mrkdwn"
-                    text: "*ReleaseCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ steps.slack-variables.outputs.short-commit-hash }}>"  
+                    text: "*ReleaseCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.release.outputs.release_commit }}|${{ needs.release.outputs.release_commit }}>
 
       # Failure Notification
       - name: Send Failure Slack alert
