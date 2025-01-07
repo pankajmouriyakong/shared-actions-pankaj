@@ -103,7 +103,7 @@ jobs:
                   - type: "mrkdwn"
                     text: "*TriggerByCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ steps.slack-variables.outputs.short-commit-hash }}>"
                   - type: "mrkdwn"
-                    text: "*ReleaseCommit:*\n<${{ needs.release.outputs.release_commit }}>"
+                    text: "*ReleaseCommit:*\n<<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.release.outputs.release_commit }}|${{ needs.release.outputs.release_commit }}>"
 
       # Failure Notification
       - name: Send Failure Slack alert
