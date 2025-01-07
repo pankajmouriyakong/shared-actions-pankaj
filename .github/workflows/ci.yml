@@ -59,7 +59,34 @@ jobs:
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
           status: success
-          success-message: ":white_check_mark: ${{ github.workflow }} workflow successfully ran within ${{ github.repository }}"
+          additional-blocks: |
+            [
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Release Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.release.outputs.release_commit }}|${{ needs.release.outputs.release_commit }}>"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Triggered By:*\n${{ github.actor }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Commit Author:*\n${{ github.event.head_commit.author.name }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Event Name:*\n${{ github.event_name }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*PRHeadRef:*\n${{ github.event.pull_request.head.ref }}"
+                  }
+                ]
+              }
+            ]
     
       # Failure Notification
       - name: Send Failure Slack alert
