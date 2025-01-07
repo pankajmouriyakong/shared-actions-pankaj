@@ -58,6 +58,7 @@ jobs:
         uses: ./slack-actions/workflow-notification
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
+          status: success
           additional-blocks: |
             [
               {
@@ -93,3 +94,4 @@ jobs:
         uses: ./slack-actions/workflow-notification
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_ALERT_PUBLIC_SHARED_ACTIONS }}
+          status: failure
