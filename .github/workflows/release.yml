@@ -113,6 +113,8 @@ jobs:
                     text: "*CommitAuthor:*\n${{ github.event.head_commit.author.name }}"
                   - type: "mrkdwn"
                     text: "*EventName:*\n${{ github.event_name }}"  
+                  - type: "mrkdwn"
+                    text: "*PRHeadRef:*\n${{ github.event.pull_request.head.ref }}" 
 
       # Failure Notification
       - name: Send Failure Slack alert
