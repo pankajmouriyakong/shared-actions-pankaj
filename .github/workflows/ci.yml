@@ -59,7 +59,6 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
           webhook-type: incoming-webhook
           payload: |
-            text: ":white_check_mark: ${{ github.workflow }} workflow successfully ran within ${{ github.repository }}"
             blocks:
               - type: "header"
                 text:
