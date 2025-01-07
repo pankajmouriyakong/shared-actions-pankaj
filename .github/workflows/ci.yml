@@ -69,6 +69,16 @@ jobs:
                 text:
                   type: "mrkdwn"
                   text: ":white_check_mark: ${{ github.workflow }} workflow *successfully* ran within ${{ github.repository }}"
+              - type: "section"
+                fields:
+                  - type: "mrkdwn"
+                    text: "*Repository:*\n<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>"
+                  - type: "mrkdwn"
+                    text: "*Branch:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|${{ github.ref_name }}>"
+                  - type: "mrkdwn"
+                    text: "*Workflow Run:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|#${{ github.run_number }}>"
+                  - type: "mrkdwn"
+                    text: "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha.substring(0,7) }}>"
 
       # Failure Notification
       - name: Send Failure Slack alert
