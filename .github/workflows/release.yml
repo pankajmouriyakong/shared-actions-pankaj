@@ -110,7 +110,7 @@ jobs:
                   - type: "mrkdwn"
                     text: "*TriggeredBy:*\n ${{ github.actor }}"
                   - type: "mrkdwn"
-                    text: "*CommitAuthor:*\n${{ needs.release.outputs.release_commit || 'N/A' }}"
+                    text: "*CommitAuthor:*\n${{ needs.release.outputs.commit_author || 'N/A' }}"
                   - type: "mrkdwn"
                     text: "*EventName:*\n${{ github.event_name }}"  
 
