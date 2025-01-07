@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.2](https://github.com/Kong/public-shared-actions/compare/@security-actions/semgrep@6.0.1...@security-actions/semgrep@6.0.2) (2025-01-07)
+
+
+### ♻️ Chores
+
+* **release:** update slack message ([fc523d9](https://github.com/Kong/public-shared-actions/commit/fc523d91516888f1ee8c1fda9e73bbc30189d4c9))
+
+
+
+
+
 ## [6.0.1](https://github.com/Kong/public-shared-actions/compare/@security-actions/semgrep@6.0.0...@security-actions/semgrep@6.0.1) (2025-01-07)
 
 
