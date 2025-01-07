@@ -73,7 +73,7 @@ jobs:
 
       # Success Notification
       - name: Send Success Slack Notification
-        if: ${{ needs.setup-and-lint.result == 'success' }}
+        if: ${{ needs.release.result == 'success' }}
         uses: slackapi/slack-github-action@v2.0.0
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
@@ -104,7 +104,7 @@ jobs:
 
       # Failure Notification
       - name: Send Failure Slack alert
-        if: ${{ needs.setup-and-lint.result == 'failure' }}
+        if: ${{ needs.release.result == 'failure' }}
         uses: slackapi/slack-github-action@v2.0.0
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL_ALERT }}
