@@ -52,7 +52,6 @@ jobs:
 
       # This step will create a tag and also release
       - name: Provision tags and make a release
-        if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') }}
         env:
           GH_TOKEN: ${{ secrets.SECURITY_BOT_PSA_PAT }}
         shell: bash
