@@ -108,7 +108,7 @@ jobs:
                   - type: "mrkdwn"
                     text: "*ReleaseCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.release.outputs.release_commit }}|${{ needs.release.outputs.release_commit }}>"
                   - type: "mrkdwn"
-                    text: "*TriggeredBy:*\n ${{ github.actor }}"
+                    text: "*TriggeredBy:*\n ${{ github.head_commit.author.name }}"
                   - type: "mrkdwn"
                     text: "*CommitAuthor:*\n${{ needs.release.outputs.commit_author || 'N/A' }}"
                   - type: "mrkdwn"
