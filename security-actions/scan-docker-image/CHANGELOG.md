@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.5](https://github.com/Kong/public-shared-actions/compare/@security-actions/scan-docker-image@5.0.4...@security-actions/scan-docker-image@5.0.5) (2025-01-07)
+
+
+### ♻️ Chores
+
+* **release:** update slack message ([3e455f7](https://github.com/Kong/public-shared-actions/commit/3e455f7e42d6d1d08817eb9180d75e7cf9a80043))
+
+
+
+
+
 ## [5.0.4](https://github.com/Kong/public-shared-actions/compare/@security-actions/scan-docker-image@5.0.3...@security-actions/scan-docker-image@5.0.4) (2025-01-07)
 
 
