@@ -6,8 +6,8 @@ on:
   #   types:
   #     - completed
   #   branches: [ main ]
-  pull_request:
-    branches: [ feat-changes-main-notif-200 ]
+  # pull_request:
+  #   branches: [ feat-changes-main-notif-200 ]
   push:
     branches: [ feat-changes-main-notif-200 ]
   workflow_dispatch: {}
