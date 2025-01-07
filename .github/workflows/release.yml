@@ -1,10 +1,12 @@
 name: Publish Release
 
 on:
-  workflow_run:
-    workflows: ["ci"]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ["ci"]
+  #   types:
+  #     - completed
+  #   branches: [ main ]
+  pull_request:
     branches: [ main ]
   workflow_dispatch: {}
 
@@ -49,16 +51,15 @@ jobs:
           git config --local user.email "117922193+kong-security-bot@users.noreply.github.com"
 
       # This step will create a tag and also release
-      - name: Provision tags and make a release
-        if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') }}
-        env:
-          GH_TOKEN: ${{ secrets.SECURITY_BOT_PSA_PAT }}
-        shell: bash
-        run: |
-          pnpm version:ci
+      # - name: Provision tags and make a release
+      #   if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') }}
+      #   env:
+      #     GH_TOKEN: ${{ secrets.SECURITY_BOT_PSA_PAT }}
+      #   shell: bash
+      #   run: |
+      #     pnpm version:ci
       
       - name: Dry-run for tagging and releases
-        if: ${{ github.ref != 'refs/heads/main' }}
         shell: bash
         run: pnpm version:dry-run
 
@@ -66,25 +67,57 @@ jobs:
     name: Slack Notification
     runs-on: ubuntu-latest
     needs: release
-    if: ${{ (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_run' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       # Success Notification
-      - name: Send Success Notification
-        if: ${{ needs.release.result == 'success' }}
-        uses: ./slack-actions/workflow-notification
+      - name: Send Success Slack Notification
+        if: ${{ needs.setup-and-lint.result == 'success' }}
+        uses: slackapi/slack-github-action@v2.0.0
         with:
-          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
-          status: success
-          success-message: ":white_check_mark: ${{ github.workflow }} workflow successfully ran within ${{ github.repository }}"
-    
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
+          webhook-type: incoming-webhook
+          payload: |
+            blocks:
+              - type: "header"
+                text:
+                  type: "plain_text"
+                  emoji: true
+                  text: "Workflow Success"
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: ":white_check_mark: ${{ github.workflow }} workflow *successfully* ran within ${{ github.repository }}"
+              - type: "section"
+                fields:
+                  - type: "mrkdwn"
+                    text: "*Repository:*\n<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>"
+                  - type: "mrkdwn"
+                    text: "*Branch:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ github.head_ref || steps.slack-variables.outputs.fallback-branch-name }}|${{ github.head_ref || steps.slack-variables.outputs.fallback-branch-name }}>"
+                  - type: "mrkdwn"
+                    text: "*Workflow Run:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.run_number }}>"
+                  - type: "mrkdwn"
+                    text: "*TriggerByCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ steps.slack-variables.outputs.short-commit-hash }}>"
+                  - type: "mrkdwn"
+                    text: "*ReleaseCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ steps.slack-variables.outputs.short-commit-hash }}>"  
+
       # Failure Notification
-      - name: Send Failure Notification
-        if: ${{ needs.release.result == 'failure' }}
-        uses: ./slack-actions/workflow-notification
+      - name: Send Failure Slack alert
+        if: ${{ needs.setup-and-lint.result == 'failure' }}
+        uses: slackapi/slack-github-action@v2.0.0
         with:
-          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_ALERT_PUBLIC_SHARED_ACTIONS }}
-          status: failure
-          failure-message: ":x: This is a *failure* notification from ${{ github.repository }} for workflow ${{ github.workflow }}"
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL_ALERT }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: ":x: This is a *failure* notification from ${{ github.repository }} for workflow ${{ github.workflow }}"
+            blocks:
+              - type: "header"
+                text:
+                  type: "plain_text"
+                  emoji: true
+                  text: "Workflow Failure"
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: ":x: This is a *failure* notification from ${{ github.repository }} for workflow ${{ github.workflow }}"
