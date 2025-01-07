@@ -101,9 +101,15 @@ jobs:
                   - type: "mrkdwn"
                     text: "*Workflow Run:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.run_number }}>"
                   - type: "mrkdwn"
-                    text: "*TriggerByCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ steps.slack-variables.outputs.short-commit-hash }}>"
+                    text: "*TriggeredByCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ steps.slack-variables.outputs.short-commit-hash }}>"
                   - type: "mrkdwn"
-                    text: "*ReleaseCommit:*\n<<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.release.outputs.release_commit }}|${{ needs.release.outputs.release_commit }}>"
+                    text: "*ReleaseCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.release.outputs.release_commit }}|${{ needs.release.outputs.release_commit }}>"
+                  - type: "mrkdwn"
+                    text: "*TriggeredBy:*\n ${{ github.actor }}"
+                  - type: "mrkdwn"
+                    text: "*CommitAuthor:*\n${{ github.event.head_commit.author.name || 'N/A' }}"
+                  - type: "mrkdwn"
+                    text: "*EventName:*\n${{ github.event_name }}"  
 
       # Failure Notification
       - name: Send Failure Slack alert
