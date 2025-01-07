@@ -17,6 +17,8 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    outputs:
+      release_commit: ${{ steps.lerna-release.outputs.release_commit }}
     permissions:
       contents: write
     steps:
@@ -52,6 +54,7 @@ jobs:
 
       # This step will create a tag and also release
       - name: Provision tags and make a release
+        id: lerna-release
         env:
           GH_TOKEN: ${{ secrets.SECURITY_BOT_PSA_PAT }}
         shell: bash
@@ -90,12 +93,18 @@ jobs:
                   type: "mrkdwn"
                   text: ":white_check_mark: ${{ github.workflow }} workflow *successfully* ran within ${{ github.repository }}"
               - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: |
-                    *Repository:* <${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>
-                    *Branch:* ${{ github.ref_name }}
-                    *Release Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.release.outputs.release_commit }}|${{ needs.release.outputs.release_commit }}>
+                fields:
+                  - type: "mrkdwn"
+                    text: "*Repository:*\n<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>"
+                  - type: "mrkdwn"
+                    text: "*Branch:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ github.head_ref || steps.slack-variables.outputs.fallback-branch-name }}|${{ github.head_ref || steps.slack-variables.outputs.fallback-branch-name }}>"
+                  - type: "mrkdwn"
+                    text: "*Workflow Run:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.run_number }}>"
+                  - type: "mrkdwn"
+                    text: "*TriggerByCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ steps.slack-variables.outputs.short-commit-hash }}>"
+                  - type: "mrkdwn"
+                    text: "*ReleaseCommit:*\n<${{ needs.release.outputs.release_commit }}>"
+
       # Failure Notification
       - name: Send Failure Slack alert
         if: ${{ needs.release.result == 'failure' }}
