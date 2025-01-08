@@ -8,7 +8,7 @@ inputs:
     required: true
   status:
     description: The status of the workflow. One of 'success', 'failure', 'cancelled', or 'skipped'.
-    required: true
+    required: false
 
   # OPTIONAL INPUTS
   payload:
