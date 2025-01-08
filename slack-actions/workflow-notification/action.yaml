@@ -64,7 +64,6 @@ runs:
           statusMessage="${{ inputs.skipped-message }}"
         else
           echo "Invalid workflow status: ${{ inputs.status }}"
-          exit 1
         fi
 
         # Output All Variables
