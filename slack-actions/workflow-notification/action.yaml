@@ -1,6 +1,5 @@
 name: Post Slack workflow conclusion notifications
 description: Post a Slack message with the workflow conclusion via Slack incoming webhook.
-
 inputs:
   # REQUIRED INPUTS
   slack-webhook-url:
@@ -9,10 +8,9 @@ inputs:
   status:
     description: The status of the workflow. One of 'success', 'failure', 'cancelled', or 'skipped'.
     required: true
-
   # OPTIONAL INPUTS
   payload:
-    description: The Slack Block Kit JSON payload to send to Slack. If provided, this input will override all other inputs other than `slack-webhook-url`.
+    description: The Slack Block Kit JSON payload to send to Slack. If provided, this input will override all other inputs other than `slack-webhook-url`. https://app.slack.com/block-kit-builder
     required: false
     default: ''
   header:
@@ -23,7 +21,7 @@ inputs:
     required: false
     default: ':large_green_circle: Workflow completed successfully :mario_luigi_dance:'
   failure-message:
-    description: The message to display when the workflow fails. Accepts markdown syntax.
+    description: The message to display when the workflow is successful. Accepts markdown syntax.
     required: false
     default: ':red_circle: Workflow failed :sad-panda:'
   cancelled-message:
@@ -34,13 +32,6 @@ inputs:
     description: The message to display when the workflow is skipped. Accepts markdown syntax.
     required: false
     default: ':white_circle: Workflow skipped'
-  additional-blocks:
-    description: |
-      A JSON array of additional Slack blocks to append after the default blocks.
-      Example: '[{ "type": "section", "fields": [ ... ] }, ...]'
-    required: false
-    default: ''
-
 
 runs:
   using: composite
@@ -55,13 +46,13 @@ runs:
 
         # Determine status message
         if [[ "${{ inputs.status }}" == 'success' ]]; then
-          statusMessage="${{ inputs.success-message }}"
+          statusMessage=$(echo "${{ inputs.success-message }}")
         elif [[ "${{ inputs.status }}" == 'failure' ]]; then
-          statusMessage="${{ inputs.failure-message }}"
+          statusMessage=$(echo "${{ inputs.failure-message }}")
         elif [[ "${{ inputs.status }}" == 'cancelled' ]]; then
-          statusMessage="${{ inputs.cancelled-message }}"
+          statusMessage=$(echo "${{ inputs.cancelled-message }}")
         elif [[ "${{ inputs.status }}" == 'skipped' ]]; then
-          statusMessage="${{ inputs.skipped-message }}"
+          statusMessage=$(echo "${{ inputs.skipped-message }}")
         else
           echo "Invalid workflow status: ${{ inputs.status }}"
           exit 1
@@ -72,17 +63,16 @@ runs:
         echo "short-commit-hash=${shortCommitHash}" >> $GITHUB_OUTPUT
         echo "status-message=${statusMessage}" >> $GITHUB_OUTPUT
 
+        # Echo all variables for debugging
+        echo "fallback-branch-name=${fallbackBranchName}"
+        echo "short-commit-hash=${shortCommitHash}"
+        echo "status-message=${statusMessage}"
+
     - name: Construct Slack payload
       id: slack-payload
       if: ${{ inputs.payload == '' }}
       shell: bash
       run: |
-        if [ -n "${{ inputs.additional-blocks }}" ]; then
-          ADDITIONAL_BLOCKS=", ${{ inputs.additional-blocks }}"
-        else
-          ADDITIONAL_BLOCKS=""
-        fi
-
         PAYLOAD=$(cat << EOF
         {
           "blocks": [
@@ -138,7 +128,6 @@ runs:
                 }
               ]
             }
-            $ADDITIONAL_BLOCKS
           ]
         }
         EOF
