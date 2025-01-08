@@ -58,6 +58,7 @@ jobs:
         uses: ./slack-actions/workflow-notification
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
+          status: success
           payload: |
             {
               "text": "Completely custom Slack message for release",

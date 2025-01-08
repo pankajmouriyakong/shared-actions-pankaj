@@ -8,7 +8,7 @@ inputs:
     required: true
   status:
     description: The status of the workflow. One of 'success', 'failure', 'cancelled', or 'skipped'.
-    required: false
+    required: true
 
   # OPTIONAL INPUTS
   payload:
@@ -64,6 +64,7 @@ runs:
           statusMessage="${{ inputs.skipped-message }}"
         else
           echo "Invalid workflow status: ${{ inputs.status }}"
+          exit 1
         fi
 
         # Output All Variables
