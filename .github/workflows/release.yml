@@ -107,7 +107,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Branch:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ github.head_ref || steps.slack-variables.outputs.fallback-branch-name }}|${{ github.head_ref || steps.slack-variables.outputs.fallback-branch-name }}>"
+                      "text": "*Branch:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|${{ github.ref_name }}>"
                     },
                     {
                       "type": "mrkdwn",
@@ -115,7 +115,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*TriggeredByCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}>"
+                      "text": "*TriggeredByCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
                     },
                     {
                       "type": "mrkdwn",

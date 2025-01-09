@@ -80,7 +80,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Branch:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ github.head_ref }}>"
+                      "text": "*Branch:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|${{ github.ref_name }}>"
                     },
                     {
                       "type": "mrkdwn",
