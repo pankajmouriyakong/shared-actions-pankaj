@@ -96,7 +96,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Commit Author:*\n${{ github.event.head_commit.committer.name }}"
+                      "text": "*Commit Author:*\n${{ github.event.head_commit.author.name }}"
                     },
                     {
                       "type": "mrkdwn",
