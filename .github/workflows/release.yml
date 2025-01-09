@@ -127,10 +127,6 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Commit Author:*\n${{ github.event.head_commit.committer.name }}"
-                    },
-                    {
-                      "type": "mrkdwn",
                       "text": "*Event Name:*\n${{ github.event_name }}"
                     }
                   ]
@@ -183,10 +179,6 @@ jobs:
                     {
                       "type": "mrkdwn",
                       "text": "*Triggered By:*\n${{ github.actor }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit Author:*\n${{ github.event.head_commit.author.name }}"
                     },
                     {
                       "type": "mrkdwn",
