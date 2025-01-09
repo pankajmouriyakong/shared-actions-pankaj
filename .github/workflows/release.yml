@@ -62,6 +62,7 @@ jobs:
           RELEASE_COMMIT="$(git rev-parse HEAD)"
           echo "release_commit=$RELEASE_COMMIT" >> "$GITHUB_OUTPUT"
           COMMIT_AUTHOR=$(git log -1 --pretty=%an)
+          echo "commit author =" $COMMIT_AUTHOR
           echo "commit_author=$COMMIT_AUTHOR" >> "$GITHUB_OUTPUT"
           
       - name: Dry-run for tagging and releases
