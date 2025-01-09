@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.4](https://github.com/Kong/public-shared-actions/compare/@security-actions/semgrep@5.0.3...@security-actions/semgrep@5.0.4) (2025-01-09)
+
+
+### 🐛 Bug Fixes
+
+* **semgrep,ci:** update semgrep ([#116](https://github.com/Kong/public-shared-actions/issues/116)) ([d989e4d](https://github.com/Kong/public-shared-actions/commit/d989e4d3c3e7442ed0190b21aa87bb082a411b79))
+
+
+
+
+
 ## [5.0.3](https://github.com/Kong/public-shared-actions/compare/@security-actions/semgrep@5.0.2...@security-actions/semgrep@5.0.3) (2025-01-09)
 
 
