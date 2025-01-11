@@ -27,7 +27,7 @@ updates:
       include: "scope"
     
   - package-ecosystem: docker
-    directory: "/security-actions/scan-docker-image"
+    directory: "/security-actions/scan-docker-images"
     schedule:
       interval: "daily"
     commit-message:
