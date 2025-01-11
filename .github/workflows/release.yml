@@ -15,6 +15,9 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    outputs:
+      release_commit: ${{ steps.lerna-release.outputs.release_commit }}
+      commit_author: ${{ steps.lerna-release.outputs.commit_author }}
     permissions:
       contents: write
     steps:
@@ -49,13 +52,19 @@ jobs:
 
       # This step will create a tag and also release
       - name: Provision tags and make a release
+        id: lerna-release
         if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') }}
         env:
           GH_TOKEN: ${{ secrets.SECURITY_BOT_PSA_PAT }}
         shell: bash
         run: |
           pnpm version:ci
-      
+          RELEASE_COMMIT="$(git rev-parse HEAD)"
+          echo "release_commit=$RELEASE_COMMIT" >> "$GITHUB_OUTPUT"
+          COMMIT_AUTHOR=$(git log -1 --pretty=%an)
+          echo "commit author =" $COMMIT_AUTHOR
+          echo "commit_author=$COMMIT_AUTHOR" >> "$GITHUB_OUTPUT"
+          
       - name: Dry-run for tagging and releases
         if: ${{ github.ref != 'refs/heads/main' }}
         shell: bash
@@ -77,7 +86,53 @@ jobs:
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
           status: success
-          success-message: ":white_check_mark: ${{ github.workflow }} workflow successfully ran within ${{ github.repository }}"
+          payload: |
+            {
+              "text": "Completely custom Slack message for release",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "emoji": true,
+                    "text": "Release Workflow Success"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repository:*\n<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|${{ github.ref_name }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Workflow Run:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.run_number }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*TriggeredByCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Release Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.release.outputs.release_commit }}|${{ needs.release.outputs.release_commit }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Triggered By:*\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Event Name:*\n${{ github.event_name }}"
+                    }
+                  ]
+                }
+              ]
+            }
     
       # Failure Notification
       - name: Send Failure Notification
@@ -86,4 +141,50 @@ jobs:
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_ALERT_PUBLIC_SHARED_ACTIONS }}
           status: failure
-          failure-message: ":x: This is a *failure* notification from ${{ github.repository }} for workflow ${{ github.workflow }}"
+          payload: |
+            {
+              "text": "Completely custom Slack message for release",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "emoji": true,
+                    "text": "Release Workflow Failure"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repository:*\n<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n<${{ github.server_url }}/${{ github.repository }}/tree/${{ github.head_ref || steps.slack-variables.outputs.fallback-branch-name }}|${{ github.head_ref || steps.slack-variables.outputs.fallback-branch-name }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Workflow Run:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.run_number }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*TriggeredByCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Release Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ needs.release.outputs.release_commit }}|${{ needs.release.outputs.release_commit }}>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Triggered By:*\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Event Name:*\n${{ github.event_name }}"
+                    }
+                  ]
+                }
+              ]
+            }
