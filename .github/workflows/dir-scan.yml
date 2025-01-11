@@ -14,7 +14,7 @@ on:
 jobs:
   test-sca-dir:
     env:
-      TEST_REPOSITORY: "${{github.repository_owner}}/insomnia"
+      TEST_REPOSITORY: "${{github.repository_owner}}/rust"
     runs-on: ubuntu-latest
     permissions:
       contents: write # publish sbom to GH releases/tag assets
@@ -30,9 +30,9 @@ jobs:
             path: ${{env.TEST_REPOSITORY}}
         - name: Scan Directory
           id: scan-dir
-          uses: ./security-actions/sca
+          uses: Kong/public-shared-actions/security-actions/sca@58297803d2f88ca94a0d3e25f740214b15da93ba
           with:
-            asset_prefix: test.insomnia
+            asset_prefix: test.rust
             dir: ${{env.TEST_REPOSITORY}}
             upload-sbom-release-assets: true
             fail_build: false
