@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/scan-docker-image@5.0.0...@security-actions/scan-docker-image@5.1.0) (2025-01-11)
+
+
+### ✨ Features
+
+* **scan-docker-image:** update trivy version ([#138](https://github.com/Kong/public-shared-actions/issues/138)) ([65dd211](https://github.com/Kong/public-shared-actions/commit/65dd211565ebefb5393d6551a3d932c1835dfbd7))
+
+
+
+
+
 # 5.0.0 (2025-01-11)
 
 
