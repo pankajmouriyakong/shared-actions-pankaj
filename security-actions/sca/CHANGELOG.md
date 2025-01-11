@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 5.0.0 (2025-01-11)
+
+
+### ✨ Features
+
+* Add optional "config" input to sca syft action ([#94](https://github.com/Kong/public-shared-actions/issues/94)) ([b0ef627](https://github.com/Kong/public-shared-actions/commit/b0ef627fa71528272d1daa9257b71dc90246cc46))
+* **release:** independent releases for public shared actions ([#201](https://github.com/Kong/public-shared-actions/issues/201)) ([3d24b7f](https://github.com/Kong/public-shared-actions/commit/3d24b7f70c912df037063a571e59e789f4e49fc2))
+
+
+### ⚙️ Continuous Integrations
+
+* **.github:** deprecate reuse of sca scan action in docker image scan ([#95](https://github.com/Kong/public-shared-actions/issues/95)) ([60c9b13](https://github.com/Kong/public-shared-actions/commit/60c9b136104671b7091b2306c599d80fec34ae3f))
+* **.github:** generalize sca scan for non docker artifacts ([#89](https://github.com/Kong/public-shared-actions/issues/89)) ([7f27a2b](https://github.com/Kong/public-shared-actions/commit/7f27a2becf7cfbda29125107f07b1482fabe3b77))
+
+
+### ♻️ Chores
+
+* **readme:** Add usage examples to security actions ([#106](https://github.com/Kong/public-shared-actions/issues/106)) ([d9e10a3](https://github.com/Kong/public-shared-actions/commit/d9e10a320e1fe023ac52e380d349b26bba67152b))
+* **readme:** Add vulnerability migration and breakglass strategy for SCA and CVE action ([#107](https://github.com/Kong/public-shared-actions/issues/107)) ([ad89a25](https://github.com/Kong/public-shared-actions/commit/ad89a255ff44a03377215b8bccbfdc17c8c7fb46))
+* **release:** publish [skip ci] ([11e80bb](https://github.com/Kong/public-shared-actions/commit/11e80bb231ae182696a52f7ec7b0b9fae53303bf))
+
+
+### Breaking changes
+
+* **release:** - Each project within Public Shared Action is now treated as an independent package.
+- Each package will have its own versioned release.
+- Releases tag example "@security-actions/scan-docker-image@1.1.0".
+- Markdown (.md) files will be ignored when determining changes for releases.
+
+
+
+
+
 # 4.0.0 (2025-01-03)
 
 
