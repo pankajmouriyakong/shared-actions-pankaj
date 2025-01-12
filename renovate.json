@@ -33,26 +33,6 @@
         "extractVersionTemplate": "{{{ currentValue }}}{{{ digest }}}"
       }
     ],
-    "packageRules": [
-      {
-        "matchDatasources": ["github-releases"],
-        "matchDepNames": ["@security-actions/semgrep"],
-        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
-        "groupName": "@security-actions/semgrep"
-      },
-      {
-        "matchDatasources": ["github-releases"],
-        "matchDepNames": ["@security-actions/scan-docker-image"],
-        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
-        "groupName": "@security-actions/scan-docker-image"
-      },
-      {
-        "matchDatasources": ["github-releases"],
-        "matchDepNames": ["@security-actions/sign-docker-image"],
-        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
-        "groupName": "@security-actions/sign-docker-image"
-      }
-    ],
     "separateMajorMinor": true,
     "separateMultipleMajor": true,
     "separateMinorPatch": true
