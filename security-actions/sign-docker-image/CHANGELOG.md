@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/sign-docker-image@5.1.0...@security-actions/sign-docker-image@5.2.0) (2025-01-12)
+
+
+### ✨ Features
+
+* **sign-docker-image:** update sign docker module version ([c250254](https://github.com/Kong/public-shared-actions/commit/c25025457290334b50992635f9461b0773d6e41a))
+
+
+
+
+
 # [5.1.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/sign-docker-image@5.0.0...@security-actions/sign-docker-image@5.1.0) (2025-01-12)
 
 
