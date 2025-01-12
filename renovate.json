@@ -14,8 +14,8 @@
           "@security-actions/*",
           "@slack-actions/*"
         ],
+        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
         "enabled": true
       }
     ]
   }
-  
