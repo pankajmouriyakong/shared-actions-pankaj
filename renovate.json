@@ -1,42 +1,32 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:base"],
-    "regexManagers": [
+    "packageRules": [
       {
-        "fileMatch": [".github/workflows/.*\\.yml"],
-        "matchStrings": [
-          "uses:\\s*(?<depName>@security-actions/semgrep)(@(?<currentValue>[\\w.\\-]+))?(?<digest>@sha256:[a-f0-9]+)?"
-        ],
-        "depNameTemplate": "{{{ depName }}}",
-        "versioningTemplate": "github-tags",
-        "datasourceTemplate": "github-releases",
-        "extractVersionTemplate": "{{{ currentValue }}}{{{ digest }}}",
-        "separateMajorMinor": true
+        "matchManagers": ["github-actions"],
+        "matchDatasources": ["github-releases"],
+        "matchPackageNames": ["@security-actions/semgrep"],
+        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
+        "separateMajorMinor": true,
+        "separateMultipleMajor": true,
+        "separateMinorPatch": true
       },
       {
-        "fileMatch": [".github/workflows/.*\\.yml"],
-        "matchStrings": [
-          "uses:\\s*(?<depName>@security-actions/scan-docker-image)(@(?<currentValue>[\\w.\\-]+))?(?<digest>@sha256:[a-f0-9]+)?"
-        ],
-        "depNameTemplate": "{{{ depName }}}",
-        "versioningTemplate": "github-tags",
-        "datasourceTemplate": "github-releases",
-        "extractVersionTemplate": "{{{ currentValue }}}{{{ digest }}}",
-        "separateMajorMinor": true
+        "matchManagers": ["github-actions"],
+        "matchDatasources": ["github-releases"],
+        "matchPackageNames": ["@security-actions/scan-docker-image"],
+        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
+        "separateMajorMinor": true,
+        "separateMultipleMajor": true,
+        "separateMinorPatch": true
       },
       {
-        "fileMatch": [".github/workflows/.*\\.yml"],
-        "matchStrings": [
-          "uses:\\s*(?<depName>@security-actions/sign-docker-image)(@(?<currentValue>[\\w.\\-]+))?(?<digest>@sha256:[a-f0-9]+)?"
-        ],
-        "depNameTemplate": "{{{ depName }}}",
-        "versioningTemplate": "github-tags",
-        "datasourceTemplate": "github-releases",
-        "extractVersionTemplate": "{{{ currentValue }}}{{{ digest }}}",
-        "separateMajorMinor": true
+        "matchManagers": ["github-actions"],
+        "matchDatasources": ["github-releases"],
+        "matchPackageNames": ["@security-actions/sign-docker-image"],
+        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
+        "separateMajorMinor": true,
+        "separateMultipleMajor": true,
+        "separateMinorPatch": true
       }
-    ],
-    "separateMultipleMajor": true,
-    "separateMinorPatch": true
+    ]
   }
-  
