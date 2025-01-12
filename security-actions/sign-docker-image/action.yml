@@ -96,7 +96,7 @@ runs:
     
     # This step runs if signature registry is different from image registry
     - name: Login to Signature Registry - ${{ inputs.signature_registry_domain }}
-      uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.3.0
+      uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
       if: ${{ inputs.signature_registry_username != '' && inputs.signature_registry_password != '' }}
       with:
         registry: ${{ inputs.signature_registry_domain }}
