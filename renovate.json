@@ -1,10 +1,21 @@
 {
     "extends": ["config:base"],
-    "github-actions": {
-      "fileMatch": [
-        "(^|/)(workflow-templates|\\.(?:github|gitea|forgejo)/(?:workflows|actions))/.+\\.ya?ml$",
-        "(^|/)action\\.ya?ml$"
-      ]
-    }
+    "packageRules": [
+      {
+        "matchManagers": ["github-actions"],
+        "matchPaths": [
+          ".github/workflows/*.yml",
+          ".github/workflows/*.yaml"
+        ],
+        "matchPackageNames": [
+          "@code-build-actions/*",
+          "@code-check-actions/*",
+          "@pr-previews/*",
+          "@security-actions/*",
+          "@slack-actions/*"
+        ],
+        "enabled": true
+      }
+    ]
   }
   
