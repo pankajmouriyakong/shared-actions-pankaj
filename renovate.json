@@ -2,22 +2,25 @@
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "packageRules": [
       {
+        "matchDatasources": ["gitlab-releases"],
         "matchPackageNames": ["@security-actions/semgrep"],
         "groupName": "@security-actions/semgrep",
-        "pinDigests": true
+        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj"
       },
       {
+        "matchDatasources": ["gitlab-releases"],
         "matchPackageNames": ["@security-actions/scan-docker-image"],
         "groupName": "@security-actions/scan-docker-image",
-        "pinDigests": true
+        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj"
       },
       {
+        "matchDatasources": ["gitlab-releases"],
         "matchPackageNames": ["@security-actions/sign-docker-image"],
         "groupName": "@security-actions/sign-docker-image",
-        "pinDigests": true
+        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj"
       }
     ],
     "separateMajorMinor": true,
     "separateMultipleMajor": true,
     "separateMinorPatch": true
-  }
+}
