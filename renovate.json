@@ -3,19 +3,21 @@
     "packageRules": [
       {
         "matchManagers": ["github-actions"],
-        "matchPaths": [
-          ".github/workflows/*.yml",
-          ".github/workflows/*.yaml"
-        ],
-        "matchPackageNames": [
-          "@code-build-actions/*",
-          "@code-check-actions/*",
-          "@pr-previews/*",
-          "@security-actions/*",
-          "@slack-actions/*"
-        ],
+        "matchPackageNames": ["@security-actions/sign-docker-image"],
         "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
-        "enabled": true
+        "description": "Handle updates for sign-docker-image"
+      },
+      {
+        "matchManagers": ["github-actions"],
+        "matchPackageNames": ["@security-actions/semgrep"],
+        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
+        "description": "Handle updates for semgrep"
+      },
+      {
+        "matchManagers": ["github-actions"],
+        "matchPackageNames": ["@security-actions/scan-docker-image"],
+        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
+        "description": "Handle updates for docker images scanners"
       }
     ]
   }
