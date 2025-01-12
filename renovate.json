@@ -2,16 +2,18 @@
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "packageRules": [
       {
-        "matchPackageNames": [
-          "@security-actions/semgrep",
-          "@security-actions/scan-docker-image",
-          "@security-actions/sign-docker-image"
-        ],
-        "matchSourceUrls": ["https://github.com/pankajmouriyakong/shared-actions-pankaj"],
-        "groupName": null,
-        "separateMultipleMajor": true,
-        "separateMinorPatch": true,
-        "versioning": "semver",
+        "matchPackageNames": ["@security-actions/semgrep"],
+        "groupName": "@security-actions/semgrep",
+        "pinDigests": true
+      },
+      {
+        "matchPackageNames": ["@security-actions/scan-docker-image"],
+        "groupName": "@security-actions/scan-docker-image",
+        "pinDigests": true
+      },
+      {
+        "matchPackageNames": ["@security-actions/sign-docker-image"],
+        "groupName": "@security-actions/sign-docker-image",
         "pinDigests": true
       }
     ],
