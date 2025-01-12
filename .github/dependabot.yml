@@ -6,9 +6,12 @@
 version: 2
 updates:
   - package-ecosystem: "github-actions"
-    directory: "/"
+    directory: "/security-actions/semgrep"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "github-actions"
+      include: "scope"
 
   - package-ecosystem: "github-actions"
     directory: "/security-actions/sca"
