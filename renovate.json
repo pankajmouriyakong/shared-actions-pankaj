@@ -1,23 +1,25 @@
 {
-    "extends": ["config:base"],
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "packageRules": [
       {
-        "matchManagers": ["github-actions"],
-        "matchPackageNames": ["@security-actions/sign-docker-image"],
-        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
-        "description": "Handle updates for sign-docker-image"
-      },
-      {
-        "matchManagers": ["github-actions"],
-        "matchPackageNames": ["@security-actions/semgrep"],
-        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
-        "description": "Handle updates for semgrep"
-      },
-      {
-        "matchManagers": ["github-actions"],
-        "matchPackageNames": ["@security-actions/scan-docker-image"],
-        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
-        "description": "Handle updates for docker images scanners"
+        "matchPackageNames": [
+          "@security-actions/semgrep",
+          "@security-actions/scan-docker-image",
+          "@security-actions/sign-docker-image"
+        ],
+        "matchSourceUrls": ["https://github.com/pankajmouriyakong/shared-actions-pankaj"],
+        "groupName": null,
+        "separateMultipleMajor": true,
+        "separateMinorPatch": true,
+        "digest": {
+          "separateDigestPrs": true
+        },
+        "versioning": "semver",
+        "pinDigests": true,
+        "separatePackages": true
       }
-    ]
+    ],
+    "separateMajorMinor": true,
+    "separateMultipleMajor": true,
+    "separateMinorPatch": true
   }
