@@ -10,7 +10,8 @@
         "depNameTemplate": "{{{ depName }}}",
         "versioningTemplate": "github-tags",
         "datasourceTemplate": "github-releases",
-        "extractVersionTemplate": "{{{ currentValue }}}{{{ digest }}}"
+        "extractVersionTemplate": "{{{ currentValue }}}{{{ digest }}}",
+        "separateMajorMinor": true
       },
       {
         "fileMatch": [".github/workflows/.*\\.yml"],
@@ -20,7 +21,8 @@
         "depNameTemplate": "{{{ depName }}}",
         "versioningTemplate": "github-tags",
         "datasourceTemplate": "github-releases",
-        "extractVersionTemplate": "{{{ currentValue }}}{{{ digest }}}"
+        "extractVersionTemplate": "{{{ currentValue }}}{{{ digest }}}",
+        "separateMajorMinor": true
       },
       {
         "fileMatch": [".github/workflows/.*\\.yml"],
@@ -30,10 +32,10 @@
         "depNameTemplate": "{{{ depName }}}",
         "versioningTemplate": "github-tags",
         "datasourceTemplate": "github-releases",
-        "extractVersionTemplate": "{{{ currentValue }}}{{{ digest }}}"
+        "extractVersionTemplate": "{{{ currentValue }}}{{{ digest }}}",
+        "separateMajorMinor": true
       }
     ],
-    "separateMajorMinor": true,
     "separateMultipleMajor": true,
     "separateMinorPatch": true
   }
