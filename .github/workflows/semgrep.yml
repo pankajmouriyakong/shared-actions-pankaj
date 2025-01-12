@@ -30,7 +30,7 @@ jobs:
           repository: ${{env.TEST_REPOSITORY}}
           token: ${{secrets.GITHUB_TOKEN}}
           path: ${{env.TEST_REPOSITORY}}
-      - uses: pankajmouriyakong/shared-actions-pankaj/security-actions/semgrep@58297803d2f88ca94a0d3e25f740214b15da93ba
+      - uses: pankajmouriyakong/shared-actions-pankaj/security-actions/semgrep@49678b3a1d85bf8649ab05674c05a8b32340cf11
         with:
           additional_config: '--config p/rust'
           codeql_upload: false
