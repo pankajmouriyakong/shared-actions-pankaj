@@ -1,0 +1,10 @@
+{
+    "extends": ["config:base"],
+    "github-actions": {
+      "fileMatch": [
+        "(^|/)(workflow-templates|\\.(?:github|gitea|forgejo)/(?:workflows|actions))/.+\\.ya?ml$",
+        "(^|/)action\\.ya?ml$"
+      ]
+    }
+  }
+  
