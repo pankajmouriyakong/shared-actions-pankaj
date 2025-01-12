@@ -59,7 +59,7 @@ jobs:
     - name: Scan AMD64 Image digest
       id: sbom_action_amd64
       if: steps.image_manifest_metadata.outputs.amd64_sha != ''
-      uses: pankajmouriyakong/shared-actions-pankaj/security-actions/scan-docker-image@58297803d2f88ca94a0d3e25f740214b15da93ba
+      uses: pankajmouriyakong/shared-actions-pankaj/security-actions/scan-docker-image@d01b734a8a8afb66730e6fecb7a71d9e2f43e245
       with:
         asset_prefix: kong-gateway-dev-linux-amd64
         image: ${{env.IMAGE}}@${{ steps.image_manifest_metadata.outputs.amd64_sha }}
@@ -70,7 +70,7 @@ jobs:
     - name: Scan ARM64 Image digest
       if: steps.image_manifest_metadata.outputs.manifest_list_exists == 'true' && steps.image_manifest_metadata.outputs.arm64_sha != ''
       id: sbom_action_arm64
-      uses: pankajmouriyakong/shared-actions-pankaj/security-actions/scan-docker-image@58297803d2f88ca94a0d3e25f740214b15da93ba
+      uses: pankajmouriyakong/shared-actions-pankaj/security-actions/scan-docker-image@d01b734a8a8afb66730e6fecb7a71d9e2f43e245
       with:
         asset_prefix: test.kong-gateway-dev-linux-arm64
         image: ${{env.IMAGE}}@${{ steps.image_manifest_metadata.outputs.arm64_sha }}
