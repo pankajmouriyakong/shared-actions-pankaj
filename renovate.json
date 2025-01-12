@@ -11,12 +11,8 @@
         "groupName": null,
         "separateMultipleMajor": true,
         "separateMinorPatch": true,
-        "digest": {
-          "separateDigestPrs": true
-        },
         "versioning": "semver",
-        "pinDigests": true,
-        "separatePackages": true
+        "pinDigests": true
       }
     ],
     "separateMajorMinor": true,
