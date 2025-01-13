@@ -1,32 +1,50 @@
 {
-    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "packageRules": [
+    "regexManagers": [
       {
-        "matchManagers": ["github-actions"],
-        "matchDatasources": ["github-releases"],
-        "matchPackageNames": ["@security-actions/semgrep"],
-        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
-        "separateMajorMinor": true,
-        "separateMultipleMajor": true,
-        "separateMinorPatch": true
+        "fileMatch": ["^\\.github/workflows/.*\\.ya?ml$"],
+        "matchStrings": [
+          "uses:\\s+.*?pankajmouriyakong/shared-actions-pankaj/security-actions/semgrep@(?<currentValue>[a-f0-9]{40})"
+        ],
+  
+        "depNameTemplate": "@security-actions/semgrep",
+
+        "datasourceTemplate": "github-tags",
+        "lookupNameTemplate": "pankajmouriyakong/shared-actions-pankaj",
+  
+        "extractVersion": "^@security-actions/semgrep@(.*)$",
+  
+        "versioning": "semver"
       },
       {
-        "matchManagers": ["github-actions"],
-        "matchDatasources": ["github-releases"],
-        "matchPackageNames": ["@security-actions/scan-docker-image"],
-        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
-        "separateMajorMinor": true,
-        "separateMultipleMajor": true,
-        "separateMinorPatch": true
+        "fileMatch": ["^\\.github/workflows/.*\\.ya?ml$"],
+        "matchStrings": [
+          "uses:\\s+.*?pankajmouriyakong/shared-actions-pankaj/security-actions/sign-docker-image@(?<currentValue>[a-f0-9]{40})"
+        ],
+  
+        "depNameTemplate": "@security-actions/sign-docker-image",
+
+        "datasourceTemplate": "github-tags",
+        "lookupNameTemplate": "pankajmouriyakong/shared-actions-pankaj",
+  
+        "extractVersion": "^@security-actions/sign-docker-image@(.*)$",
+  
+        "versioning": "semver"
       },
       {
-        "matchManagers": ["github-actions"],
-        "matchDatasources": ["github-releases"],
-        "matchPackageNames": ["@security-actions/sign-docker-image"],
-        "sourceUrl": "https://github.com/pankajmouriyakong/shared-actions-pankaj",
-        "separateMajorMinor": true,
-        "separateMultipleMajor": true,
-        "separateMinorPatch": true
+        "fileMatch": ["^\\.github/workflows/.*\\.ya?ml$"],
+        "matchStrings": [
+          "uses:\\s+.*?pankajmouriyakong/shared-actions-pankaj/security-actions/scan-docker-image@(?<currentValue>[a-f0-9]{40})"
+        ],
+  
+        "depNameTemplate": "@security-actions/scan-docker-image",
+
+        "datasourceTemplate": "github-tags",
+        "lookupNameTemplate": "pankajmouriyakong/shared-actions-pankaj",
+  
+        "extractVersion": "^@security-actions/scan-docker-image@(.*)$",
+  
+        "versioning": "semver"
       }
     ]
   }
+  
