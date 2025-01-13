@@ -1,50 +1,42 @@
 {
-    "regexManagers": [
+    "customManagers": [
       {
+        "customType": "regex",
         "fileMatch": ["^\\.github/workflows/.*\\.ya?ml$"],
         "matchStrings": [
-          "uses:\\s+.*?pankajmouriyakong/shared-actions-pankaj/security-actions/semgrep@(?<currentValue>[a-f0-9]{40})"
+          "uses:\\s+pankajmouriyakong/shared-actions-pankaj/security-actions/semgrep@(?<currentValue>[a-f0-9]{40})"
         ],
-  
         "depNameTemplate": "@security-actions/semgrep",
-
         "datasourceTemplate": "github-tags",
         "lookupNameTemplate": "pankajmouriyakong/shared-actions-pankaj",
-  
-        "extractVersion": "^@security-actions/semgrep@(.*)$",
-  
-        "versioning": "semver"
+        "versioningTemplate": "semver",
+        "extractVersionTemplate": "^@security-actions/semgrep@(.*)$"
       },
       {
+        "customType": "regex",
         "fileMatch": ["^\\.github/workflows/.*\\.ya?ml$"],
         "matchStrings": [
-          "uses:\\s+.*?pankajmouriyakong/shared-actions-pankaj/security-actions/sign-docker-image@(?<currentValue>[a-f0-9]{40})"
+          "uses:\\s+pankajmouriyakong/shared-actions-pankaj/security-actions/sign-docker-image@(?<currentValue>[a-f0-9]{40})"
         ],
-  
         "depNameTemplate": "@security-actions/sign-docker-image",
-
         "datasourceTemplate": "github-tags",
         "lookupNameTemplate": "pankajmouriyakong/shared-actions-pankaj",
-  
-        "extractVersion": "^@security-actions/sign-docker-image@(.*)$",
-  
-        "versioning": "semver"
+        "versioningTemplate": "semver",
+        "extractVersionTemplate": "^@security-actions/sign-docker-image@(.*)$"
       },
       {
+        "customType": "regex",
         "fileMatch": ["^\\.github/workflows/.*\\.ya?ml$"],
         "matchStrings": [
-          "uses:\\s+.*?pankajmouriyakong/shared-actions-pankaj/security-actions/scan-docker-image@(?<currentValue>[a-f0-9]{40})"
+          "uses:\\s+pankajmouriyakong/shared-actions-pankaj/security-actions/scan-docker-image@(?<currentValue>[a-f0-9]{40})"
         ],
-  
         "depNameTemplate": "@security-actions/scan-docker-image",
-
         "datasourceTemplate": "github-tags",
         "lookupNameTemplate": "pankajmouriyakong/shared-actions-pankaj",
-  
-        "extractVersion": "^@security-actions/scan-docker-image@(.*)$",
-  
-        "versioning": "semver"
+        "versioningTemplate": "semver",
+        "extractVersionTemplate": "^@security-actions/scan-docker-image@(.*)$"
       }
+      
     ]
   }
   
