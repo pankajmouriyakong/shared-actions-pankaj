@@ -2,41 +2,13 @@
     "customManagers": [
       {
         "customType": "regex",
-        "fileMatch": ["^\\.github/workflows/.*\\.ya?ml$"],
+        "fileMatch": ["\\.github\/.*\\.ya?ml$"],
         "matchStrings": [
-          "uses:\\s+pankajmouriyakong/shared-actions-pankaj/security-actions/semgrep@(?<currentValue>[a-f0-9]{40})"
+          ["uses:\\s(?<packageName>pankajmouriyakong\\\/shared-actions-pankaj)\\\/.*@(?<depName>.*)_(?<currentValue>[0-9\\.]*)"],
         ],
-        "depNameTemplate": "@security-actions/semgrep",
         "datasourceTemplate": "github-tags",
-        "lookupNameTemplate": "pankajmouriyakong/shared-actions-pankaj",
-        "versioningTemplate": "semver",
-        "extractVersionTemplate": "^@security-actions/semgrep@(.*)$"
-      },
-      {
-        "customType": "regex",
-        "fileMatch": ["^\\.github/workflows/.*\\.ya?ml$"],
-        "matchStrings": [
-          "uses:\\s+pankajmouriyakong/shared-actions-pankaj/security-actions/sign-docker-image@(?<currentValue>[a-f0-9]{40})"
-        ],
-        "depNameTemplate": "@security-actions/sign-docker-image",
-        "datasourceTemplate": "github-tags",
-        "lookupNameTemplate": "pankajmouriyakong/shared-actions-pankaj",
-        "versioningTemplate": "semver",
-        "extractVersionTemplate": "^@security-actions/sign-docker-image@(.*)$"
-      },
-      {
-        "customType": "regex",
-        "fileMatch": ["^\\.github/workflows/.*\\.ya?ml$"],
-        "matchStrings": [
-          "uses:\\s+pankajmouriyakong/shared-actions-pankaj/security-actions/scan-docker-image@(?<currentValue>[a-f0-9]{40})"
-        ],
-        "depNameTemplate": "@security-actions/scan-docker-image",
-        "datasourceTemplate": "github-tags",
-        "lookupNameTemplate": "pankajmouriyakong/shared-actions-pankaj",
-        "versioningTemplate": "semver",
-        "extractVersionTemplate": "^@security-actions/scan-docker-image@(.*)$"
+        "extractVersionTemplate": "{{depName}}_(?<version>[0-9\\.]*)$"
       }
       
     ]
   }
-  
