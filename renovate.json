@@ -2,12 +2,13 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["\\.github\\/.*\\.ya?ml$"],
+      "fileMatch": ["\\.github\/.*\\.ya?ml$"],
       "matchStrings": [
-        "uses:\\s(?<packageName>pankajmouriyakong\\/shared-actions-pankaj)\\/.*@(?<depName>[^_]+)_(?<currentValue>[0-9\\.]+)"
+        ["uses:\\s(?<packageName>pankajmouriyakong\\\/shared-actions-pankaj)\\\/.*@(?<depName>.*)_(?<currentValue>[0-9\\.]*)"],
       ],
       "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "{{currentValue}}"
+      "extractVersionTemplate": "{{depName}}_(?<version>[0-9\\.]*)$"
     }
+    
   ]
 }
