@@ -1,9 +1,9 @@
 name: Sign Docker Image
-description: Keyeless Image signing with transaprency and uploads to registry for specified docker image
+description: Keyeless Image signing with transaprency and uploads to registry for specified docker image.
 author: 'Kong'
 inputs:
   local_save_cosign_assets:
-    description: 'Save cosign output assets locally on disk. Ex: certificate and signature of signed artifacts'
+    description: 'Save cosign string output assets locally on disk. Ex: certificate and signature of signed artifacts'
     required: false
     default: false
   cosign_output_prefix:
