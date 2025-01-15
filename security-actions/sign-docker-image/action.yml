@@ -1,4 +1,4 @@
-name: Sign Docker Image
+name: Sign Docker Image for security 
 description: Keyeless Image signing with transaprency and uploads to registry for specified docker image.
 author: 'Kong'
 inputs:
