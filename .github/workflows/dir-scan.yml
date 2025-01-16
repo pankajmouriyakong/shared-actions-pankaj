@@ -30,7 +30,7 @@ jobs:
             path: ${{env.TEST_REPOSITORY}}
         - name: Scan Directory
           id: scan-dir
-          uses: Kong/public-shared-actions/security-actions/sca@58297803d2f88ca94a0d3e25f740214b15da93ba
+          uses: Kong/public-shared-actions/security-actions/sca@9629f9eae6544d20573c5fdc5f032b976d85cb30
           with:
             asset_prefix: test.rust
             dir: ${{env.TEST_REPOSITORY}}
