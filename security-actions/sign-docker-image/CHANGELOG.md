@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.0.1](https://github.com/Kong/public-shared-actions/compare/@security-actions/sign-docker-image@9.0.0...@security-actions/sign-docker-image@9.0.1) (2025-01-16)
+
+
+### ♻️ Chores
+
+* **sign-docker-image:** update  workflow ([1fb4adb](https://github.com/Kong/public-shared-actions/commit/1fb4adbeac8926be3e33f16f4a409501cbe0f7c0))
+
+
+
+
+
 # 9.0.0 (2025-01-16)
 
 
