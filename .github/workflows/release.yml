@@ -63,9 +63,10 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         shell: bash
         run: | 
-          result=`lerna list -l`
-          echo "LERNA_PUBLISHED_PACKAGES=$result" >> "$GITHUB_OUTPUT"
-          echo "LERNA_PUBLISHED_PACKAGES=$result" >> $GITHUB_STEP_SUMMARY
+          result=$(lerna list -l)
+          formatted_result=$(echo "$result" | awk '{printf "- *%s* `%s`\n", $1, $2}')
+          echo "LERNA_PUBLISHED_PACKAGES=$formatted_result" >> "$GITHUB_OUTPUT"
+          echo "### Published Packages\n$formatted_result" >> $GITHUB_STEP_SUMMARY
       
       - name: Dry-run for tagging and releases
         if: ${{ github.ref != 'refs/heads/main' }}
@@ -149,7 +150,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "This is a mrkdwn section block :ghost: *this is bold*, and ~this is crossed out~, and <https://google.com|this is a link>"
+                    "text": "The following packages have been published successfully:\n\n${{ env.LERNA_PUBLISHED_PACKAGES }}"
                   }
                 }
               ]
