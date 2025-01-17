@@ -57,6 +57,16 @@ jobs:
         run: |
           pnpm version:ci
       
+      # This step will list packages with their most recent tags
+      - name: List packages with tags
+        id: list-published-packages
+        if: ${{ github.ref == 'refs/heads/main' }}
+        shell: bash
+        run: | 
+          result=`lerna list -l`
+          echo "LERNA_PUBLISHED_PACKAGES=$result" >> "$GITHUB_OUTPUT"
+          echo "LERNA_PUBLISHED_PACKAGES=$result" >> $GITHUB_STEP_SUMMARY
+      
       - name: Dry-run for tagging and releases
         if: ${{ github.ref != 'refs/heads/main' }}
         shell: bash
@@ -121,7 +131,31 @@ jobs:
                 }
               ]
             }
-    
+      
+      # Publish released packages to Engineering Slack Channel
+      - name: Publish packages list in Slack
+        if: ${{ needs.publish.result == 'success' }}
+        env:
+          LERNA_PUBLISHED_PACKAGES: ${{ steps.list-published-packages.outputs.LERNA_PUBLISHED_PACKAGES }}
+        uses: ./slack-actions/workflow-notification
+        with:
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
+          status: success
+          payload: |
+            {
+              "text": "Completely custom Slack message for release",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "This is a mrkdwn section block :ghost: *this is bold*, and ~this is crossed out~, and <https://google.com|this is a link>"
+                  }
+                }
+              ]
+            }
+
+
       # Failure Notification
       - name: Send Failure Notification
         if: ${{ needs.publish.result == 'failure' }}
