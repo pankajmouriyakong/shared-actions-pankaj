@@ -19,7 +19,7 @@ importers:
         version: 17.8.1(lerna@8.1.9(encoding@0.1.13))
       '@evilmartians/lefthook':
         specifier: ^1.9.2
-        version: 1.9.2
+        version: 1.10.8
       '@rushstack/eslint-patch':
         specifier: ^1.2.0
         version: 1.10.4
@@ -211,8 +211,9 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@evilmartians/lefthook@1.9.2':
-    resolution: {integrity: sha512-bcYrzoRh8toQTk/kHgzJbRiWPmogIn9jHxFpPFj/mbhz5y6CmIy1ebfncIRYTJl8XhztSlr2Zf7/5t1FNgi+bA==}
+  '@evilmartians/lefthook@1.10.8':
+    resolution: {integrity: sha512-qN0RJxh5iyPQlRl1vBv2vjq1sCeo0DgmypK6GGCN4tOfA7JvjTgG+fFcY1XJOIwF4MN9R86aD/aZvcI/uWuN0Q==}
+    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -3242,7 +3243,7 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@evilmartians/lefthook@1.9.2': {}
+  '@evilmartians/lefthook@1.10.8': {}
 
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
