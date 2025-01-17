@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.2.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/sca@7.1.0...@security-actions/sca@7.2.0) (2025-01-17)
+
+
+### ✨ Features
+
+* **sca:** update SCA ([ca638c4](https://github.com/Kong/public-shared-actions/commit/ca638c41ffc81e546258876930842c39a8513b8a))
+
+
+
+
+
 # [7.1.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/sca@7.0.0...@security-actions/sca@7.1.0) (2025-01-17)
 
 

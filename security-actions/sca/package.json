@@ -1,6 +1,6 @@
 {
   "name": "@security-actions/sca",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "description": "a unified action for composition analysis. The action produces an SBOM, CVE reports for a given image / directory / file.",
   "main": "index.js",
   "repository": {
