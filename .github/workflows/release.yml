@@ -65,11 +65,7 @@ jobs:
         run: | 
           result=$(lerna list -l | awk '{printf "- *%s* `%s`\n", $1, $2}')
           echo "### Published Packages\n $result" >> $GITHUB_STEP_SUMMARY
-          {
-          echo 'LERNA_PUBLISHED_PACKAGES<<EOF'
-          echo "$result"
-          echo 'EOF'
-          } >> "$GITHUB_ENV"
+          echo "resultpackage=$result" >> "$GITHUB_ENV"
       
       - name: Dry-run for tagging and releases
         if: ${{ github.ref != 'refs/heads/main' }}
@@ -140,6 +136,8 @@ jobs:
       - name: Publish packages list in Slack
         if: ${{ needs.publish.result == 'success' }}
         uses: ./slack-actions/workflow-notification
+        env:
+          SLACK_PACKAGES: ${{ env.resultpackage }}
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
           status: success
@@ -151,7 +149,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "The following packages have been published successfully:\n\n ${{ env.LERNA_PUBLISHED_PACKAGES }}"
+                    "text": "The following packages have been published successfully:\n\n $SLACK_PACKAGES"
                   }
                 }
               ]
