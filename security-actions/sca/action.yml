@@ -90,7 +90,7 @@ runs:
 
     # Must upload artifact for output file parameter to have effect
     - name: Generate SPDX SBOM Using Syft
-      uses: anchore/sbom-action@v0.17.9
+      uses: anchore/sbom-action@v0.17.0
       id: sbom_spdx
       with:
         config: ${{ inputs.config }}
