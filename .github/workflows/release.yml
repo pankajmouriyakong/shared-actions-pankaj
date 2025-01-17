@@ -139,8 +139,6 @@ jobs:
       # Publish released packages to Engineering Slack Channel
       - name: Publish packages list in Slack
         if: ${{ needs.publish.result == 'success' }}
-        env:
-          SLACK_PACKAGES: ${{ env.LERNA_PUBLISHED_PACKAGES }}
         uses: ./slack-actions/workflow-notification
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
@@ -153,7 +151,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "The following packages have been published successfully:\n\n${{ env.SLACK_PACKAGES }}"
+                    "text": "The following packages have been published successfully:\n\n ${{ env.LERNA_PUBLISHED_PACKAGES }}"
                   }
                 }
               ]
