@@ -63,12 +63,13 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         shell: bash
         run: | 
-          result=$(lerna list -l)
-          formatted_result=$(echo "$result" | awk '{printf "- *%s* `%s`\n", $1, $2}')
-          echo "LERNA_PUBLISHED_PACKAGES<<EOF" >> $GITHUB_ENV
-          echo "$result" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-          echo "### Published Packages\n $formatted_result" >> $GITHUB_STEP_SUMMARY
+          result=$(lerna list -l | awk '{printf "- *%s* `%s`\n", $1, $2}')
+          echo "### Published Packages\n $result" >> $GITHUB_STEP_SUMMARY
+          {
+          echo 'LERNA_PUBLISHED_PACKAGES<<EOF'
+          echo "$result"
+          echo 'EOF'
+          } >> "$GITHUB_ENV"
       
       - name: Dry-run for tagging and releases
         if: ${{ github.ref != 'refs/heads/main' }}
