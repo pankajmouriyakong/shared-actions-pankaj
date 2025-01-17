@@ -1,17 +1,5 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "customManagers": [{
-    "customType": "regex",
-    "fileMatch": ["\\.github\/.*\\.ya?ml$"],
-    "matchStrings": ["uses:\\s(?<packageName>pankajmouriyakong\\\/shared-actions-pankaj)\\\/.*@(?<depName>.*)_(?<currentValue>[0-9\\.]*)"],
-    "datasourceTemplate": "github-tags",
-    "extractVersionTemplate": "{{depName}}_(?<version>[0-9\\.]*)$"
-  }],
-  "packageRules": [
-    {
-      "matchPackagePatterns": ["^@octokit\/"],
-      "updateTypes": ["major"],
-      "enabled": false
-    }
+  "extends": [
+    "github>Kong/public-shared-renovate:github-actions"
   ]
 }
