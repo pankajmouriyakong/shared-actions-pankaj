@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      package_output: ${{ steps.list-published-packages.outputs.packages_list }}
     steps:
 
       - name: Checkout code
@@ -153,7 +155,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "The following packages have been published successfully:\n\n ${{ steps.list-published-packages.outputs.packages_list }}"
+                    "text": "The following packages have been published successfully:\n\n ${{ needs.publish.outputs.package_output }}"
                   }
                 }
               ]
