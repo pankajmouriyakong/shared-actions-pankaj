@@ -66,7 +66,8 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         shell: bash
         run: |
-          bullet_points=$(echo $(lerna list -l) | sed -E 's/^([^[:space:]]+)[[:space:]]+([^[:space:]]+).*/- \1 -> \2/')
+          raw_result=$(lerna list -l)
+          bullet_points=$(echo "$raw_result" | sed -E 's/^([^[:space:]]+)[[:space:]]+([^[:space:]]+).*/- \1 -> \2/')
           escaped_result=$(echo "$bullet_points" | sed ':a;N;$!ba;s/\n/\\n/g')
           echo "published_packages<<EOF" >> $GITHUB_OUTPUT
           echo "$escaped_result" >> $GITHUB_OUTPUT
