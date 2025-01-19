@@ -19,7 +19,7 @@ jobs:
     permissions:
       contents: write
     outputs:
-      test_output: ${{ steps.list-published-packages.outputs.test_output }}
+      published_packages: ${{ steps.list-published-packages.outputs.published_packages }}
     steps:
 
       - name: Checkout code
@@ -66,15 +66,11 @@ jobs:
         shell: bash
         run: | 
           result=$(lerna list -l | awk '{printf "- *%s* `%s`\n", $1, $2}')
-          echo "### Published Packages" >> "$GITHUB_STEP_SUMMARY"
-          echo "$result"             >> "$GITHUB_STEP_SUMMARY"
-          echo "### Published Packages\n $result" >> $GITHUB_STEP_SUMMARY
-          echo "test_output<<EOF" >> $GITHUB_OUTPUT
-          while IFS= read -r line
-          do
-            echo "$line"
-          done <<< "$result"
+          echo "published_packages<<EOF" >> $GITHUB_OUTPUT
+          echo "$result" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
+          echo "### Published Packages" >> "$GITHUB_STEP_SUMMARY"
+          echo "$result"               >> "$GITHUB_STEP_SUMMARY"
       
       - name: Dry-run for tagging and releases
         if: ${{ github.ref != 'refs/heads/main' }}
@@ -156,7 +152,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "The following packages have been published successfully:\n\n ${{ needs.publish.outputs.test_output }}"
+                    "text": "The following packages have been published successfully:\n\n${{ needs.publish.outputs.published_packages }}"
                   }
                 }
               ]
