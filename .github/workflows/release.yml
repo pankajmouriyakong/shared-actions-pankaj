@@ -66,14 +66,13 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         shell: bash
         run: |
-          raw_result=$(lerna list -l)
-          bullet_points=$(echo "$raw_result" | sed -E 's/^([^[:space:]]+)[[:space:]]+([^[:space:]]+).*/- \1 -> \2/')
+          bullet_points=$(echo $(lerna list -l) | sed -E 's/^([^[:space:]]+)[[:space:]]+([^[:space:]]+).*/- \1 -> \2/')
           escaped_result=$(echo "$bullet_points" | sed ':a;N;$!ba;s/\n/\\n/g')
           echo "published_packages<<EOF" >> $GITHUB_OUTPUT
           echo "$escaped_result" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
           echo "### Published Packages" >> "$GITHUB_STEP_SUMMARY"
-          echo "escaped_result"           >> "$GITHUB_STEP_SUMMARY"
+          echo "$escaped_result"           >> "$GITHUB_STEP_SUMMARY"
       
       - name: Dry-run for tagging and releases
         if: ${{ github.ref != 'refs/heads/main' }}
