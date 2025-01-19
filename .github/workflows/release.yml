@@ -64,13 +64,14 @@ jobs:
         shell: bash
         run: | 
           result=$(lerna list -l | awk '{printf "- *%s* `%s`\n", $1, $2}')
+          echo "### Published Packages" >> "$GITHUB_STEP_SUMMARY"
+          echo "$result"             >> "$GITHUB_STEP_SUMMARY"
           echo "### Published Packages\n $result" >> $GITHUB_STEP_SUMMARY
           {
-            echo 'test_output<<EOF'
-            echo $result
-            echo EOF
-          } >> "$GITHUB_ENV"
-          echo "Test_Suites=$(echo "$test_output")" >> $GITHUB_OUTPUT
+            echo "test_output<<EOF"
+            echo "$result"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
       
       - name: Dry-run for tagging and releases
         if: ${{ github.ref != 'refs/heads/main' }}
@@ -141,8 +142,6 @@ jobs:
       - name: Publish packages list in Slack
         if: ${{ needs.publish.result == 'success' }}
         uses: ./slack-actions/workflow-notification
-        env:
-          SLACK_MESSAGE: ${{ toJson(steps.list-published-packages.outputs) }}
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
           status: success
@@ -154,7 +153,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "The following packages have been published successfully:\n\n ${{ env.SLACK_MESSAGE }}"
+                    "text": "The following packages have been published successfully:\n\n${{ steps.list-published-packages.outputs.test_output }}"
                   }
                 }
               ]
