@@ -25,6 +25,7 @@ jobs:
         shell: bash
         run: |
           echo "List of changed packages"
+          echo $(lerna changed)
 
   publish:
     name: publish
