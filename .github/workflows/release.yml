@@ -85,6 +85,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      
+      - name: print result value
+        shell: bash
+        run: |
+          echo "Result value is = "${{ needs.publish.outputs.published_packages }}
 
       # Success Notification
       - name: Send Success Notification
