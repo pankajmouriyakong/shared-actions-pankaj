@@ -19,7 +19,7 @@ jobs:
     permissions:
       contents: write
     outputs:
-      published_packages: ${{ steps.list-published-packages.outputs.published_packages }}
+      published_packages: ${{ steps.list-published-packages.outputs.escaped_data }}
     steps:
 
       - name: Checkout code
@@ -68,7 +68,7 @@ jobs:
         run: |
           bullet_points=$(echo $(lerna list -l) | sed -E 's/^([^[:space:]]+)[[:space:]]+([^[:space:]]+).*/- \1 -> \2/')
           escaped_result=$(echo "$bullet_points" | sed ':a;N;$!ba;s/\n/\\n/g')
-          echo "$escaped_result" >> $GITHUB_OUTPUT
+          echo "escaped_data=$escaped_result" >> $GITHUB_OUTPUT
           echo "### Published Packages" >> "$GITHUB_STEP_SUMMARY"
           echo "$escaped_result"           >> "$GITHUB_STEP_SUMMARY"
       
