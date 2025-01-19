@@ -70,8 +70,9 @@ jobs:
 
           echo "### Published Packages" >> "$GITHUB_STEP_SUMMARY"
           echo "$raw_result"           >> "$GITHUB_STEP_SUMMARY"
+          bullet_points=$(echo "$raw_result" | sed -E 's/^([^[:space:]]+[[:space:]]+[^[:space:]]+).*/- \1/')
 
-          escaped_result=$(echo "$raw_result" | sed ':a;N;$!ba;s/\n/\\n/g')
+          escaped_result=$(echo "$bullet_points" | sed ':a;N;$!ba;s/\n/\\n/g')
 
           echo "published_packages<<EOF" >> $GITHUB_OUTPUT
           echo "$escaped_result" >> $GITHUB_OUTPUT
