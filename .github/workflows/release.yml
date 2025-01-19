@@ -89,7 +89,8 @@ jobs:
       - name: print result value
         shell: bash
         run: |
-          echo "Result value is = ${{ needs.publish.outputs.published_packages }}"
+          echo "Result value is ="
+          echo "${{ needs.publish.outputs.published_packages }}"
 
       # Success Notification
       - name: Send Success Notification
