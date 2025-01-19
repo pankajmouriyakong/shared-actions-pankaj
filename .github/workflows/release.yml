@@ -19,7 +19,7 @@ jobs:
     permissions:
       contents: write
     outputs:
-      package_output: ${{ steps.list-published-packages.outputs.packages_list }}
+      test_output: ${{ steps.list-published-packages.outputs.test_output }}
     steps:
 
       - name: Checkout code
@@ -69,11 +69,12 @@ jobs:
           echo "### Published Packages" >> "$GITHUB_STEP_SUMMARY"
           echo "$result"             >> "$GITHUB_STEP_SUMMARY"
           echo "### Published Packages\n $result" >> $GITHUB_STEP_SUMMARY
-          {
-            echo "packages_list<<EOF"
-            echo "$result"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
+          echo "test_output<<EOF" >> $GITHUB_OUTPUT
+          while IFS= read -r line
+          do
+            echo "$line"
+          done <<< "$result"
+          echo "EOF" >> $GITHUB_OUTPUT
       
       - name: Dry-run for tagging and releases
         if: ${{ github.ref != 'refs/heads/main' }}
@@ -155,7 +156,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "The following packages have been published successfully:\n\n ${{ needs.publish.outputs.package_output }}"
+                    "text": "The following packages have been published successfully:\n\n ${{ needs.publish.outputs.test_output }}"
                   }
                 }
               ]
