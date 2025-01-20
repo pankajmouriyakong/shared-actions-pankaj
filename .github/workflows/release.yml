@@ -17,7 +17,7 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     outputs:
-      has_changed: ${{ steps.lerna-check.outputs.has_changed }}
+      has_package_changed: ${{ steps.lerna-check.outputs.has_package_changed }}
     steps:
 
       - name: Checkout code
@@ -36,17 +36,17 @@ jobs:
 
           if [ -z "$changed" ]; then
             echo "No changed packages since last release."
-            echo "has_changed=false" >> "$GITHUB_OUTPUT"
+            echo "has_package_changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "Detected changed packages!"
-            echo "has_changed=true" >> "$GITHUB_OUTPUT"
+            echo "has_package_changed=true" >> "$GITHUB_OUTPUT"
           fi
 
 
   publish:
     name: publish
     needs: check_for_package_changes
-    if: ${{ needs.check_for_package_changes.outputs.has_changed == 'true' }}
+    if: ${{ needs.check_for_package_changes.outputs.has_package_changed == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -119,7 +119,7 @@ jobs:
           echo "$result" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
           
-          # Publish tags result as GitHub Summary 
+          # Publish tags result as GitHub Summary
           echo "### Published Packages" >> "$GITHUB_STEP_SUMMARY"
           echo "$raw_result"           >> "$GITHUB_STEP_SUMMARY"
       
@@ -193,7 +193,7 @@ jobs:
         if: ${{ needs.publish.result == 'success' }}
         uses: ./slack-actions/workflow-notification
         with:
-          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_ENGINEERING_CHANNEL }}
           status: success
           payload: |
             {
