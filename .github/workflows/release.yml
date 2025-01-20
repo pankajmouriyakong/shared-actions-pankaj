@@ -95,7 +95,7 @@ jobs:
           echo "$escaped_result" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
           echo "### Published Packages" >> "$GITHUB_STEP_SUMMARY"
-          echo "$bullet_points"           >> "$GITHUB_STEP_SUMMARY"
+          echo "$raw_result"           >> "$GITHUB_STEP_SUMMARY"
       
       - name: Dry-run for tagging and releases
         if: ${{ github.ref != 'refs/heads/main' }}
