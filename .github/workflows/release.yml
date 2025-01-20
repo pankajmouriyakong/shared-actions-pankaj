@@ -27,6 +27,7 @@ jobs:
 
       - name: Check new releases
         shell: bash
+        id: lerna-check
         run: |
           changed=$(lerna changed || true)
 
@@ -107,7 +108,7 @@ jobs:
             tag="$pkg@$ver"
             sha=$(git rev-parse "$tag" 2>/dev/null || echo "N/A")
 
-            # Append a bullet line: "* @pkg -> 5.0.0 -> 123abcd"
+            # Append a bullet line: "* @pkg -> 5.0.0 -> 123abcd...."
             bullet_points+="* $pkg -> $ver -> $sha\n\n"
           done <<< "$raw_result"
 
