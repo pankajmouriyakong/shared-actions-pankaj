@@ -193,7 +193,7 @@ jobs:
         if: ${{ needs.publish.result == 'success' }}
         uses: ./slack-actions/workflow-notification
         with:
-          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_ENGINEERING_CHANNEL }}
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
           status: success
           payload: |
             {
