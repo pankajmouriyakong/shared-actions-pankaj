@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.4.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/scan-docker-image@5.3.0...@security-actions/scan-docker-image@5.4.0) (2025-01-20)
+
+
+### ✨ Features
+
+* **scan-docker-image:** make workflow more readable ([b6ec2a9](https://github.com/Kong/public-shared-actions/commit/b6ec2a9e015b2ae37c0aaef81db79e209132bcc6))
+
+
+
+
+
 # [5.3.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/scan-docker-image@5.2.0...@security-actions/scan-docker-image@5.3.0) (2025-01-20)
 
 
