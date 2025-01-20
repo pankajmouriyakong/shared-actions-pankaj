@@ -45,7 +45,7 @@ jobs:
   publish:
     name: publish
     needs: check_new_release
-    if: ${{ needs.check_new_release.outputs.has_changed != 'true' }}
+    if: ${{ needs.check_new_release.outputs.has_changed == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
