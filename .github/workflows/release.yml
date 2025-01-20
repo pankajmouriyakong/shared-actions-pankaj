@@ -16,6 +16,8 @@ jobs:
     name: check new releases
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
+    outputs:
+      has_changed: ${{ steps.lerna-check.outputs.has_changed }}
     steps:
 
       - name: Checkout code
@@ -24,12 +26,26 @@ jobs:
       - name: Check new releases
         shell: bash
         run: |
-          echo "List of changed packages"
-          echo $(lerna changed)
+          changed=$(lerna changed || true)
+
+          echo "Changed packages:"
+          echo "$changed"
+
+          if [ -z "$changed" ]; then
+            echo "No changed packages since last release."
+            # Set output to 'false'
+            echo "has_changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Detected changed packages!"
+            # Set output to 'true'
+            echo "has_changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
 
   publish:
     name: publish
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    needs: check_new_release
+    if: ${{ needs.check_new_release.outputs.has_changed == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -91,7 +107,7 @@ jobs:
             tag="$pkg@$ver"
             sha=$(git rev-parse "$tag" 2>/dev/null || echo "N/A")
 
-            # Append a bullet line: "- @pkg -> 5.0.0 -> 123abcd"
+            # Append a bullet line: "* @pkg -> 5.0.0 -> 123abcd"
             bullet_points+="* $pkg -> $ver -> $sha\n\n"
           done <<< "$raw_result"
 
