@@ -92,7 +92,6 @@ jobs:
           pnpm version:ci
       
       # This step will list packages with their most recent tags
-      # | awk '{printf "- *%s* `%s`\n", $1, $2}')
       - name: List packages with their latest tags & SHA Digest
         id: list-published-package-tags
         if: ${{ github.ref == 'refs/heads/main' }}
