@@ -83,7 +83,7 @@ jobs:
         run: |
           raw_result=$(lerna list -l)
           bullet_points=""
-          
+
           # Loop to fetch Tags SHA digest
           while IFS= read -r line; do
             pkg=$(echo "$line" | awk '{print $1}')
@@ -95,7 +95,7 @@ jobs:
             bullet_points+="* $pkg -> $ver -> $sha\n\n"
           done <<< "$raw_result"
 
-          Escape newlines so Slack sees them correctly
+          # Escape newlines so Slack sees them correctly
           result=$(echo "$bullet_points" | sed ':a;N;$!ba;s/\n/\\n/g')
 
           # Prepare lerna version list as a multiline output for Slack job
