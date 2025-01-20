@@ -12,8 +12,8 @@ permissions:
   contents: read
 
 jobs:
-  check_new_release:
-    name: check new releases
+  check_for_package_changes:
+    name: check for package changes
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     outputs:
@@ -45,13 +45,13 @@ jobs:
 
   publish:
     name: publish
-    needs: check_new_release
-    if: ${{ needs.check_new_release.outputs.has_changed == 'true' }}
+    needs: check_for_package_changes
+    if: ${{ needs.check_for_package_changes.outputs.has_changed == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
     outputs:
-      lerna_packages: ${{ steps.list-published-packages.outputs.lerna_packages }}
+      lerna_published_tags: ${{ steps.list-published-package-tags.outputs.lerna_published_tags }}
     steps:
 
       - name: Checkout code
@@ -93,8 +93,8 @@ jobs:
       
       # This step will list packages with their most recent tags
       # | awk '{printf "- *%s* `%s`\n", $1, $2}')
-      - name: List packages with tags
-        id: list-published-packages
+      - name: List packages with their latest tags & SHA Digest
+        id: list-published-package-tags
         if: ${{ github.ref == 'refs/heads/main' }}
         shell: bash
         run: |
@@ -115,8 +115,8 @@ jobs:
           # Escape newlines so Slack sees them correctly
           result=$(echo "$bullet_points" | sed ':a;N;$!ba;s/\n/\\n/g')
 
-          # Prepare lerna version list as a multiline output for Slack job
-          echo "lerna_packages<<EOF" >> $GITHUB_OUTPUT
+          # Prepare lerna tag list as a multiline output for Slack job
+          echo "lerna_published_tags<<EOF" >> $GITHUB_OUTPUT
           echo "$result" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
           
@@ -204,7 +204,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "The following packages have been published successfully:\n\n${{ needs.publish.outputs.lerna_packages }}"
+                    "text": "The following packages have been published successfully:\n\n${{ needs.publish.outputs.lerna_published_tags }}"
                   }
                 }
               ]
