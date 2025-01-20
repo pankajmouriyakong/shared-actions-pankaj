@@ -85,9 +85,9 @@ jobs:
           bullet_points=""
           while IFS= read -r line; do
             pkg=$(echo "$line" | awk '{print $1}')
-            ver=$(echo "$line" | awk '{print $2}')
+            ver=$(echo "$line" | awk '{ sub(/^v/, "", $2); print $2 }')
             tag="$pkg@$ver"
-            sha=$(git rev-parse --short "$tag" 2>/dev/null || echo "N/A")
+            sha=$(git rev-parse "$tag" 2>/dev/null || echo "N/A")
             bullet_points+="- $pkg -> $ver -> $sha\n"
           done <<< "$raw_result"
           escaped_result=$(echo "$bullet_points" | sed ':a;N;$!ba;s/\n/\\n/g')
