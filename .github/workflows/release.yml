@@ -35,11 +35,9 @@ jobs:
 
           if [ -z "$changed" ]; then
             echo "No changed packages since last release."
-            # Set output to 'false'
             echo "has_changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "Detected changed packages!"
-            # Set output to 'true'
             echo "has_changed=true" >> "$GITHUB_OUTPUT"
           fi
 
@@ -134,7 +132,7 @@ jobs:
     name: Slack Notification
     runs-on: ubuntu-latest
     needs: publish
-    if: always() && github.ref == 'refs/heads/main'
+    if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
