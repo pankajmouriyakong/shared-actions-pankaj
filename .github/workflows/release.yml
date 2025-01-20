@@ -203,7 +203,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":rocket::rocket::rocket:**The following packages have been published successfully as part of the new release of Public Shared actions repository:**\n\n${{ needs.publish.outputs.lerna_published_tags }}"
+                    "text": ":rocket::rocket::rocket:The following packages have been published successfully as part of the new release of Public Shared actions repository:\n\n${{ needs.publish.outputs.lerna_published_tags }}"
                   }
                 }
               ]
