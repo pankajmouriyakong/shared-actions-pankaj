@@ -34,7 +34,7 @@ jobs:
     permissions:
       contents: write
     outputs:
-      published_packages: ${{ steps.list-published-packages.outputs.published_packages }}
+      lerna_packages: ${{ steps.list-published-packages.outputs.lerna_packages }}
     steps:
 
       - name: Checkout code
@@ -83,17 +83,27 @@ jobs:
         run: |
           raw_result=$(lerna list -l)
           bullet_points=""
+          
+          # Loop to fetch Tags SHA digest
           while IFS= read -r line; do
             pkg=$(echo "$line" | awk '{print $1}')
             ver=$(echo "$line" | awk '{ sub(/^v/, "", $2); print $2 }')
             tag="$pkg@$ver"
             sha=$(git rev-parse "$tag" 2>/dev/null || echo "N/A")
-            bullet_points+="- $pkg -> $ver -> $sha\n\n"
+
+            # Append a bullet line: "- @pkg -> 5.0.0 -> 123abcd"
+            bullet_points+="* $pkg -> $ver -> $sha\n\n"
           done <<< "$raw_result"
-          escaped_result=$(echo "$bullet_points" | sed ':a;N;$!ba;s/\n/\\n/g')
-          echo "published_packages<<EOF" >> $GITHUB_OUTPUT
-          echo "$escaped_result" >> $GITHUB_OUTPUT
+
+          Escape newlines so Slack sees them correctly
+          result=$(echo "$bullet_points" | sed ':a;N;$!ba;s/\n/\\n/g')
+
+          # Prepare lerna version list as a multiline output for Slack job
+          echo "lerna_packages<<EOF" >> $GITHUB_OUTPUT
+          echo "$result" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
+          
+          # Publish tags result as GitHub Summary 
           echo "### Published Packages" >> "$GITHUB_STEP_SUMMARY"
           echo "$raw_result"           >> "$GITHUB_STEP_SUMMARY"
       
@@ -177,7 +187,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "The following packages have been published successfully:\n\n${{ needs.publish.outputs.published_packages }}"
+                    "text": "The following packages have been published successfully:\n\n${{ needs.publish.outputs.lerna_packages }}"
                   }
                 }
               ]
