@@ -88,7 +88,7 @@ jobs:
             ver=$(echo "$line" | awk '{ sub(/^v/, "", $2); print $2 }')
             tag="$pkg@$ver"
             sha=$(git rev-parse "$tag" 2>/dev/null || echo "N/A")
-            bullet_points+="\- *$pkg* -> *$ver* -> \`$sha\`\n"
+            bullet_points+="\`\`\`${pkg}\t${ver}\t${sha}\`\`\`\n"
           done <<< "$raw_result"
           escaped_result=$(echo "$bullet_points" | sed ':a;N;$!ba;s/\n/\\n/g')
           echo "published_packages<<EOF" >> $GITHUB_OUTPUT
