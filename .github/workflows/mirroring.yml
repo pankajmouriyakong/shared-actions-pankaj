@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'run-build-on-change-2'
+      - 'asset-mirroring-workflow-for-security-tools'
   schedule:
     - cron: '0 0 * * *'    # For trivy (default schedule)
     - cron: '0 0 * * *'    # For semgrep
