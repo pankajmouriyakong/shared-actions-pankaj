@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.11.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/semgrep@5.10.0...@security-actions/semgrep@5.11.0) (2025-01-23)
+
+
+### ✨ Features
+
+* **semgrep,scan-docker-image:** update imafe ([a71df55](https://github.com/Kong/public-shared-actions/commit/a71df55d38a4bb939cf990d7dbf2f695f044f6d3))
+
+
+
+
+
 # [5.10.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/semgrep@5.2.0...@security-actions/semgrep@5.10.0) (2025-01-23)
 
 
