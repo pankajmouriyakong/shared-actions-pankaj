@@ -32,7 +32,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Construct tooling matrix
-      if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+    #   if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
       id: config
       run: |
         matrix_file=".github/build/docker/security-image-matrix.yml"
