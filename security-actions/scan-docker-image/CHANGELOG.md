@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.8.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/scan-docker-image@5.7.0...@security-actions/scan-docker-image@5.8.0) (2025-01-23)
+
+
+### ✨ Features
+
+* **semgrep,scan-docker-image:** update imafe ([94cda53](https://github.com/Kong/public-shared-actions/commit/94cda53333fcb495393780c8a9780e9fcbc3dd72))
+
+
+
+
+
 # [5.7.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/scan-docker-image@5.6.0...@security-actions/scan-docker-image@5.7.0) (2025-01-23)
 
 
