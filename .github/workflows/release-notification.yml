@@ -11,9 +11,9 @@ jobs:
     if: always()
     steps:
       - name: Send notification
-        uses: Kong/public-shared-actions/slack-actions/workflow-notification@v2
+        uses: ./slack-actions/workflow-notification
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
           status: ${{ job.status }}
-          success-message: "Successfully released <${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}/releases/tag/${{ github.event.release.tag_name }}|${{ github.event.release.tag_name }}> :octocat:"
-          failure-message: "Failed to release <${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}/releases/tag/${{ github.event.release.tag_name }}|${{ github.event.release.tag_name }}> :github-dead:"
+          success-message: 'Successfully released <${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}/releases/tag/${{ github.event.release.tag_name }}|${{ github.event.release.tag_name }}> :octocat:'
+          failure-message: 'Failed to release <${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}/releases/tag/${{ github.event.release.tag_name }}|${{ github.event.release.tag_name }}> :github-dead:'
