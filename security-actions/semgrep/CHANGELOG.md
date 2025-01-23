@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.10.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/semgrep@5.2.0...@security-actions/semgrep@5.10.0) (2025-01-23)
+
+
+### ✨ Features
+
+* **semgrep,scan-docker-image:** add semgrep and trivy version ([558438d](https://github.com/Kong/public-shared-actions/commit/558438d06b6958376dc346430ce6abb829c1bd4f))
+* **semgrep,scan-docker-image:** add semgrep and trivy version ([b981e95](https://github.com/Kong/public-shared-actions/commit/b981e950baf0d569243a9e52f96f032d91adfaf9))
+* **semgrep:** add semgrep release ([e27f7c1](https://github.com/Kong/public-shared-actions/commit/e27f7c178c27967399f4277fa06944c85b3bc728))
+
+
+
+
+
 # [5.2.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/semgrep@5.1.0...@security-actions/semgrep@5.2.0) (2025-01-20)
 
 

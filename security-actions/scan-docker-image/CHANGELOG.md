@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.7.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/scan-docker-image@5.6.0...@security-actions/scan-docker-image@5.7.0) (2025-01-23)
+
+
+### ✨ Features
+
+* **semgrep,scan-docker-image:** add semgrep and trivy version ([b981e95](https://github.com/Kong/public-shared-actions/commit/b981e950baf0d569243a9e52f96f032d91adfaf9))
+
+
+
+
+
 # [5.6.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/scan-docker-image@5.5.0...@security-actions/scan-docker-image@5.6.0) (2025-01-20)
 
 
