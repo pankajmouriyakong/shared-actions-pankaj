@@ -48,7 +48,7 @@ runs:
       run: $GITHUB_ACTION_PATH/scripts/scan-metadata.sh
     
     # Don't fail during report generation
-    - name: Vulnerability analysis of SBOM
+    - name: Vulnerability analysis of SBOM ss
       uses: anchore/scan-action@4be3c24559b430723e51858969965e163b196957 # v3.3.5
       continue-on-error: true
       id: scan
