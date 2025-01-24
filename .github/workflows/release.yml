@@ -50,8 +50,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    outputs:
-      lerna_published_tags: ${{ steps.list-published-package-tags.outputs.lerna_published_tags }}
     steps:
 
       - name: Checkout code
@@ -90,38 +88,6 @@ jobs:
         shell: bash
         run: |
           pnpm version:ci
-      
-      # This step will list packages with their most recent tags
-      - name: List packages with their latest tags & SHA Digest
-        id: list-published-package-tags
-        if: ${{ github.ref == 'refs/heads/main' }}
-        shell: bash
-        run: |
-          raw_result=$(lerna list -l)
-          bullet_points=""
-
-          # Loop to fetch Tags SHA digest
-          while IFS= read -r line; do
-            pkg=$(echo "$line" | awk '{print $1}')
-            ver=$(echo "$line" | awk '{ sub(/^v/, "", $2); print $2 }')
-            tag="$pkg@$ver"
-            sha=$(git rev-parse "$tag" 2>/dev/null || echo "N/A")
-
-            # Append a bullet line: "* @pkg -> 5.0.0 -> 123abcd...."
-            bullet_points+="* $pkg -> $ver -> $sha\n\n"
-          done <<< "$raw_result"
-
-          # Escape newlines so Slack sees them correctly
-          result=$(echo "$bullet_points" | sed ':a;N;$!ba;s/\n/\\n/g')
-
-          # Prepare lerna tag list as a multiline output for Slack job
-          echo "lerna_published_tags<<EOF" >> $GITHUB_OUTPUT
-          echo "$result" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-          
-          # Publish tags result as GitHub Summary
-          echo "### Published Packages" >> "$GITHUB_STEP_SUMMARY"
-          echo "$raw_result"           >> "$GITHUB_STEP_SUMMARY"
       
       - name: Dry-run for tagging and releases
         if: ${{ github.ref != 'refs/heads/main' }}
@@ -184,27 +150,6 @@ jobs:
                       "text": "*Event Name:*\n${{ github.event_name }}"
                     }
                   ]
-                }
-              ]
-            }
-      
-      # Publish released packages to Engineering Slack Channel
-      - name: Publish packages list in Slack
-        if: ${{ needs.publish.result == 'success' }}
-        uses: ./slack-actions/workflow-notification
-        with:
-          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
-          status: success
-          payload: |
-            {
-              "text": "Completely custom Slack message for release",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":rocket::rocket::rocket:The following packages have been published successfully as part of the new release of Public Shared actions repository:\n\n${{ needs.publish.outputs.lerna_published_tags }}"
-                  }
                 }
               ]
             }
