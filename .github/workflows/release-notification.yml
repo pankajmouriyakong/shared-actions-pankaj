@@ -20,20 +20,23 @@ jobs:
           status: ${{ job.status }}
           payload: |
             {
+              "text": "Completely custom Slack message for release",
               "blocks": [
                 {
-                  "type": "rich_text",
-                  "block_id": "block1",
-                  "elements": [
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "emoji": true,
+                    "text": ":rocket:"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
                     {
-                      "type": "rich_text_quote",
-                      "elements": [
-                        {
-                          "type": "mrkdwn",
-                          "text": "Successfully released <${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ github.event.release.tag_name }}|${{ github.event.release.tag_name }}>"
-                        }
-                      ]
-                    }
+                      "type": "mrkdwn",
+                      "text": "Successfully released <${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ github.event.release.tag_name }}|${{ github.event.release.tag_name }}>"
+                    },
                   ]
                 }
               ]
