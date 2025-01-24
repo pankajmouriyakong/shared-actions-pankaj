@@ -51,6 +51,7 @@ jobs:
                       "indent": 0,
                       "border": 1
                     }
+                  ]
                 }
               ]
             }
