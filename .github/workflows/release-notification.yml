@@ -18,5 +18,17 @@ jobs:
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
           status: ${{ job.status }}
-          success-message: "Successfully released <${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ github.event.release.tag_name }}|${{ github.event.release.tag_name }}> :octocat:"
-          failure-message: "Failed to release <${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ github.event.release.tag_name }}|${{ github.event.release.tag_name }}> :github-dead:"
+          payload: |
+            {
+              "text": "Completely custom Slack message for release",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Successfully released <${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ github.event.release.tag_name }}|${{ github.event.release.tag_name }}> :octocat:"
+                  }
+                }
+              ]
+            }
+          
