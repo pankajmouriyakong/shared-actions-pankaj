@@ -23,11 +23,34 @@ jobs:
               "text": "Completely custom Slack message for release",
               "blocks": [
                 {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Successfully released <${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ github.event.release.tag_name }}|${{ github.event.release.tag_name }}> :octocat:"
-                  }
+                  "type": "rich_text",
+                  "elements": [
+                    {
+                      "type": "rich_text_section",
+                      "elements": [
+                        {
+                          "type": "text",
+                          "text": "New packages released:"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rich_text_list",
+                      "elements": [
+                        {
+                          "type": "rich_text_section",
+                          "elements": [
+                            {
+                              "type": "text",
+                              "text": "Successfully released <${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ github.event.release.tag_name }}|${{ github.event.release.tag_name }}>"
+                            }
+                          ]
+                        },
+                      ],
+                      "style": "bullet",
+                      "indent": 0,
+                      "border": 1
+                    }
                 }
               ]
             }
