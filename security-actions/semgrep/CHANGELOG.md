@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.15.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/semgrep@5.14.0...@security-actions/semgrep@5.15.0) (2025-01-24)
+
+
+### ✨ Features
+
+* **semgrep:** add sem ([bbf7d47](https://github.com/Kong/public-shared-actions/commit/bbf7d47049a04ae13e9c0b303262a7eae16eeaad))
+
+
+
+
+
 # [5.14.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/semgrep@5.13.0...@security-actions/semgrep@5.14.0) (2025-01-24)
 
 
