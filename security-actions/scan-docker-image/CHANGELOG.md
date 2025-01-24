@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.17.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/scan-docker-image@5.16.0...@security-actions/scan-docker-image@5.17.0) (2025-01-24)
+
+
+### ✨ Features
+
+* **semgrep,scan-docker-image,scan-rust:** update ([2c5a3fa](https://github.com/Kong/public-shared-actions/commit/2c5a3fa6e0783204d76188b95d952257074f4d4c))
+
+
+
+
+
 # [5.16.0](https://github.com/Kong/public-shared-actions/compare/@security-actions/scan-docker-image@5.15.0...@security-actions/scan-docker-image@5.16.0) (2025-01-24)
 
 
