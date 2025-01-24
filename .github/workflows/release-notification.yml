@@ -20,17 +20,17 @@ jobs:
           status: ${{ job.status }}
           payload: |
             {
-              "text": "Completely custom Slack message for release",
               "blocks": [
                 {
                   "type": "rich_text",
+                  "block_id": "block1",
                   "elements": [
                     {
                       "type": "rich_text_section",
                       "elements": [
                         {
                           "type": "text",
-                          "text": "New packages released:"
+                          "text": "My favorite Slack features (in no particular order):"
                         }
                       ]
                     },
@@ -46,6 +46,24 @@ jobs:
                             }
                           ]
                         },
+                        {
+                          "type": "rich_text_section",
+                          "elements": [
+                            {
+                              "type": "text",
+                              "text": "Canvas"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "rich_text_section",
+                          "elements": [
+                            {
+                              "type": "text",
+                              "text": "Developing with Block Kit"
+                            }
+                          ]
+                        }
                       ],
                       "style": "bullet",
                       "indent": 0,
@@ -55,4 +73,4 @@ jobs:
                 }
               ]
             }
-          
+        
