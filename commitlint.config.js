@@ -13,5 +13,8 @@ module.exports = {
       [...(await getPackages(ctx)), 'release', 'deps', 'ci']
     ]
   },
+  ignores: [
+    (message) => /^Bumps \[.+]\(.+\) from .+ to .+\.$/m.test(message),
+  ],
   helpUrl: 'https://github.com/Kong/public-shared-actions',
 }
