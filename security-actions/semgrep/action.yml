@@ -26,13 +26,18 @@ runs:
   using: 'composite'
   steps:
 
+    - name: Configure AWS Credentials
+      uses: ./login-aws-cloud
+
     - name: SAST Scan
+<<<<<<< HEAD
       uses: docker://returntocorp/semgrep:1.94.0
+=======
+      uses: ./security-actions/semgrep/run-semgrep
+>>>>>>> 6a0289e (feat(semgrep): add Dockerfile and update Semgrep action)
       id: semgrep
       continue-on-error: true
-      with:
-        args: "semgrep ci --config auto --sarif -o semgrep_${{github.sha}}.sarif --no-autofix ${{ inputs.additional_config }}"
-
+      
     # Upload grype cve reports
     - name: Upload Semgrep SARIF to Workflow
       if: always()
