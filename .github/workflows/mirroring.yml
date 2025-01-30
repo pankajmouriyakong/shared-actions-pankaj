@@ -145,10 +145,10 @@ jobs:
           platforms: ${{ env.platforms }}
           build-args: ${{ env.build_args }}
           labels: |
-            org.opencontainers.image.semgrep.image=${{ env.BASE_TOOL_IMAGE }}
+            org.opencontainers.image.base_tool_image=${{ env.BASE_TOOL_IMAGE }}
             org.opencontainers.image.base_image=${{ env.BASE_IMAGE }}
-            org.opencontainers.image.url=https://github.com/Pankajmouriya/shared-actions
-            org.opencontainers.image.documentation=https://github.com/Pankajmouriya/shared-actions
+            org.opencontainers.image.url="https://github.com/Kong/public-shared-actions"
+            org.opencontainers.image.documentation="https://github.com/Kong/public-shared-actions"
           # these 2 options are needed so that the MediaType of the manifest is
           # OCI-compliant for other downstream integrations
           # see also:

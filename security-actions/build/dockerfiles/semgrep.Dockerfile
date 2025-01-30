@@ -8,5 +8,8 @@ RUN addgroup -g 1001 kong && \
 # Switch to the non-root user
 USER kong
 
+# Pull Semgrep binary or package if needed (optional improvement)
+COPY --from=$BASE_TOOL_IMAGE /usr/local/bin/semgrep /usr/local/bin/semgrep
+
 # Run Semgrep (you can add your Semgrep command here, e.g., to analyze a directory)
 ENTRYPOINT ["semgrep"]
