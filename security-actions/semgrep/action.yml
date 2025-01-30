@@ -30,11 +30,7 @@ runs:
       uses: ./login-aws-cloud
 
     - name: SAST Scan
-<<<<<<< HEAD
-      uses: docker://returntocorp/semgrep:1.94.0
-=======
       uses: ./security-actions/semgrep/run-semgrep
->>>>>>> 6a0289e (feat(semgrep): add Dockerfile and update Semgrep action)
       id: semgrep
       continue-on-error: true
       
