@@ -1,19 +1,12 @@
-# Use the specified base image for Semgrep setup
+# Use the specified base image for Semgrep
 ARG BASE_TOOL_IMAGE
 ARG BASE_IMAGE
-
-FROM $BASE_TOOL_IMAGE AS semgrep-setup
-
-FROM $BASE_IMAGE AS semgrep
+FROM $BASE_IMAGE AS base
+RUN addgroup -g 1001 kong && \
+    adduser -D -u 1001 -G kong kong
 
 # Switch to the non-root user
-USER 1001
+USER kong
 
-# Copy the Semgrep binary from the setup stage to the correct path
-COPY --from=semgrep-setup --chown=1001:0 /usr/bin/semgrep /usr/bin/semgrep
-
-# Ensure the Semgrep binary is executable (usually not needed but good to ensure)
-RUN chmod +x /usr/bin/semgrep
-
-# Set the entry point to Semgrep
+# Run Semgrep (you can add your Semgrep command here, e.g., to analyze a directory)
 ENTRYPOINT ["semgrep"]
