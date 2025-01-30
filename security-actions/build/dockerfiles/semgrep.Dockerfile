@@ -12,7 +12,7 @@ FROM $BASE_IMAGE AS semgrep
 USER 1001
 
 # Pull Semgrep binary or package if needed (optional improvement)
-COPY --from=semgrep-setup --chown=1001:0 /home/semgrep /home/semgrep
+COPY --from=semgrep-setup --chown=1001:0 /usr/bin/semgrep /usr/bin/semgrep
 
 # Run Semgrep (you can add your Semgrep command here, e.g., to analyze a directory)
 ENTRYPOINT ["semgrep"]
