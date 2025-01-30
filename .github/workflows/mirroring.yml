@@ -67,7 +67,6 @@ jobs:
     name: Build Asset - ${{ matrix.asset.name }}
     permissions:
       id-token: write
-      contents: write
 
     strategy:
       fail-fast: false
