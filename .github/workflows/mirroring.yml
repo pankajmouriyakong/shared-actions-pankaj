@@ -142,7 +142,6 @@ jobs:
           push: true
           pull: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
           platforms: ${{ env.platforms }}
           build-args: ${{ env.build_args }}
           labels: |
