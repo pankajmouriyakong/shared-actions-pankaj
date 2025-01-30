@@ -7,11 +7,9 @@ FROM $BASE_TOOL_IMAGE AS semgrep-setup
 
 
 FROM $BASE_IMAGE AS semgrep
-RUN addgroup -g 1001 kong && \
-    adduser -D -u 1001 -G kong kong
 
 # Switch to the non-root user
-USER kong
+USER 1001
 
 # Pull Semgrep binary or package if needed (optional improvement)
 COPY --from=semgrep-setup --chown=1001:0 /usr/local/bin/semgrep /usr/local/bin/semgrep
