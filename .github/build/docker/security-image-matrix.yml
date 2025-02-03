@@ -1,6 +1,17 @@
 ---
 assets:
-
+  - name: trivy
+    build: true
+    cron: '0 0 * * *'
+    # Will be exported as GH env
+    # Must match args in dockerfile
+    # Update renovate.json when docker image keys are modified in this file
+    build_args:
+      # Points to base image of vendor specific tool
+      BASE_TOOL_IMAGE: docker.io/aquasec/trivy:0.55.2@sha256:addfb8fd6b9e520c25b22c61d8aa5d58ecd7879177aa959f952bf4734f4e3f60
+      # Points to the base image of the final build stage
+      BASE_IMAGE: gcr.io/distroless/base@sha256:7a4bffcb07307d97aa731b50cb6ab22a68a8314426f4e4428335939b5b1943a5
+      
   - name: semgrep
     build: true
     cron: '0 0 * * *'
