@@ -31,21 +31,29 @@ jobs:
       ecr_registry: ${{ steps.config.outputs.ecr_registry }}
     steps:
     - uses: actions/checkout@v3
-    - name: Construct tooling matrix
-    #   if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v35
+      with:
+        files: |
+          .github/build/docker/**/*.yml
+
+    - name: Construct tooling matrix from changed files
       id: config
       run: |
-        matrix_file=".github/build/docker/security-image-matrix.yml"
-        assets=$(yq eval -o=json '.assets' $matrix_file)
-        # Set default cron if not specified
-        assets=$(echo "$assets" | jq 'map(if has("cron") then . else . + {cron: "0 0 * * *"} end)')
-        assets=$(echo "$assets" | jq '[.[] | select(.build == true)]')
-        # Construct the dependency matrix
-        # Format tooling build_args as key=value pair space separated string
-        single_line_assets=$(echo "$assets" | jq -rc 'map({
-          name: .name,
-          cron: .cron,
-          build_args: (
+        changed_files="${{ steps.changed-files.outputs.all_changed_files }}"
+        echo "Changed files: $changed_files"
+
+        # Loop over each changed file and extract matrix data
+        assets=""
+        for file in $changed_files; do
+          asset=$(yq eval -o=json '.assets[]' $file)
+          name=$(echo "$asset" | jq -r '.name')
+          cron=$(echo "$asset" | jq -r '.cron // "0 0 * * *"')
+
+          # Format build_args
+          build_args=$(echo "$asset" | jq -r '
             if (.build_args // null) == null then
               ""
             else
@@ -54,11 +62,25 @@ jobs:
               map("\(.key)=\(.value)") |
               join(" ")
             end
+          ')
+
+          # Construct the final asset object
+          formatted_asset=$(jq -n \
+            --arg name "$name" \
+            --arg cron "$cron" \
+            --arg build_args "$build_args" \
+            '{name: $name, cron: $cron, build_args: $build_args}'
           )
-        })')  
-        echo "ASSETS_JSON=$single_line_assets"
+
+          # Append to assets list
+          assets="${assets}${formatted_asset},"
+        done
+
+        # Convert to JSON array and output
+        assets="[${assets%,}]"
+        echo "ASSETS_JSON=$assets"
         echo "ecr_registry=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
-        echo "assets=$single_line_assets" >> $GITHUB_OUTPUT
+        echo "assets=$assets" >> $GITHUB_OUTPUT
   
   # TODO: Enhance this job to run per asset frequency schedule
   build-publish-assets:
