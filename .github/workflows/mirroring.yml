@@ -45,14 +45,16 @@ jobs:
         changed_files="${{ steps.changed-files.outputs.all_changed_files }}"
         echo "Changed files: $changed_files"
 
-        # Loop over each changed file and extract matrix data
+        # Initialize assets list
         assets=""
+
+        # Loop over changed files and construct JSON objects
         for file in $changed_files; do
           asset=$(yq eval -o=json '.assets[]' $file)
           name=$(echo "$asset" | jq -r '.name')
           cron=$(echo "$asset" | jq -r '.cron // "0 0 * * *"')
 
-          # Format build_args
+          # Format build_args as key=value pairs
           build_args=$(echo "$asset" | jq -r '
             if (.build_args // null) == null then
               ""
@@ -64,8 +66,8 @@ jobs:
             end
           ')
 
-          # Construct the final asset object
-          formatted_asset=$(jq -n \
+          # Construct compact JSON object
+          formatted_asset=$(jq -c -n \
             --arg name "$name" \
             --arg cron "$cron" \
             --arg build_args "$build_args" \
@@ -76,9 +78,12 @@ jobs:
           assets="${assets}${formatted_asset},"
         done
 
-        # Convert to JSON array and output
+        # Create compact JSON array
         assets="[${assets%,}]"
-        echo "ASSETS_JSON=$assets"
+
+        # Set outputs properly
+        echo "ASSETS_JSON=$assets" >> $GITHUB_ENV
+        echo "ASSETS_JSON=$assets" >> $GITHUB_OUTPUT
         echo "ecr_registry=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
         echo "assets=$assets" >> $GITHUB_OUTPUT
   
