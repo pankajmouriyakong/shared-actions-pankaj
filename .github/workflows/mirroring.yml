@@ -37,7 +37,8 @@ jobs:
       uses: tj-actions/changed-files@v35
       with:
         files: |
-          .github/build/docker/**/*.yml
+          security-actions/scan-docker-image/build/*.yml
+          security-actions/semgrep/build/*.yml
 
     - name: Construct tooling matrix from changed files
       id: config
@@ -164,7 +165,7 @@ jobs:
         uses: docker/build-push-action@v5
         id: image
         with:
-          file: security-actions/build/dockerfiles/${{ matrix.asset.name }}.Dockerfile
+          file: security-actions/${{ matrix.asset.workspace_name }}/build/dockerfiles/${{ matrix.asset.name }}.Dockerfile
           context: .
           push: true
           pull: true
