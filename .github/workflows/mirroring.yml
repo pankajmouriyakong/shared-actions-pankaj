@@ -37,7 +37,7 @@ jobs:
       uses: tj-actions/changed-files@v35
       with:
         files: |
-          security-actions/scan-docker-image/build/*.yml
+          security-actions/scan-docker-image/build/trivy.yml
           security-actions/semgrep/build/*.yml
 
     - name: Construct tooling matrix from changed files
@@ -103,7 +103,7 @@ jobs:
       matrix:
         asset: ${{ fromJSON(needs.metadata.outputs.assets) }}
 
-    # if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
 
     steps:
       - uses: actions/checkout@v4
