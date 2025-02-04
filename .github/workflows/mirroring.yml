@@ -53,6 +53,7 @@ jobs:
         for file in $changed_files; do
           asset=$(yq eval -o=json '.assets[]' $file)
           name=$(echo "$asset" | jq -r '.name')
+          workspace_name=$(echo "$asset" | jq -r '.workspace_name')
           cron=$(echo "$asset" | jq -r '.cron // "0 0 * * *"')
 
           # Format build_args as key=value pairs
@@ -70,9 +71,10 @@ jobs:
           # Construct compact JSON object
           formatted_asset=$(jq -c -n \
             --arg name "$name" \
+            --arg workspace_name "$workspace_name"
             --arg cron "$cron" \
             --arg build_args "$build_args" \
-            '{name: $name, cron: $cron, build_args: $build_args}'
+            '{name: $name, workspace_name: $workspace_name, cron: $cron, build_args: $build_args}'
           )
 
           # Append to assets list
