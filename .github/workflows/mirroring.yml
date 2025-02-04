@@ -71,7 +71,7 @@ jobs:
           # Construct compact JSON object
           formatted_asset=$(jq -c -n \
             --arg name "$name" \
-            --arg workspace_name "$workspace_name"
+            --arg workspace_name "$workspace_name" \
             --arg cron "$cron" \
             --arg build_args "$build_args" \
             '{name: $name, workspace_name: $workspace_name, cron: $cron, build_args: $build_args}'
