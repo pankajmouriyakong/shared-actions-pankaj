@@ -18,7 +18,7 @@
     "packageRules": [
         {
         "description": "Replace Dockerhub with ghcr.io for renovate",
-        "registryUrls": "https://hub.docker.com/",
+        "registryUrls": ["https://hub.docker.com"],
         "matchDatasources": ["docker"],
         "matchPackageNames": ["https://hub.docker.com/r/semgrep/semgrep"]
         }
