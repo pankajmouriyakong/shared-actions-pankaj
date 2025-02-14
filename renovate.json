@@ -23,7 +23,9 @@
         {
         "description": "Replace Dockerhub with ghcr.io for renovate",
         "matchDatasources": ["docker"],
-        "matchDepNames": ["semgrep/semgrep"]
+        "matchDepNames": ["semgrep/semgrep"],
+        "matchPackageNames": ["hub.docker.com/r/semgrep/semgrep"],
+        "versioning": "docker"
         }
     ]
       
