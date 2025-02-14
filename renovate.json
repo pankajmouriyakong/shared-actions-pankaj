@@ -11,10 +11,10 @@
       "depNameTemplate": "semgrep/semgrep"
     }],
     "packageRules": [
-    {
-      "matchDatasources": [
-        "docker"
-      ]
-    }
+        {
+            "matchDatasources": ["docker"],
+            "matchPackageNames": ["semgrep/semgrep"],
+            "versioning": "semver"
+        }
   ]
   }
