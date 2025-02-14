@@ -11,7 +11,7 @@
           "semgrep/semgrep:(?<currentValue>[\\d\\.]+)"
         ],
         "datasourceTemplate": "docker",
-        "depNameTemplate": "semgrep"
+        "depNameTemplate": "hub.docker.com/r/semgrep/semgrep"
       }
     ],
     "hostRules": [
