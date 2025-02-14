@@ -19,6 +19,14 @@ updates:
       include: "scope"
 
   - package-ecosystem: "github-actions"
+    directory: "/security-actions/semgrep/run-semgrep"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "github-actions"
+      include: "scope"
+
+  - package-ecosystem: "github-actions"
     directory: "/security-actions/scan-docker-image"
     schedule:
       interval: "daily"

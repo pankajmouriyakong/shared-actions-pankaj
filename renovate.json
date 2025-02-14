@@ -9,8 +9,7 @@
         "docker://418272760313\\.dkr\\.ecr\\.us-east-1\\.amazonaws\\.com/k-internal/semgrep/semgrep:(?<currentValue>[\\d\\.]+)"
       ],
       "datasourceTemplate": "docker",
-      "extractVersionTemplate": "^(?:@{{{depName}}}@|v)(?<version>[0-9\\.]+)$",
-      "autoReplaceStringTemplate": "{{{packageName}}}@{{#if newDigest}}{{{newDigest}}}"
+      "depNameTemplate": "semgrep/semgrep"
     }],
     "packageRules": [
         {
