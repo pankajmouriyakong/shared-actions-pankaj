@@ -7,7 +7,7 @@
       "customType": "regex",
       "fileMatch": ["^/security-actions/semgrep/run-semgrep/action\\.yml$"],
       "matchStrings": [
-        "(?<packageName>418272760313\\.dkr\\.ecr\\.us-east-1\\.amazonaws\\.com\\/k-internal\\/semgrep\\/(?<depName>semgrep)):(?<currentValue>[\\d\\.]+)"
+        "(?<packageName>semgrep\\/semgrep):(?<currentValue>[\\d\\.]+)"
       ],
       "datasourceTemplate": "docker",
       "depNameTemplate": "semgrep/semgrep",
