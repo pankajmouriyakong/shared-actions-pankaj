@@ -1,26 +1,25 @@
-
 {
-    "extends": [
-      "config:recommended"
-    ],
-    "customManagers": [
-      {
-        "customType": "regex",
-        "fileMatch": ["^/security-actions/semgrep/run-semgrep/action\\.yml$"],
-        "matchStrings": [
-          "uses: docker://418272760313.dkr.ecr.us-east-1.amazonaws.com/k-internal/(?<depName>.*?):(?<currentValue>.*?)"
-        ],
-        "datasourceTemplate": "docker",
-        "depNameTemplate": "semgrep"
-      }
-    ],
-    "packageRules": [
-        {
-        "description": "Replace Dockerhub with ghcr.io for renovate",
-        "matchDatasources": ["docker"],
-        "matchDepNames": ["semgrep/semgrep"],
-        "versioning": "docker"
-        }
-    ]
-      
-  }
+  "extends": ["config:recommended"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^/security-actions/semgrep/run-semgrep/action\\.yml$"],
+      "matchStrings": [
+        "418272760313\\.dkr\\.ecr\\.us-east-1\\.amazonaws\\.com/k-internal/semgrep/semgrep:(?<currentValue>[\\d\\.]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "semgrep/semgrep",
+      "extractVersionTemplate": "^(?:v)?(?<version>[0-9\\.]+)$",
+      "autoReplaceStringTemplate": "418272760313.dkr.ecr.us-east-1.amazonaws.com/k-internal/semgrep/semgrep:{{{newVersion}}}",
+      "versioningTemplate": "semver"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Fetch updates for ECR semgrep image from Docker Hub",
+      "matchDepNames": ["semgrep/semgrep"],
+      "versioning": "docker",
+      "replaceString": "418272760313.dkr.ecr.us-east-1.amazonaws.com/k-internal/semgrep/semgrep:{{{newVersion}}}"
+    }
+  ]
+}
