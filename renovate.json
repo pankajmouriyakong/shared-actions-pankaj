@@ -2,14 +2,23 @@
     "extends": [
       "github>pankajmouriyakong/public-shared-renovate:github-actions"
     ],
-    "customManagers": [
+    "customManagers": [{
+      "customType": "regex",
+      "fileMatch": ["^/security-actions/semgrep/run-semgrep/action\\.yml$"],
+      "matchStrings": [
+        "semgrep/semgrep:(?<currentValue>[\\d\\.]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "semgrep/semgrep",
+      "extractVersionTemplate": "^(?:@{{{depName}}}@|v)(?<version>[0-9\\.]+)$"
+    }],
+    "hostRules": [
       {
-        "customType": "docker",
-        "fileMatch": ["^security-actions/semgrep/run-semgrep/action\\.yml$"],
-        "matchStrings": [
-          "semgrep/semgrep:(?<currentValue>[\\d\\.]+)"
-        ],
-        "depNameTemplate": "semgrep/semgrep"
+        "hostType": "docker",
+        "domainName": "docker.io",
+        "username": null,
+        "password": null,
+        "enabled": true
       }
     ],
     "packageRules": [
