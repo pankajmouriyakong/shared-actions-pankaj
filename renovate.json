@@ -1,0 +1,5 @@
+{
+    "extends": [
+      "github>pankajmouriyakong/public-shared-renovate:github-actions"
+    ]
+  }
