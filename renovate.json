@@ -17,9 +17,9 @@
   "packageRules": [
     {
       "description": "Fetch updates for ECR semgrep image from Docker Hub",
-      "matchDepNames": ["semgrep/semgrep"],
+      "matchPackageNames": ["semgrep/semgrep"],
       "versioning": "docker",
-      "replaceString": "418272760313.dkr.ecr.us-east-1.amazonaws.com/k-internal/semgrep/semgrep:{{{newVersion}}}"
+      "matchManagers": ["docker"]
     }
   ]
 }
