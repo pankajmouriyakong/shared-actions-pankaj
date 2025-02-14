@@ -9,8 +9,7 @@
         "matchStrings": [
           "semgrep/semgrep:(?<currentValue>[\\d\\.]+)"
         ],
-        "depNameTemplate": "semgrep/semgrep",
-        "versioning": "semver"
+        "depNameTemplate": "semgrep/semgrep"
       }
     ],
     "packageRules": [
