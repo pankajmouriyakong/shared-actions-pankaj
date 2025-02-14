@@ -8,7 +8,9 @@
       "matchStrings": [
         "docker://418272760313\\.dkr\\.ecr\\.us-east-1\\.amazonaws\\.com/k-internal/semgrep/semgrep:(?<currentValue>[\\d\\.]+)"
       ],
-      "depNameTemplate": "semgrep/semgrep"
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "semgrep/semgrep",
+      "extractVersionTemplate": "^(?:@{{{depName}}}@|v)(?<version>[0-9\\.]+)$"
     }],
     "packageRules": [
         {
