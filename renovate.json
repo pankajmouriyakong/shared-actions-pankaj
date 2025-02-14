@@ -25,7 +25,7 @@
       {
         "matchDatasources": ["docker"],
         "matchPackageNames": ["semgrep/semgrep"],
-        "registryUrls": ["https://index.docker.io/v2/"],
+        "registryUrls": ["https://registry.hub.docker.com/r/"],
         "versioning": "semver"
       }
     ],
