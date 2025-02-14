@@ -10,8 +10,7 @@
         "(?<packageName>semgrep\\/semgrep):(?<currentValue>[\\d\\.]+)"
       ],
       "datasourceTemplate": "docker",
-      "depNameTemplate": "semgrep/semgrep",
-      "extractVersionTemplate": "^(?<version>[0-9\\.]+)$",
+      "extractVersionTemplate": "^(?:@{{{depName}}}@|v)(?<version>[0-9\\.]+)$",
       "autoReplaceStringTemplate": "{{{packageName}}}:{{{newVersion}}}",
       "versioningTemplate": "semver"
     }
