@@ -19,7 +19,6 @@
   "packageRules": [
     {
       "description": "Fetch updates for ECR semgrep image from Docker Hub",
-      "matchDepNames": ["semgrep/semgrep"],
       "matchPackageNames": ["semgrep/semgrep"],
       "versioning": "docker",
       "enabled": false
