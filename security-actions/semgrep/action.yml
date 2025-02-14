@@ -39,13 +39,11 @@ runs:
         registry: 418272760313.dkr.ecr.us-east-1.amazonaws.com
         username: ${{ steps.creds.outputs.aws-access-key-id }}
         password: ${{ steps.creds.outputs.aws-secret-access-key }}
-        
+    
     - name: SAST Scan
-      uses: docker://418272760313.dkr.ecr.us-east-1.amazonaws.com/k-internal/semgrep/semgrep:1.104.0
+      uses: ./security-actions/semgrep/run-semgrep
       id: semgrep
       continue-on-error: true
-      with:
-        args: "semgrep ci --config auto --sarif -o semgrep_${{github.sha}}.sarif --no-autofix ${{ inputs.additional_config }}"
 
     # Upload grype cve reports
     - name: Upload Semgrep SARIF to Workflow
