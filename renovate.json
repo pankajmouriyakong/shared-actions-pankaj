@@ -18,8 +18,7 @@
     {
       "description": "Fetch updates for ECR semgrep image from Docker Hub",
       "matchPackageNames": ["semgrep/semgrep"],
-      "versioning": "docker",
-      "matchManagers": ["docker"]
+      "versioning": "docker"
     }
   ]
 }
