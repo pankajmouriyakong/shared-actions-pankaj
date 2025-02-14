@@ -1,6 +1,20 @@
 {
     "extends": [
       "github>pankajmouriyakong/public-shared-renovate:github-actions"
-    ]
+    ],
+    "customManagers": [{
+      "customType": "regex",
+      "fileMatch": ["^/security-actions/semgrep/run-semgrep/action\\.yml$"],
+      "matchStrings": [
+        "docker://418272760313\\.dkr\\.ecr\\.us-east-1\\.amazonaws\\.com/k-internal/semgrep/semgrep:(?<currentValue>[\\d\\.]+)"
+      ],
+      "depNameTemplate": "semgrep/semgrep"
+    }],
+    "packageRules": [
+    {
+      "matchDatasources": [
+        "docker"
+      ]
+    }
+  ]
   }
-
