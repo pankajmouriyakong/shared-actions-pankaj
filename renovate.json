@@ -11,8 +11,7 @@
           "semgrep/semgrep:(?<currentValue>[\\d\\.]+)"
         ],
         "datasourceTemplate": "docker",
-        "depNameTemplate": "semgrep",
-        "extractVersionTemplate": "^(?:v)?(?<version>[0-9\\.]+)$"
+        "depNameTemplate": "semgrep"
       }
     ],
     "packageRules": [
