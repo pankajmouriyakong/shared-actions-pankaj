@@ -1,7 +1,8 @@
 
 {
     "extends": [
-      "github>pankajmouriyakong/public-shared-renovate:github-actions"
+      "docker",
+      "config:recommended"
     ],
     "customManagers": [
       {
@@ -15,22 +16,12 @@
         "extractVersionTemplate": "^(?:v)?(?<version>[0-9\\.]+)$"
       }
     ],
-    "hostRules": [
-      {
-        "hostType": "docker",
-        "domainName": "docker.io",
-        "enabled": true
-      }
-    ],
     "packageRules": [
-      {
+        {
+        "description": "Replace Dockerhub with ghcr.io for renovate",
         "matchDatasources": ["docker"],
-        "matchPackageNames": ["semgrep/semgrep"],
-        "registryUrls": ["https://registry.hub.docker.com/r/"],
-        "versioning": "semver",
-        "updateTypes": ["major", "minor", "patch"],
-        "replaceString": "418272760313.dkr.ecr.us-east-1.amazonaws.com/k-internal/semgrep/semgrep:{{newVersion}}"
-      }
+        "matchPackageNames": ["docker.io/semgrep/semgrep"]
+        }
     ]
+      
   }
-  
