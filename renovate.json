@@ -14,6 +14,11 @@
         "depNameTemplate": "semgrep"
       }
     ],
+    "hostRules": [
+    {
+    "matchHost": "hub.docker.com"
+    }
+    ],
     "packageRules": [
         {
         "description": "Replace Dockerhub with ghcr.io for renovate",
