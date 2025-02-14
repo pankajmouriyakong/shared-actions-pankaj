@@ -1,3 +1,4 @@
+
 {
     "extends": [
       "github>pankajmouriyakong/public-shared-renovate:github-actions"
@@ -7,7 +8,7 @@
         "customType": "regex",
         "fileMatch": ["^/security-actions/semgrep/run-semgrep/action\\.yml$"],
         "matchStrings": [
-          "semgrep/semgrep:(?<currentValue>[\\d\\.]+)"
+          "418272760313\\.dkr\\.ecr\\.us-east-1\\.amazonaws\\.com/k-internal/semgrep/semgrep:(?<currentValue>[\\d\\.]+)"
         ],
         "datasourceTemplate": "docker",
         "depNameTemplate": "semgrep/semgrep",
@@ -26,11 +27,10 @@
         "matchDatasources": ["docker"],
         "matchPackageNames": ["semgrep/semgrep"],
         "registryUrls": ["https://registry.hub.docker.com/r/"],
-        "versioning": "semver"
+        "versioning": "semver",
+        "updateTypes": ["major", "minor", "patch"],
+        "replaceString": "418272760313.dkr.ecr.us-east-1.amazonaws.com/k-internal/semgrep/semgrep:{{newVersion}}"
       }
-    ],
-    "ignorePaths": [
-      "**/k-internal/**"
     ]
   }
   
