@@ -1,7 +1,6 @@
 
 {
     "extends": [
-      "docker",
       "config:recommended"
     ],
     "customManagers": [
