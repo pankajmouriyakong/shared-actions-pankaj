@@ -8,23 +8,17 @@
         "customType": "regex",
         "fileMatch": ["^/security-actions/semgrep/run-semgrep/action\\.yml$"],
         "matchStrings": [
-          "semgrep/semgrep:(?<currentValue>[\\d\\.]+)"
+          "uses: docker://418272760313.dkr.ecr.us-east-1.amazonaws.com/k-internal/(?<depName>.*?):(?<currentValue>.*?)"
         ],
         "datasourceTemplate": "docker",
-        "depNameTemplate": "hub.docker.com/r/semgrep/semgrep"
+        "depNameTemplate": "semgrep"
       }
-    ],
-    "hostRules": [
-    {
-    "matchHost": "hub.docker.com"
-    }
     ],
     "packageRules": [
         {
         "description": "Replace Dockerhub with ghcr.io for renovate",
         "matchDatasources": ["docker"],
         "matchDepNames": ["semgrep/semgrep"],
-        "matchPackageNames": ["hub.docker.com/r/semgrep/semgrep"],
         "versioning": "docker"
         }
     ]
