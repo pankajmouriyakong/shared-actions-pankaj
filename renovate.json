@@ -10,10 +10,12 @@
         "418272760313\\.dkr\\.ecr\\.us-east-1\\.amazonaws\\.com\\/k-internal\\/(?<depName>semgrep\\/semgrep):(?<currentValue>[\\d\\.]+)"
       ],
       "datasourceTemplate": "docker",
+      "depNameTemplate": "docker.io/semgrep/semgrep",
       "extractVersionTemplate": "(?<version>[0-9\\.]+)",
       "autoReplaceStringTemplate": "{{{depName}}}:{{{newVersion}}}",
       "versioningTemplate": "semver"
     }
+    
   ],
   "packageRules": [
     {
