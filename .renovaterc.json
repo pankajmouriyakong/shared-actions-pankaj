@@ -1,5 +1,4 @@
 {
-    "extends": ["docker"],
     "regexManagers": [
       {
         "fileMatch": ["^/security-actions/semgrep/run-semgrep/action\\.yml$"],
