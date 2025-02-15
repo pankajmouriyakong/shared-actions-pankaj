@@ -1,25 +1,27 @@
-// {
-//   "extends": [
-//     "config:recommended"
-//   ],
-//   "customManagers": [
-//     {
-//       "customType": "regex",
-//       "fileMatch": ["^/security-actions/semgrep/run-semgrep/action\\.yml$"],
-//       "matchStrings": [
-//         "418272760313\\.dkr\\.ecr\\.us-east-1\\.amazonaws\\.com\\/k-internal\\/(?<depName>semgrep\\/semgrep):(?<currentValue>[\\d\\.]+)"
-//       ],
-//       "datasourceTemplate": "docker",
-//       "extractVersionTemplate": "(?<version>[0-9\\.]+)",
-//       "autoReplaceStringTemplate": "{{{depName}}}:{{{newVersion}}}",
-//       "versioningTemplate": "semver"
-//     }
-//   ],
-//   "packageRules": [
-//     {
-//       "description": "Fetch updates for ECR semgrep image from Docker Hub",
-//       "matchPackageNames": ["semgrep/semgrep"],
-//       "versioning": "docker"
-//     }
-//   ]
-// }
+{
+  "extends": [
+    "config:recommended"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^/security-actions/semgrep/run-semgrep/action\\.yml$"],
+      "matchStrings": [
+        "418272760313\\.dkr\\.ecr\\.us-east-1\\.amazonaws\\.com\\/k-internal\\/(?<depName>semgrep\\/semgrep):(?<currentValue>[\\d\\.]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "extractVersionTemplate": "(?<version>[0-9\\.]+)",
+      "autoReplaceStringTemplate": "{{{depName}}}:{{{newVersion}}}",
+      "versioningTemplate": "semver"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Fetch updates for ECR semgrep image from Docker Hub",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/^(docker\\.io\\/)?[a-z-]+(\\/[a-z-]+)?$/"],
+      "registryUrl": "https://index.docker.io/",
+      "versioning": "docker"
+    }
+  ]
+}
