@@ -1,0 +1,12 @@
+{
+    "extends": ["docker"],
+    "docker": {
+      "semgrep/semgrep": {
+        "schedule": ["every weekend"],
+        "labels": ["semgrep_version"],
+        "digests": ["latest"],
+        "versions": ["1.106.0"]
+      }
+    }
+  }
+  
