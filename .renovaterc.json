@@ -1,12 +1,14 @@
 {
     "extends": ["docker"],
-    "docker": {
-      "semgrep/semgrep": {
-        "schedule": ["every weekend"],
-        "labels": ["semgrep_version"],
-        "digests": ["latest"],
-        "versions": ["1.106.0"]
+    "regexManagers": [
+      {
+        "fileMatch": ["^/security-actions/semgrep/run-semgrep/action\\.yml$"],
+        "matchStrings": [
+          ".*(?<depName>semgrep/semgrep):(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+        ],
+        "datasourceTemplate": "docker",
+        "versioningTemplate": "docker"
       }
-    }
+    ]
   }
   
