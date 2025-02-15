@@ -20,7 +20,6 @@
       "description": "Fetch updates for ECR semgrep image from Docker Hub",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["/^(docker\\.io\\/)?[a-z-]+(\\/[a-z-]+)?$/"],
-      "registryUrl": "https://index.docker.io/",
       "versioning": "docker"
     }
   ]
