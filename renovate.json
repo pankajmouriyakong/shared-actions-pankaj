@@ -2,12 +2,6 @@
   "extends": [
     "config:recommended"
   ],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "fileMatch": ["^/security-actions/semgrep/run-semgrep/action\\.yml$"]
-    }
-  ],
   "packageRules": [
     {
       "description": "Fetch updates for ECR semgrep image from Docker Hub",
