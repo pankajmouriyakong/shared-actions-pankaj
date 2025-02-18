@@ -27,7 +27,7 @@ inputs:
     - 'true'
     - 'false'
 
-outputs:
+outputs: 
   grype-json-report:
     description: 'vulnerability json report'
     value: ${{ steps.grype_analysis.outputs.json }}
