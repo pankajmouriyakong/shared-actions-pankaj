@@ -6,20 +6,27 @@
     {
       "customType": "regex",
       "fileMatch": [
-        "security-actions/semgrep/run-semgrep/action.yml"
+        "security-actions/semgrep/run-semgrep/action.yml",
+        "security-actions/scan-docker-image/run-semgrep/action.yml"
       ],
       "matchStrings": [
         "semgrep\\/semgrep:(?<currentValue>[\\d\\.]+)"
       ],
       "datasourceTemplate": "docker",
-      "depNameTemplate": "semgrep/semgrep"
+      "depNameTemplate": [
+        "semgrep/semgrep",
+        "aquasec/trivy",
+        "aquasecurity/trivy-db"
+      ]
     }
   ],
   "packageRules": [
     {
       "description": "Fetch updates for ECR semgrep image from Docker Hub",
       "matchPackageNames": [
-        "semgrep/semgrep"
+        "semgrep/semgrep",
+        "aquasec/trivy",
+        "aquasecurity/trivy-db"
       ],
       "versioning": "docker"
     }
