@@ -13,11 +13,29 @@
         "semgrep\\/semgrep:(?<currentValue>[\\d\\.]+)"
       ],
       "datasourceTemplate": "docker",
-      "depNameTemplate": [
-        "semgrep/semgrep",
-        "aquasec/trivy",
-        "aquasecurity/trivy-db"
-      ]
+      "depNameTemplate": "semgrep/semgrep"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "security-actions/scan-docker-image/run-semgrep/action.yml"
+      ],
+      "matchStrings": [
+        "aquasec\\/trivy:(?<currentValue>[\\d\\.]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "aquasec/trivy"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "security-actions/scan-docker-image/run-semgrep/action.yml"
+      ],
+      "matchStrings": [
+        "aquasecurity\\/trivy-db:(?<currentValue>[\\d\\.]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "aquasecurity/trivy-db"
     }
   ],
   "packageRules": [
