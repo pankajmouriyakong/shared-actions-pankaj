@@ -42,7 +42,7 @@ runs:
       # TODO: Define a tagging mechanism for dependency manager version updates 
       # Also for controlled rollouts
       # TODO: Replace with the actual AWS ACCOUNT ID
-      uses: docker://4182XXXXXXX.dkr.ecr.us-east-1.amazonaws.com/trivy:latest
+      uses: docker://418272760313.dkr.ecr.us-east-1.amazonaws.com/k-internal/aquasec/trivy:0.58.0
       with:
         entrypoint: trivy
         args:
