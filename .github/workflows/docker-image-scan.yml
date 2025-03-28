@@ -72,8 +72,8 @@ jobs:
       id: sbom_action_arm64
       uses: ./security-actions/scan-docker-image
       with:
-        asset_prefix: test.kong-gateway-dev-linux-arm64
-        image: ${{env.IMAGE}}@${{ steps.image_manifest_metadata.outputs.arm64_sha }}
+        asset_prefix: kong-gateway-dev-linux-arm64
+        image: kong/kong-gateway-dev:latest@sha256:e061799146cf0402696a7749f7029a746caceacf0a426e27b2494c8a4e422dbf
         upload-sbom-release-assets: true
         skip_cis_scan: false
 
