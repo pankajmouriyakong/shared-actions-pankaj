@@ -36,5 +36,5 @@ runs:
       if: ${{ always() && inputs.fail_on_findings == 'true' && steps.trufflehog.outcome == 'failure' }}
       shell: bash
       run: |
-        echo "::error::TruffleHog detected secrets. See: trufflehog_secrets.zip / GitHub code scanning alerts"
+        echo "::error::TruffleHog detected secrets"
         exit 1
