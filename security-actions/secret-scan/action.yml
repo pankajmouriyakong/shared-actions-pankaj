@@ -11,7 +11,7 @@ inputs:
     required: false
     default: HEAD
   fail_on_findings:
-    description: 'Fail job if TruffleHog detects findings'
+    description: 'Fail job if TruffleHog detects findings/secrets'
     required: false
     default: false
     type: choice
