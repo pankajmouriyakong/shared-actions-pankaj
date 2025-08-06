@@ -12,26 +12,33 @@ inputs:
     default: HEAD
   fail_on_findings:
     description: 'Fail job if TruffleHog detects findings/secrets'
-    required: false
+    required: true
     default: false
-    type: choice
-    options:
-      - 'true'
-      - 'false'
 
 runs:
   using: 'composite'
   steps:
-    - name: TruffleHog OSS 
+    # Dynamically set TRUFFLEHOG_LOG_LEVEL based on whether GitHub debug logging is enabled
+    # - If ACTIONS_STEP_DEBUG=true, use trace mode (5)
+    # - Else, use info(0)
+    - name: Set TRUFFLEHOG_LOG_LEVEL
+      shell: bash
+      run: |
+        if [[ "$ACTIONS_STEP_DEBUG" == "true" ]]; then
+          echo "TRUFFLEHOG_LOG_LEVEL=5" >> $GITHUB_ENV
+        else
+          echo "TRUFFLEHOG_LOG_LEVEL=0" >> $GITHUB_ENV
+        fi
+
+    - name: Running Secret Scan using Trufflehog 
       id: trufflehog 
       uses: trufflesecurity/trufflehog@a05cf0859455b5b16317ee22d809887a4043cdf0 # v3.90.2
       continue-on-error: true 
-      with: 
-        path: ./ 
-        base: ${{ inputs.base }}
-        head: ${{ inputs.head }} 
-        extra_args: --log-level=2 --results=verified,unknown
+      with:  
+        extra_args: --log-level=${{ env.TRUFFLEHOG_LOG_LEVEL }} --results=verified,unknown
 
+     # Fail the job if secrets are found and fail_on_findings is true
+    # This avoids accidental merging of leaked secrets into protected branches
     - name: Fail on TruffleHog Findings
       if: ${{ always() && inputs.fail_on_findings == 'true' && steps.trufflehog.outcome == 'failure' }}
       shell: bash
