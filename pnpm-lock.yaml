@@ -48,18 +48,6 @@ importers:
         specifier: ^7.1.4
         version: 7.4.2(encoding@0.1.13)
 
-  code-build-actions/build-js-sdk: {}
-
-  code-check-actions/lua-lint: {}
-
-  code-check-actions/rust-lint: {}
-
-  pr-previews/cleanup: {}
-
-  pr-previews/up-to-date: {}
-
-  pr-previews/validate: {}
-
   security-actions/sca: {}
 
   security-actions/scan-docker-image: {}
@@ -71,8 +59,6 @@ importers:
   security-actions/semgrep: {}
 
   security-actions/sign-docker-image: {}
-
-  slack-actions/workflow-notification: {}
 
 packages:
 
