@@ -280,7 +280,7 @@ runs:
     - name: Upload SARIF to GitHub Code Scanning (Public Repos)
       if: ${{ always() && inputs.codeql_upload == 'true' && steps.grype_db.outputs.GRYPE_DB_UPDATE_STATUS == 0 }}
       continue-on-error: true
-      uses: github/codeql-action/upload-sarif@5f8171a638ada777af81d42b55959a643bb29017
+      uses: github/codeql-action/upload-sarif@f1f6e5f6af878fb37288ce1c627459e94dbf7d01
       with:
         sarif_file: ${{ steps.meta.outputs.grype_sarif_file }}
         category: sca
