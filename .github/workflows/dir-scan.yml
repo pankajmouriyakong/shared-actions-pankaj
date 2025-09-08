@@ -36,3 +36,4 @@ jobs:
             dir: ${{env.TEST_REPOSITORY}}
             upload-sbom-release-assets: true
             fail_build: false
+            codeql_upload: true
