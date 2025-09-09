@@ -10,13 +10,7 @@ on:
     tags:
     - '*'
   workflow_dispatch: {}
-permissions:
-  contents: write # publish sbom to GH releases/tag assets
-  issues: read
-  checks: write
-  pull-requests: write
-  security-events: write
-  actions: read
+
 jobs:
   test-sca-dir:
     env:
