@@ -14,7 +14,7 @@ on:
 jobs:
   test-sca-dir:
     env:
-      TEST_REPOSITORY: "${{github.repository_owner}}/insomnia"
+      TEST_REPOSITORY: "${{github.repository_owner}}/legitfy-test"
     runs-on: ubuntu-latest
     permissions:
       contents: write # publish sbom to GH releases/tag assets
@@ -35,7 +35,7 @@ jobs:
           id: scan-dir
           uses: ./security-actions/sca
           with:
-            asset_prefix: test.insomnia
+            asset_prefix: test.legitfy-test
             dir: ${{env.TEST_REPOSITORY}}
             upload-sbom-release-assets: true
             fail_build: false
