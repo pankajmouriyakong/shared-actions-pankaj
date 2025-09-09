@@ -35,7 +35,7 @@ jobs:
           with:
             repository: ${{env.TEST_REPOSITORY}}
             path: ${{env.TEST_REPOSITORY}}
-            token: ${{ secrets.GH_PAT_READONLY }}
+            token: ${{ secrets.GH_READ_PAT }}
         - name: Scan Directory
           id: scan-dir
           uses: ./security-actions/sca
