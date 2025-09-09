@@ -31,6 +31,7 @@ jobs:
           with:
             repository: ${{env.TEST_REPOSITORY}}
             path: ${{env.TEST_REPOSITORY}}
+            token: ${{ secrets.GITHUB_TOKEN }}
         - name: Scan Directory
           id: scan-dir
           uses: ./security-actions/sca
