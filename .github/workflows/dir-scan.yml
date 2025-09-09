@@ -14,7 +14,7 @@ on:
 jobs:
   test-sca-dir:
     env:
-      TEST_REPOSITORY: "${{github.repository_owner}}/legitfy-test"
+      TEST_REPOSITORY: "${{github.repository_owner}}/ai-security-analyzer"
     runs-on: ubuntu-latest
     permissions:
       contents: write # publish sbom to GH releases/tag assets
@@ -36,7 +36,7 @@ jobs:
           id: scan-dir
           uses: ./security-actions/sca
           with:
-            asset_prefix: test.legitfy-test
+            asset_prefix: test.ai-security-analyzer
             dir: ${{env.TEST_REPOSITORY}}
             upload-sbom-release-assets: true
             fail_build: false
