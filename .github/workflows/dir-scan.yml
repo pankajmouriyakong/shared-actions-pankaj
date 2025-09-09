@@ -14,7 +14,7 @@ on:
 jobs:
   test-sca-dir:
     env:
-      TEST_REPOSITORY: "${{github.repository_owner}}/ai-security-analyzer"
+      TEST_REPOSITORY: "pankajmouriyakong/ai-security-analyzer"
     runs-on: ubuntu-latest
     permissions:
       contents: write # publish sbom to GH releases/tag assets
