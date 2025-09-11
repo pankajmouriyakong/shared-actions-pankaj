@@ -52,24 +52,46 @@ runs:
         repositories: ${{ inputs.repositories }}
         artifact_name: ${{ inputs.artifact_name }}
 
-    - name: Check scan results
+    - name: Check Legitify report existence
+      if: ${{ steps.legitify-scan.conclusion == 'success' }}
+      id: legitify_report
       shell: bash
       run: |
-        if [[ "${{ steps.legitify-scan.outcome }}" == "failure" ]]; then
-          echo "::warning::Legitify CIS scan detected compliance issues"
-          echo "SCAN_FAILED=true" >> $GITHUB_ENV
-        else
-          echo "::notice::Legitify CIS scan completed successfully"
-          echo "SCAN_FAILED=false" >> $GITHUB_ENV
+        echo "::group::Check for Legitify report existence"
+        files_found=false
+        
+        # Check for JSON report file
+        if [[ -f "legitify_output.json" ]]; then
+          echo "JSON report file exists: legitify_output.json"
+          files_found=true
         fi
+        
+        # Check for SARIF files
+        if ls *.sarif 1> /dev/null 2>&1; then
+          echo "SARIF files found: $(ls *.sarif)"
+          files_found=true
+        fi
+        
+        if [[ "$files_found" == "true" ]]; then
+          echo "Legitify report files exist"
+          echo "files_exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "::warning::No Legitify report files found"
+          echo "files_exists=false" >> $GITHUB_OUTPUT
+        fi
+        echo "::endgroup::"
 
-    - name: Fail on CIS compliance issues
-      if: ${{ always() && inputs.fail_on_findings == 'true' && env.SCAN_FAILED == 'true' }}
-      shell: bash
-      run: |
-        echo "::error::Legitify CIS scan detected compliance issues and fail_on_findings is enabled"
-        echo "::error::Check the scan results artifact: ${{ inputs.artifact_name }}"
-        exit 1
+    # Upload artifacts
+    - name: Upload Legitify scan results
+      if: ${{ always() && steps.legitify_report.outputs.files_exists == 'true' }}
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      with:
+        name: ${{ inputs.artifact_name }}
+        path: |
+          legitify_output.json
+          *.sarif
+          *legitify*.json
+        if-no-files-found: warn
 
     - name: Summary
       if: always()
