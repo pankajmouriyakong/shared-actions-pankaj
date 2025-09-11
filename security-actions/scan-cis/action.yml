@@ -27,6 +27,7 @@ inputs:
     description: 'GitHub token with appropriate permissions for Legitify scan'
     required: true
 
+
 runs:
   using: 'composite'
   steps:
@@ -48,7 +49,7 @@ runs:
         github_token: ${{ inputs.github_token }}
         upload_code_scanning: ${{ inputs.upload_code_scanning }}
         scorecard: ${{ inputs.scorecard }}
-        repositories: ${{ github.repository }}
+        repositories: ${{ inputs.repositories }}
         artifact_name: ${{ inputs.artifact_name }}
 
     - name: Check scan results
