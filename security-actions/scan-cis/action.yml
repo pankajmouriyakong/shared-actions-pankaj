@@ -58,10 +58,17 @@ runs:
       shell: bash
       run: |
         echo "::group::Check for Legitify report existence"
-        sarif_file=${{ inputs.artifact_name }}
+        
+        # Debug: List all files in current directory
+        echo "Files in current directory:"
+        ls -la
+        
+        # Check for the specific SARIF file that Legitify generates
+        sarif_file="legitify-output.sarif"
         if [[ -f "${sarif_file}" ]]; then
           echo "SARIF report file exists: ${sarif_file}"
           echo "files_exists=true" >> $GITHUB_OUTPUT
+          echo "sarif_file=${sarif_file}" >> $GITHUB_OUTPUT
         else
           echo "::warning::Legitify SARIF report file not found: ${sarif_file}"
           echo "files_exists=false" >> $GITHUB_OUTPUT
@@ -74,7 +81,7 @@ runs:
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
       with:
         name: ${{ inputs.artifact_name }}
-        path: legitify-output.sarif
+        path: ${{ steps.legitify_report.outputs.sarif_file }}
         if-no-files-found: warn
 
     - name: Summary
