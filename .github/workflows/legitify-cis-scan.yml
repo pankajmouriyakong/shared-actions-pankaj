@@ -1,0 +1,35 @@
+name: CIS GH Legitify Compliance Scan
+
+on:
+  pull_request: {}
+  push:
+    branches: 
+    - master
+    - main
+  workflow_dispatch: {}
+
+
+permissions:
+  contents: read
+  discussions: read
+  issues: read
+  pull-requests: read
+  security-events: write
+
+jobs:
+  cis-compliance-scan:
+    name: CIS Compliance Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Legitify CIS Scan
+        uses: ./security-actions/scan-cis
+        with:
+          github_token: ${{ secrets.LEGITIFY_TOKEN }}
+          fail_on_findings: 'false'  # Fail CI if issues are found
+          upload_code_scanning: 'true'  # Upload to GitHub Security tab
+          artifact_name: 'legitify-cis-report-${{ github.run_id }}'
+          repositories: "pankajmouriyakong/insomnia"
