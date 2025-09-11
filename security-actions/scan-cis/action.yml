@@ -3,9 +3,6 @@ description: 'Run Legitify CIS compliance scan on GitHub repositories'
 author: 'Kong'
 
 inputs:
-  github_token:
-    description: 'GitHub token with appropriate permissions for Legitify scan'
-    required: true
   fail_on_findings:
     description: 'Fail job if Legitify detects CIS compliance issues'
     required: false
@@ -45,7 +42,7 @@ runs:
       uses: Legit-Labs/legitify@038aa49473a6974a3ef79f6c76b949b689d23282
       continue-on-error: true
       with:
-        github_token: ${{ inputs.github_token }}
+        github_token: ${{ secrets.SECURITY_BOT_LEGITIFY_TOKEN }}
         upload_code_scanning: ${{ inputs.upload_code_scanning }}
         scorecard: ${{ inputs.scorecard }}
         repositories: ${{ github.repository }}
