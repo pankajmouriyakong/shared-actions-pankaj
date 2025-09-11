@@ -28,6 +28,7 @@ jobs:
       - name: Run Legitify CIS Scan
         uses: ./security-actions/scan-cis
         with:
+          github_token: ${{ secrets.LEGITIFY_TOKEN }}
           fail_on_findings: 'true'  # Fail CI if issues are found
           upload_code_scanning: 'true'  # Upload to GitHub Security tab
           artifact_name: 'legitify-cis-report-${{ github.run_id }}'

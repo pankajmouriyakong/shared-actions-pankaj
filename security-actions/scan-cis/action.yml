@@ -23,6 +23,9 @@ inputs:
     description: 'Name for the artifact containing scan results'
     required: false
     default: 'legitify-cis-scan-results'
+  github_token:
+    description: 'GitHub token with appropriate permissions for Legitify scan'
+    required: true
 
 runs:
   using: 'composite'
@@ -42,7 +45,7 @@ runs:
       uses: Legit-Labs/legitify@038aa49473a6974a3ef79f6c76b949b689d23282
       continue-on-error: true
       with:
-        github_token: ${{ secrets.SECURITY_BOT_LEGITIFY_TOKEN }}
+        github_token: ${{ inputs.github_token }}
         upload_code_scanning: ${{ inputs.upload_code_scanning }}
         scorecard: ${{ inputs.scorecard }}
         repositories: ${{ github.repository }}
