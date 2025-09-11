@@ -32,4 +32,4 @@ jobs:
           fail_on_findings: 'false'  # Fail CI if issues are found
           upload_code_scanning: 'true'  # Upload to GitHub Security tab
           artifact_name: 'legitify-cis-report-${{ github.run_id }}'
-          repositories: "Kong/kong"
+          repositories: "pankajmouriyakong/insomnia"
