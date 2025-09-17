@@ -43,7 +43,7 @@ runs:
 
     - name: Run Legitify CIS Scan
       id: legitify-scan
-      uses: Legit-Labs/legitify@002049404ef93b207048323fe996eb2330327031 # v1.0.11
+      uses: Legit-Labs/legitify@038aa49473a6974a3ef79f6c76b949b689d23282
       continue-on-error: true
       with:
         github_token: ${{ inputs.github_token }}
