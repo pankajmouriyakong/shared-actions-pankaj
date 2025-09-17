@@ -51,6 +51,7 @@ runs:
         scorecard: ${{ inputs.scorecard }}
         repositories: ${{ inputs.repositories }}
         artifact_name: ${{ inputs.artifact_name }}
+        output_dir: './legitify-reports'
 
     - name: Check Legitify report existence
       if: ${{ steps.legitify-scan.conclusion == 'success' }}
@@ -59,18 +60,15 @@ runs:
       run: |
         echo "::group::Check for Legitify report existence"
         
-        # Debug: List all files in current directory
-        echo "Files in current directory:"
-        ls -la
+        output_dir="./legitify-reports"
+        json_file="${output_dir}/legitify-output.json"
         
-        # Check for the specific SARIF file that Legitify generates
-        sarif_file="legitify-output.sarif"
-        if [[ -f "${sarif_file}" ]]; then
-          echo "SARIF report file exists: ${sarif_file}"
+        if [[ -f "${json_file}" ]]; then
+          echo "JSON report file exists: ${json_file}"
           echo "files_exists=true" >> $GITHUB_OUTPUT
-          echo "sarif_file=${sarif_file}" >> $GITHUB_OUTPUT
+          echo "json_file=${json_file}" >> $GITHUB_OUTPUT
         else
-          echo "::warning::Legitify SARIF report file not found: ${sarif_file}"
+          echo "::warning::Legitify JSON report file not found: ${json_file}"
           echo "files_exists=false" >> $GITHUB_OUTPUT
         fi
         echo "::endgroup::"
@@ -81,7 +79,7 @@ runs:
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
       with:
         name: ${{ inputs.artifact_name }}
-        path: ${{ steps.legitify_report.outputs.sarif_file }}
+        path: ${{ steps.legitify_report.outputs.json_file }}
         if-no-files-found: warn
 
     - name: Summary
