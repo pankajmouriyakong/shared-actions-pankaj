@@ -26,6 +26,7 @@ inputs:
     required: false
     default: 'legitify-cis-scan-results'
 
+
 runs:
   using: 'composite'
   steps:
@@ -49,6 +50,8 @@ runs:
         scorecard: ${{ inputs.scorecard }}
         repositories: ${{ inputs.repositories }}
         artifact_name: ${{ inputs.artifact_name }}
+        output-format: "json"
+        output-file: "legitify-output.json"
 
     - name: Check scan results
       shell: bash
@@ -69,6 +72,20 @@ runs:
         echo "::error::Check the scan results artifact: ${{ inputs.artifact_name }}"
         exit 1
 
+    - name: Upload artifact to Workflow
+      if: always()
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      with:
+        name: ${{ inputs.artifact_name }}
+        path: |
+          legitify-output.json
+          legitify-*.json
+          legitify-*.sarif
+          *.json
+          *.sarif
+        if-no-files-found: warn
+
+        
     - name: Summary
       if: always()
       shell: bash
