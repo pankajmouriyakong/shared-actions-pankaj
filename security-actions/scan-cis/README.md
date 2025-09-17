@@ -1,2 +1,0 @@
-# Secret Scanning - GitHub Action
-
