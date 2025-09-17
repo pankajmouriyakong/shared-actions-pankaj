@@ -55,5 +55,4 @@ runs:
       run: | 
         ls -la
         find legitfy-output.json
-        which legitfy-output.json
-
+        ls security-actions
