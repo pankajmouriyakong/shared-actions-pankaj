@@ -47,7 +47,6 @@ runs:
       with:
         github_token: ${{ inputs.github_token }}
         upload_code_scanning: ${{ inputs.upload_code_scanning }}
-        scorecard: ${{ inputs.scorecard }}
         repositories: ${{ inputs.repositories }}
     
     - name: list files
