@@ -27,7 +27,6 @@ inputs:
     description: 'GitHub token with appropriate permissions for Legitify scan'
     required: true
 
-
 runs:
   using: 'composite'
   steps:
@@ -51,47 +50,120 @@ runs:
         scorecard: ${{ inputs.scorecard }}
         repositories: ${{ inputs.repositories }}
         artifact_name: ${{ inputs.artifact_name }}
-        output_dir: './legitify-reports'
+
+    - name: Debug - List all files after Legitify scan
+      shell: bash
+      run: |
+        echo "::group::Debug - Current directory contents"
+        ls -la
+        echo "::endgroup::"
+        
+        echo "::group::Debug - Find all JSON and SARIF files"
+        find . -name "*.json" -o -name "*.sarif" | head -20
+        echo "::endgroup::"
+        
+        echo "::group::Debug - Check common output directories"
+        for dir in "./legitify-reports" "./legitify" "./output" "./results"; do
+          if [[ -d "$dir" ]]; then
+            echo "Directory $dir exists:"
+            ls -la "$dir"
+          else
+            echo "Directory $dir does not exist"
+          fi
+        done
+        echo "::endgroup::"
 
     - name: Check Legitify report existence
-      if: ${{ steps.legitify-scan.conclusion == 'success' }}
       id: legitify_report
       shell: bash
       run: |
         echo "::group::Check for Legitify report existence"
         
-        output_dir="./legitify-reports"
-        json_file="${output_dir}/legitify-output.json"
+        # Try multiple possible locations
+        possible_files=(
+          "./legitify-reports/legitify-output.json"
+          "./legitify-output.json"
+          "./results.json"
+          "./legitify.json"
+          "./output.json"
+        )
         
-        if [[ -f "${json_file}" ]]; then
-          echo "JSON report file exists: ${json_file}"
+        json_file=""
+        files_exist=false
+        
+        for file in "${possible_files[@]}"; do
+          if [[ -f "$file" ]]; then
+            echo "Found JSON report file: $file"
+            json_file="$file"
+            files_exist=true
+            break
+          else
+            echo "File not found: $file"
+          fi
+        done
+        
+        # Also check for SARIF files
+        sarif_files=$(find . -name "*.sarif" -type f | head -5)
+        if [[ -n "$sarif_files" ]]; then
+          echo "Found SARIF files:"
+          echo "$sarif_files"
+        fi
+        
+        if [[ "$files_exist" == true ]]; then
           echo "files_exists=true" >> $GITHUB_OUTPUT
           echo "json_file=${json_file}" >> $GITHUB_OUTPUT
+          
+          # Show file size and first few lines for debugging
+          echo "File size: $(wc -c < "$json_file") bytes"
+          echo "First few lines:"
+          head -10 "$json_file"
         else
-          echo "::warning::Legitify JSON report file not found: ${json_file}"
+          echo "::warning::No Legitify report files found in expected locations"
           echo "files_exists=false" >> $GITHUB_OUTPUT
         fi
         echo "::endgroup::"
 
-    # Upload artifacts
-    - name: Upload Legitify SARIF report
-      if: ${{ steps.legitify-scan.conclusion == 'success' && steps.legitify_report.outputs.files_exists == 'true' }}
+    # Upload artifacts - Upload whatever files we find
+    - name: Upload Legitify report files
+      if: ${{ steps.legitify_report.outputs.files_exists == 'true' }}
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
       with:
         name: ${{ inputs.artifact_name }}
         path: ${{ steps.legitify_report.outputs.json_file }}
         if-no-files-found: warn
 
-    - name: Summary
-      if: always()
+    # Backup: Upload all JSON files if specific file not found
+    - name: Upload all JSON files (fallback)
+      if: ${{ steps.legitify_report.outputs.files_exists == 'false' }}
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      continue-on-error: true
+      with:
+        name: ${{ inputs.artifact_name }}-debug
+        path: |
+          ./*.json
+          ./*.sarif
+          ./legitify*
+          ./results*
+          ./output*
+        if-no-files-found: warn
+
+    # Handle failure cases
+    - name: Handle scan results
       shell: bash
       run: |
-        echo "## Legitify CIS Scan Summary" >> $GITHUB_STEP_SUMMARY
-        echo "**Repository scanned:** ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
-        echo "**Scan status:** ${{ steps.legitify-scan.outcome }}" >> $GITHUB_STEP_SUMMARY
-        echo "**Artifact name:** ${{ inputs.artifact_name }}" >> $GITHUB_STEP_SUMMARY
-        if [[ "${{ env.SCAN_FAILED }}" == "true" ]]; then
-          echo "**Result:** ⚠️ Compliance issues detected" >> $GITHUB_STEP_SUMMARY
-        else
-          echo "**Result:** ✅ No compliance issues found" >> $GITHUB_STEP_SUMMARY
+        if [[ "${{ steps.legitify-scan.conclusion }}" != "success" ]]; then
+          echo "::warning::Legitify scan did not complete successfully"
+          echo "Scan conclusion: ${{ steps.legitify-scan.conclusion }}"
+        fi
+        
+        if [[ "${{ inputs.fail_on_findings }}" == "true" && "${{ steps.legitify_report.outputs.files_exists }}" == "true" ]]; then
+          # Parse the JSON to check for findings
+          json_file="${{ steps.legitify_report.outputs.json_file }}"
+          if [[ -f "$json_file" ]]; then
+            # Simple check for issues (adjust based on actual JSON structure)
+            if grep -q '"violations"' "$json_file" || grep -q '"failed"' "$json_file"; then
+              echo "::error::CIS compliance issues found in scan results"
+              exit 1
+            fi
+          fi
         fi
