@@ -47,8 +47,13 @@ runs:
       with:
         github_token: ${{ inputs.github_token }}
         repositories: ${{ inputs.repositories }}
-        output_format: "json"
-        output_file: "legitify-output.json"
+    
+    - name: Upload outputs as Workflow Artifacts
+      if: ${{ steps.legitify-scan.conclusion == 'success' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.artifact_name }}
+        path: legitify-output.*
 
     # - name: Check scan results
     #   shell: bash
