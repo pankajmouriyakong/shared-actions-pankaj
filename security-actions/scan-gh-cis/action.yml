@@ -77,7 +77,7 @@ runs:
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: legitify-output.sarif
-        category: "legitify-report"
+        category: "legitify-report-${{ github.run_id }}"
 
     # - name: Check scan results
     #   shell: bash
