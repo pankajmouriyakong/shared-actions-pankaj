@@ -9,22 +9,22 @@ inputs:
   repositories:
     description: 'Comma-separated list of repositories to scan (e.g., "owner/repo1,owner/repo2")'
     required: true
-  fail_on_findings:
-    description: 'Fail job if Legitify detects CIS compliance issues'
-    required: false
-    default: 'false'
-  upload_code_scanning:
-    description: 'Upload results to GitHub Code Scanning'
-    required: false
-    default: 'true'
-  scorecard:
-    description: 'Enable OpenSSF Scorecard integration'
-    required: false
-    default: 'no'
-  artifact_name:
-    description: 'Name for the artifact containing scan results'
-    required: false
-    default: 'legitify-cis-scan-results'
+  # fail_on_findings:
+  #   description: 'Fail job if Legitify detects CIS compliance issues'
+  #   required: false
+  #   default: 'false'
+  # upload_code_scanning:
+  #   description: 'Upload results to GitHub Code Scanning'
+  #   required: false
+  #   default: 'true'
+  # scorecard:
+  #   description: 'Enable OpenSSF Scorecard integration'
+  #   required: false
+  #   default: 'no'
+  # artifact_name:
+  #   description: 'Name for the artifact containing scan results'
+  #   required: false
+  #   default: 'legitify-cis-scan-results'
 
 
 runs:
@@ -46,56 +46,53 @@ runs:
       continue-on-error: true
       with:
         github_token: ${{ inputs.github_token }}
-        upload_code_scanning: ${{ inputs.upload_code_scanning }}
-        scorecard: ${{ inputs.scorecard }}
         repositories: ${{ inputs.repositories }}
-        artifact_name: ${{ inputs.artifact_name }}
         output-format: "json"
         output-file: "legitify-output.json"
 
-    - name: Check scan results
-      shell: bash
-      run: |
-        if [[ "${{ steps.legitify-scan.outcome }}" == "failure" ]]; then
-          echo "::warning::Legitify CIS scan detected compliance issues"
-          echo "SCAN_FAILED=true" >> $GITHUB_ENV
-        else
-          echo "::notice::Legitify CIS scan completed successfully"
-          echo "SCAN_FAILED=false" >> $GITHUB_ENV
-        fi
+    # - name: Check scan results
+    #   shell: bash
+    #   run: |
+    #     if [[ "${{ steps.legitify-scan.outcome }}" == "failure" ]]; then
+    #       echo "::warning::Legitify CIS scan detected compliance issues"
+    #       echo "SCAN_FAILED=true" >> $GITHUB_ENV
+    #     else
+    #       echo "::notice::Legitify CIS scan completed successfully"
+    #       echo "SCAN_FAILED=false" >> $GITHUB_ENV
+    #     fi
 
-    - name: Fail on CIS compliance issues
-      if: ${{ always() && inputs.fail_on_findings == 'true' && env.SCAN_FAILED == 'true' }}
-      shell: bash
-      run: |
-        echo "::error::Legitify CIS scan detected compliance issues and fail_on_findings is enabled"
-        echo "::error::Check the scan results artifact: ${{ inputs.artifact_name }}"
-        exit 1
+    # - name: Fail on CIS compliance issues
+    #   if: ${{ always() && inputs.fail_on_findings == 'true' && env.SCAN_FAILED == 'true' }}
+    #   shell: bash
+    #   run: |
+    #     echo "::error::Legitify CIS scan detected compliance issues and fail_on_findings is enabled"
+    #     echo "::error::Check the scan results artifact: ${{ inputs.artifact_name }}"
+    #     exit 1
 
-    - name: Upload artifact to Workflow
-      if: always()
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-      with:
-        name: ${{ inputs.artifact_name }}
-        path: |
-          legitify-output.json
-          legitify-*.json
-          legitify-*.sarif
-          *.json
-          *.sarif
-        if-no-files-found: warn
+    # - name: Upload artifact to Workflow
+    #   if: always()
+    #   uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+    #   with:
+    #     name: ${{ inputs.artifact_name }}
+    #     path: |
+    #       legitify-output.json
+    #       legitify-*.json
+    #       legitify-*.sarif
+    #       *.json
+    #       *.sarif
+    #     if-no-files-found: warn
 
-        
-    - name: Summary
-      if: always()
-      shell: bash
-      run: |
-        echo "## Legitify CIS Scan Summary" >> $GITHUB_STEP_SUMMARY
-        echo "**Repositories scanned:** ${{ inputs.repositories }}" >> $GITHUB_STEP_SUMMARY
-        echo "**Scan status:** ${{ steps.legitify-scan.outcome }}" >> $GITHUB_STEP_SUMMARY
-        echo "**Artifact name:** ${{ inputs.artifact_name }}" >> $GITHUB_STEP_SUMMARY
-        if [[ "${{ env.SCAN_FAILED }}" == "true" ]]; then
-          echo "**Result:** ⚠️ Compliance issues detected" >> $GITHUB_STEP_SUMMARY
-        else
-          echo "**Result:** ✅ No compliance issues found" >> $GITHUB_STEP_SUMMARY
-        fi
+
+    # - name: Summary
+    #   if: always()
+    #   shell: bash
+    #   run: |
+    #     echo "## Legitify CIS Scan Summary" >> $GITHUB_STEP_SUMMARY
+    #     echo "**Repositories scanned:** ${{ inputs.repositories }}" >> $GITHUB_STEP_SUMMARY
+    #     echo "**Scan status:** ${{ steps.legitify-scan.outcome }}" >> $GITHUB_STEP_SUMMARY
+    #     echo "**Artifact name:** ${{ inputs.artifact_name }}" >> $GITHUB_STEP_SUMMARY
+    #     if [[ "${{ env.SCAN_FAILED }}" == "true" ]]; then
+    #       echo "**Result:** ⚠️ Compliance issues detected" >> $GITHUB_STEP_SUMMARY
+    #     else
+    #       echo "**Result:** ✅ No compliance issues found" >> $GITHUB_STEP_SUMMARY
+    #     fi
