@@ -21,10 +21,10 @@ inputs:
   #   description: 'Enable OpenSSF Scorecard integration'
   #   required: false
   #   default: 'no'
-  # artifact_name:
-  #   description: 'Name for the artifact containing scan results'
-  #   required: false
-  #   default: 'legitify-cis-scan-results'
+  artifact_name:
+    description: 'Name for the artifact containing scan results'
+    required: false
+    default: 'legitify-cis-scan-results'
 
 
 runs:
