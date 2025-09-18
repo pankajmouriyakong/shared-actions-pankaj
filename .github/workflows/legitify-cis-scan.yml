@@ -29,4 +29,5 @@ jobs:
         uses: ./security-actions/scan-gh-cis
         with:
           github_token: ${{ secrets.LEGITIFY_TOKEN }}
+          upload_code_scanning: 'true'  
           repositories: "pankajmouriyakong/httpsnippet"

@@ -13,10 +13,10 @@ inputs:
   #   description: 'Fail job if Legitify detects CIS compliance issues'
   #   required: false
   #   default: 'false'
-  # upload_code_scanning:
-  #   description: 'Upload results to GitHub Code Scanning'
-  #   required: false
-  #   default: 'true'
+  upload_code_scanning:
+    description: 'Upload results to GitHub Code Scanning'
+    required: false
+    default: 'true'
   # scorecard:
   #   description: 'Enable OpenSSF Scorecard integration'
   #   required: false
@@ -47,6 +47,7 @@ runs:
       with:
         github_token: ${{ inputs.github_token }}
         repositories: ${{ inputs.repositories }}
+        upload_code_scanning: ${{ inputs.upload_code_scanning }}
     
     - name: Upload outputs as Workflow Artifacts
       if: ${{ steps.legitify-scan.conclusion == 'success' }}
@@ -54,6 +55,14 @@ runs:
       with:
         name: ${{ inputs.artifact_name }}
         path: legitify-output.*
+
+    - name: Upload SARIF as Code Scanning Results
+      if: ${{ inputs.upload_code_scanning == 'true' && steps.legitify-scan.conclusion == 'success' }}
+      continue-on-error: true
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: legitify-output.sarif
+        category: "legitify-report"
 
     # - name: Check scan results
     #   shell: bash
