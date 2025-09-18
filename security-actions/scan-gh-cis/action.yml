@@ -47,8 +47,8 @@ runs:
       with:
         github_token: ${{ inputs.github_token }}
         repositories: ${{ inputs.repositories }}
-        output-format: "json"
-        output-file: "legitify-output.json"
+        output_format: "json"
+        output_file: "legitify-output.json"
 
     # - name: Check scan results
     #   shell: bash
