@@ -1,80 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "Kong/public-shared-renovate:backend",
-    "Kong/public-shared-renovate:makefile",
-    "kumahq/kuma//.renovate/go-control-plane",
-    "kumahq/kuma//.renovate/mise",
-    "kumahq/kuma//.renovate/security",
-    "bartsmykla/kuma//.renovate/gha2"
+    "Kong/public-shared-renovate:github-actions"
   ],
   "enabledManagers": [
-    "custom.regex",
     "dockerfile",
     "github-actions",
     "gomod",
-    "helm-values",
-    "kubernetes",
-    "mise"
-  ],
-  "ignorePaths": [],
-  "kubernetes": {
-    "description": "Update image versions in Kubernetes manifests from 'kumactl install demo|observability'",
-    "managerFilePatterns": [
-      "/app/kumactl/data/install/k8s/.+\\.ya?ml$/"
-    ]
-  },
-  "packageRules": [
-    {
-      "description": "Skip tests and apply preset config for GitHub Actions updates",
-      "matchManagers": [
-        "github-actions"
-      ],
-      "extends": [
-        "kumahq/kuma//.renovate/github-actions"
-      ]
-    },
-    {
-      "description": "Skip tests and apply GitHub Actions preset for 'Kong/public-shared-actions' managed by custom regex manager",
-      "matchManagers": [
-        "custom.regex"
-      ],
-      "matchPackageNames": [
-        "Kong/public-shared-actions/**",
-        "bartsmykla/public-shared-actions/**"
-      ],
-      "extends": [
-        "kumahq/kuma//.renovate/github-actions"
-      ]
-    },
-    {
-      "description": "Group container image updates for 'kumactl install demo|observability' Kubernetes manifests",
-      "groupName": "kumactl install demo|observability container images",
-      "groupSlug": "kumactl-install-k8s",
-      "matchFileNames": [
-        "app/kumactl/data/install/k8s/**"
-      ]
-    },
-    {
-      "description": "Change commit message topic to 'envoy' for kumahq/envoy-builds, which are our own builds of released Envoy versions. This dependency is managed by the custom regex manager for Makefiles. We only change the topic to better reflect the component being updated",
-      "matchDepNames": [
-        "kumahq/envoy-builds"
-      ],
-      "commitMessageTopic": "envoy"
-    },
-    {
-      "description": "Disable pinning of openapi-tool which won't work and always will result in pailures. This dependency is managed by the custom regex manager for Makefiles",
-      "matchManagers": [
-        "custom.regex"
-      ],
-      "matchDepNames": [
-        "kumahq/openapi-tool"
-      ],
-      "matchUpdateTypes": [
-        "pin",
-        "pinDigest"
-      ],
-      "enabled": false
-    }
+    "helm-values"
   ]
 }
