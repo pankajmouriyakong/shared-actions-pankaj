@@ -100,6 +100,8 @@ jobs:
   # Replace your entire slack_notification job with this:
   notify-slack:
     needs: [test-scan-docker-image, test-download-sbom]
+    # if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ always()  }}
     uses: ./.github/workflows/slack-notif-main.yml
     with:
       workflow_name: "Docker Image Scan Workflow RESUSABLE TYPE"
