@@ -99,7 +99,7 @@ jobs:
                   "elements": [
                     {
                       "type": "mrkdwn",
-                      "text": "🕐 Completed at: <!date^${{ github.event.head_commit.timestamp }}^{date_num} {time_secs}|${{ github.event.head_commit.timestamp }}> | Event: `${{ github.event_name }}` | Duration: ~${{ github.event.workflow_run.run_duration || 'N/A' }}"
+                      "text": "🕐 Completed at: ${{ github.event.head_commit.timestamp }} | Event: `${{ github.event_name }}` | Run ID: ${{ github.run_id }}"
                     }
                   ]
                 }
@@ -173,7 +173,7 @@ jobs:
                   "elements": [
                     {
                       "type": "mrkdwn",
-                      "text": "🕐 Failed at: <!date^${{ github.event.head_commit.timestamp }}^{date_num} {time_secs}|${{ github.event.head_commit.timestamp }}> | Event: `${{ github.event_name }}` | Please investigate ASAP"
+                      "text": "🕐 Failed at: ${{ github.event.head_commit.timestamp }} | Event: `${{ github.event_name }}` | Please investigate ASAP"
                     }
                   ]
                 }
