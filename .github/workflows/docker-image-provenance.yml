@@ -49,7 +49,7 @@ jobs:
       actions: read
       packages: write # needed to upload to packages to registry
       id-token: write # needed for signing the images with GitHub OIDC Token
-    if: ${{ github.repository_owner == 'Kong' }}
+    if: ${{ github.repository_owner == 'Kongs' }}
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.1.0
     with:
       image: "${{ needs.provenance-metadata.outputs.IMAGE }}"
@@ -79,14 +79,14 @@ jobs:
           status: success
           payload: |
             {
-              "text": "✅ SCA Directory Scan Workflow Success - ${{ github.repository }}",
+              "text": "✅ Docker Image Provenance Workflow Success - ${{ github.repository }}",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
                     "emoji": true,
-                    "text": "✅ SCA Directory Scan Workflow ran Successfully"
+                    "text": "✅ Docker Image Provenance Workflow ran Successfully"
                   }
                 },
                 {
@@ -139,21 +139,21 @@ jobs:
           status: failure
           payload: |
             {
-              "text": "🚨 SCA Directory Scan Workflow FAILED - ${{ github.repository }} - Immediate attention required!",
+              "text": "🚨 Docker Image Provenance Workflow FAILED - ${{ github.repository }} - Immediate attention required!",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
                     "emoji": true,
-                    "text": "🚨 SCA Directory Scan Workflow has FAILED"
+                    "text": "🚨 Docker Image Provenance Workflow has FAILED"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "⚠️ *Action Required:* The SCA Directory Scan has failed and needs immediate attention"
+                    "text": "⚠️ *Action Required:* The Docker Image Provenance generation has failed and needs immediate attention"
                   }
                 },
                 {
