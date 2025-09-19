@@ -14,7 +14,7 @@ on:
 jobs:
   test-sca-dir:
     env:
-      TEST_REPOSITORY: "${{github.repository_owner}}/insomnia"
+      TEST_REPOSITORY: "${{github.repository_owner}}/insomniadd"
     runs-on: ubuntu-latest
     permissions:
       contents: write # publish sbom to GH releases/tag assets
