@@ -41,6 +41,7 @@ jobs:
     name: Slack Notification
     runs-on: ubuntu-latest
     needs: test-sca-dir
+    if: always() # Run regardless of previous job status
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -54,14 +55,14 @@ jobs:
           status: success
           payload: |
             {
-              "text": "Completely custom Slack message for CI",
+              "text": "✅ SCA Directory Scan Workflow Success - ${{ github.repository }}",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
                     "emoji": true,
-                    "text": "SCA Directory Scan Workflow Success"
+                    "text": "✅ SCA Directory Scan Workflow Success"
                   }
                 },
                 {
@@ -77,7 +78,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Workflow Run:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.run_number }}>"
+                      "text": "*Workflow Run:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Run #${{ github.run_number }}>"
                     },
                     {
                       "type": "mrkdwn",
@@ -85,11 +86,20 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Commit Author:*\n${{ github.event.head_commit.author.name }}"
+                      "text": "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.event.head_commit.message }}>"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Event Name:*\n${{ github.event_name }}"
+                      "text": "*Author:*\n${{ github.event.head_commit.author.name }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "🕐 Completed at: <!date^${{ github.event.head_commit.timestamp }}^{date_num} {time_secs}|${{ github.event.head_commit.timestamp }}> | Event: `${{ github.event_name }}` | Duration: ~${{ github.event.workflow_run.run_duration || 'N/A' }}"
                     }
                   ]
                 }
@@ -97,7 +107,7 @@ jobs:
             }
     
       # Failure Notification
-      - name: Send Failure Slack alert
+      - name: Send Failure Slack Alert
         if: ${{ needs.test-sca-dir.result == 'failure' }}
         uses: ./slack-actions/workflow-notification
         with:
@@ -105,14 +115,21 @@ jobs:
           status: failure
           payload: |
             {
-              "text": "Completely custom Slack message for CI",
+              "text": "🚨 SCA Directory Scan Workflow FAILED - ${{ github.repository }} - Immediate attention required!",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
                     "emoji": true,
-                    "text": "SCA Directory Scan Workflow Failure"
+                    "text": "🚨 SCA Directory Scan Workflow FAILED"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "⚠️ *Action Required:* The SCA Directory Scan has failed and needs immediate attention from the Security Engineering team."
                   }
                 },
                 {
@@ -128,7 +145,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Workflow Run:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.run_number }}>"
+                      "text": "*Failed Run:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|🔍 View Logs - Run #${{ github.run_number }}>"
                     },
                     {
                       "type": "mrkdwn",
@@ -136,14 +153,29 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Commit Author:*\n${{ github.event.head_commit.author.name }}"
+                      "text": "*Commit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.event.head_commit.message }}>"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Event Name:*\n${{ github.event_name }}"
+                      "text": "*Author:*\n${{ github.event.head_commit.author.name }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*🔧 Quick Actions:*\n• <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View detailed logs>\n• <${{ github.server_url }}/${{ github.repository }}/actions|Check recent workflow history>\n• <${{ github.server_url }}/${{ github.repository }}/actions/workflows/${{ github.workflow }}/badge.svg|Workflow status badge>"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "🕐 Failed at: <!date^${{ github.event.head_commit.timestamp }}^{date_num} {time_secs}|${{ github.event.head_commit.timestamp }}> | Event: `${{ github.event_name }}` | Please investigate ASAP"
                     }
                   ]
                 }
               ]
             }
-        
