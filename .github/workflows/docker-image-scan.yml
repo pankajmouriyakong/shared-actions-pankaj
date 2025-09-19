@@ -101,6 +101,7 @@ jobs:
     name: Slack Notification
     runs-on: ubuntu-latest
     # if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ always() }}
     needs: test-download-sbom
     steps:
       - name: Checkout repository
