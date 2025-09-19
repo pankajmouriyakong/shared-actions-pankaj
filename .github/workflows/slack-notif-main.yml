@@ -12,11 +12,6 @@ on:
         description: 'Status of the job (success, failure, cancelled)'
         required: true
         type: string
-    #   restrict_to_main:
-    #     description: 'Whether to restrict notifications to main branch pushes only'
-    #     required: false
-    #     type: boolean
-    #     default: false
     secrets:
       SLACK_WEBHOOK_URL_NOTIFY:
         description: 'Slack webhook URL for success notifications'
@@ -116,7 +111,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "⚠️ *Action Required:* The ${{ inputs.workflow_name }} has failed and needs immediate attention from the Security Engineering team."
+                    "text": "⚠️ *Action Required:* The ${{ inputs.workflow_name }} has failed and needs immediate attention."
                   }
                 },
                 {
