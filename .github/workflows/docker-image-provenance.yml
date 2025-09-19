@@ -66,14 +66,14 @@ jobs:
     runs-on: ubuntu-latest
     # if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     if: ${{ always() }}
-    needs: generate-docker-image-provenance
+    needs: [generate-docker-image-provenance, provenance-metadata]
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       # Success Notification
       - name: Send Success Slack Notification
-        if: ${{ needs.generate-docker-image-provenance.result == 'success' }}
+        if: ${{ needs.generate-docker-image-provenance.result == 'success' || needs.provenance-metadata.result == 'success' }}
         uses: ./slack-actions/workflow-notification
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
@@ -133,7 +133,7 @@ jobs:
     
       # Failure Notification
       - name: Send Failure Slack Alert
-        if: ${{ needs.generate-docker-image-provenance.result == 'failure' }}
+        if: ${{ needs.generate-docker-image-provenance.result == 'failure' || needs.provenance-metadata.result == 'failure' }}
         uses: ./slack-actions/workflow-notification
         with:
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL_ALERT_PUBLIC_SHARED_ACTIONS }}
