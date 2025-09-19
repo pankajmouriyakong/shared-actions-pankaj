@@ -61,7 +61,7 @@ jobs:
                   "text": {
                     "type": "plain_text",
                     "emoji": true,
-                    "text": "CI Workflow Success"
+                    "text": "SCA Directory Scan Workflow Success"
                   }
                 },
                 {
@@ -78,10 +78,6 @@ jobs:
                     {
                       "type": "mrkdwn",
                       "text": "*Workflow Run:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.run_number }}>"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*TriggeredByCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
                     },
                     {
                       "type": "mrkdwn",
@@ -116,7 +112,7 @@ jobs:
                   "text": {
                     "type": "plain_text",
                     "emoji": true,
-                    "text": "CI Workflow Failure"
+                    "text": "SCA Directory Scan Workflow Failure"
                   }
                 },
                 {
@@ -133,10 +129,6 @@ jobs:
                     {
                       "type": "mrkdwn",
                       "text": "*Workflow Run:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.run_number }}>"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*TriggeredByCommit:*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ steps.slack-variables.outputs.short-commit-hash }}>"
                     },
                     {
                       "type": "mrkdwn",
