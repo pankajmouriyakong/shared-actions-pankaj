@@ -100,7 +100,7 @@ jobs:
   # Replace your entire slack_notification job with this:
   notify-slack:
     needs: [test-scan-docker-image, test-download-sbom]
-    uses: ./.github/workflows/slack-notification.yml
+    uses: .github/workflows/slack-notification.yml
     with:
       workflow_name: "Docker Image Scan Workflow RESUSABLE TYPE"
       job_status: ${{ needs.test-scan-docker-image.result }}
