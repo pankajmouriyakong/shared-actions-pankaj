@@ -14,7 +14,7 @@ on:
 jobs:
   test-sca-dir:
     env:
-      TEST_REPOSITORY: "${{github.repository_owner}}/insomniadd"
+      TEST_REPOSITORY: "${{github.repository_owner}}/insomnia"
     runs-on: ubuntu-latest
     permissions:
       contents: write # publish sbom to GH releases/tag assets
@@ -62,7 +62,7 @@ jobs:
                   "text": {
                     "type": "plain_text",
                     "emoji": true,
-                    "text": "✅ SCA Directory Scan Workflow Success"
+                    "text": "✅ SCA Directory Scan Workflow ran Successfully"
                   }
                 },
                 {
@@ -122,14 +122,14 @@ jobs:
                   "text": {
                     "type": "plain_text",
                     "emoji": true,
-                    "text": "🚨 SCA Directory Scan Workflow FAILED"
+                    "text": "🚨 SCA Directory Scan Workflow has FAILED"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "⚠️ *Action Required:* The SCA Directory Scan has failed and needs immediate attention from the Security Engineering team."
+                    "text": "⚠️ *Action Required:* The SCA Directory Scan has failed and needs immediate attention"
                   }
                 },
                 {
@@ -165,7 +165,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*🔧 Quick Actions:*\n• <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View detailed logs>\n• <${{ github.server_url }}/${{ github.repository }}/actions|Check recent workflow history>\n• <${{ github.server_url }}/${{ github.repository }}/actions/workflows/${{ github.workflow }}/badge.svg|Workflow status badge>"
+                    "text": "*🔧 Quick Actions:*\n• <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View detailed logs>\n• <${{ github.server_url }}/${{ github.repository }}/actions|Check recent workflow history>\n"
                   }
                 },
                 {
@@ -173,7 +173,7 @@ jobs:
                   "elements": [
                     {
                       "type": "mrkdwn",
-                      "text": "🕐 Failed at: ${{ github.event.head_commit.timestamp }} | Event: `${{ github.event_name }}` | Please investigate ASAP"
+                      "text": "🕐 Failed at: ${{ github.event.head_commit.timestamp }} | Event: `${{ github.event_name }}` | Investigation Needed"
                     }
                   ]
                 }
