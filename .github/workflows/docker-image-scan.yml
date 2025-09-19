@@ -106,7 +106,7 @@ jobs:
     uses: ./.github/workflows/slack-notif-main.yml
     with:
       workflow_name: "Docker Image Scan Workflow"
-      job_status: ${{ contains(needs.*.result, 'failure') && 'failure' || 'success' }}
+      job_status: ${{ contains(needs.*.result, 'failure') && 'failure' || contains(needs.*.result, 'success') && 'success' || 'failure' }}
     secrets:
       SLACK_WEBHOOK_URL_NOTIFY: ${{ secrets.SLACK_WEBHOOK_URL_NOTIFY_PUBLIC_SHARED_ACTIONS }}
       SLACK_WEBHOOK_URL_ALERT: ${{ secrets.SLACK_WEBHOOK_URL_ALERT_PUBLIC_SHARED_ACTIONS }}
